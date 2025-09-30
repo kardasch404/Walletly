@@ -18,6 +18,25 @@ class UserService {
         };
         return this.userRepository.create(userData);
     }
+
+    async login(data) {
+        const user = await this.userRepository.findByEmail(data.email);
+        if (!user) {
+            throw new Error('Invalid email or password');
+        }
+        
+        const isValidPassword = await bcrypt.compare(data.password, user.password);
+        if (!isValidPassword) {
+            throw new Error('Invalid email or password');
+        }
+        
+        return {
+            id: user.id,
+            fname: user.fname,
+            lname: user.lname,
+            email: user.email
+        };
+    }
 }
 
 module.exports = UserService;
