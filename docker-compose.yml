@@ -1,6 +1,7 @@
 services:
   db:
-    image: mysql:latest
+    image: mysql:5.7
+    container_name: walletly_db
     environment:
       - MYSQL_ROOT_PASSWORD=rootpassword123
       - MYSQL_DATABASE=walletly
@@ -13,11 +14,13 @@ services:
       - "3306:3306"
     networks:
       - app-network
+    restart: unless-stopped
 
   app:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: walletly_app
     depends_on:
       - db
     volumes:
@@ -33,9 +36,11 @@ services:
       - DB_NAME=walletly
     networks:
       - app-network
+    restart: unless-stopped
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
+    container_name: walletly_phpmyadmin
     restart: always
     ports:
       - "8001:80"
