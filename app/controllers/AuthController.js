@@ -1,4 +1,5 @@
 class AuthController {
+
     constructor(userService) {
         this.userService = userService;
     }
@@ -7,10 +8,27 @@ class AuthController {
         try {
             const data = req.body;
             const user = await this.userService.register(data);
+            return res.json({
+                id: user.id,
+                fname: user.fname,
+                lname: user.lname,
+                email: user.email
+            });
+        } catch (error) {
+            return res.json({
+                error: error.message
+            });
+        }
+    }
+
+    async login(req, res) {
+        try {
+            const data = req.body;
+            const user = await this.userService.login(data);
             return res.json(user);
         } catch (error) {
-            return res.status(400).json({
-                error: error.message 
+            return res.json({
+                error: error.message
             });
         }
     }

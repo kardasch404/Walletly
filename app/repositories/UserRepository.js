@@ -17,6 +17,24 @@ class UserRepository {
             });
         });
     }
+
+    findByEmail(email) {
+        return new Promise((resolve, reject) => {
+            const query = 'SELECT * FROM users WHERE email = ?';
+            
+            pool.query(query, [email], (err, results) => {
+                if (err) {
+                    reject(err);
+                } else if (results.length === 0) {
+                    resolve(null);
+                } else {
+                    const userData = results[0];
+                    const user = new User(userData.id, userData.firstname, userData.lastname, userData.email, userData.password, userData.image);
+                    resolve(user);
+                }
+            });
+        });
+    }
 }
 
 module.exports = UserRepository;

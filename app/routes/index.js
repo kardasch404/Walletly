@@ -20,6 +20,16 @@ router.get('/register', function(req, res, next) {
   res.render('register');
 });
 
+/* GET login page */
+router.get('/login', function(req, res, next) {
+  res.render('login');
+});
+
+/* POST login */
+router.post('/login', async (req, res) => {
+  await authController.login(req, res);
+});
+
 /* POST register */
 router.post('/register', async (req, res) => {
   const { error } = registerSchema.validate(req.body);
