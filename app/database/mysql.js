@@ -2,7 +2,7 @@ const mysql = require('mysql');
 
 const pool = mysql.createPool({
     connectionLimit: 10,
-    host: process.env.DB_HOST || 'localhost',
+    host: process.env.DB_HOST || 'db',
     user: process.env.DB_USER || 'user',
     password: process.env.DB_PASSWORD || 'userpassword123',
     database: process.env.DB_NAME || 'walletly',

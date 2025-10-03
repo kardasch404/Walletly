@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Walletly - Smart Budget Management</title>
+    <link rel='stylesheet' href='/css/style.css'>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+    <%- include('../components/navbar') %>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-text">
+                <h1 class="hero-title">Take Control of Your Financial Future</h1>
+                <p class="hero-description">Experience the most beautiful and intuitive way to manage your money. Track expenses, set budgets, and achieve your financial goals with our award-winning platform.</p>
+                <div class="hero-buttons">
+                    <a href="/register" class="btn-primary">
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none">
+                            <path d="M16 21V19A4 4 0 0 0 12 15H5A4 4 0 0 0 1 19V21" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+                            <line x1="20" y1="8" x2="20" y2="14" stroke="currentColor" stroke-width="2"/>
+                            <line x1="23" y1="11" x2="17" y2="11" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                        Start Free Trial
+                    </a>
+                    <a href="#features" class="btn-secondary">
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none">
+                            <polygon points="5,3 19,12 5,21" fill="currentColor"/>
+                        </svg>
+                        Watch Demo
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50K+</span>
+                        <span class="stat-label">Happy Users</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">€10M+</span>
+                        <span class="stat-label">Money Managed</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">4.9★</span>
+                        <span class="stat-label">App Rating</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="dashboard-preview">
+                    <div class="preview-card">
+                        <div class="card-header">Monthly Budget Overview</div>
+                        <div class="card-amount">€2,450.00</div>
+                        <div class="card-progress">
+                            <div class="progress-bar" style="width: 65%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Powerful Features for Modern Finance</h2>
+                <p>Everything you need to take complete control of your financial life, beautifully designed and intelligently crafted.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Smart Budget Tracking</h3>
+                    <p>AI-powered budgeting that learns from your spending patterns and provides intelligent recommendations for better financial health.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>Expense Intelligence</h3>
+                    <p>Automatically categorize and analyze your expenses with machine learning. Get insights that help you save more and spend smarter.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Goal Achievement</h3>
+                    <p>Set ambitious financial goals and track your progress with beautiful visualizations. Celebrate milestones and stay motivated.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📈</div>
+                    <h3>Advanced Analytics</h3>
+                    <p>Comprehensive reports and insights that reveal spending patterns, trends, and opportunities for financial optimization.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Bank-Level Security</h3>
+                    <p>Your financial data is protected with military-grade encryption, biometric authentication, and advanced fraud detection.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌟</div>
+                    <h3>Premium Experience</h3>
+                    <p>Enjoy a beautifully crafted interface with smooth animations, intuitive navigation, and delightful micro-interactions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <%- include('../components/footer') %>
+    <script src='/javascripts/main.js'></script>
+</body>
+</html>
