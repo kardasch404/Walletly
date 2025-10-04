@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/css/style.css' />
+</head>
+<body>
+    <div class="container">
+        <h1>Create Category</h1>
+        <form action="/categories/create" method="POST">
+            <div>
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div>
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" required></textarea>
+            </div>
+            <div>
+                <label for="image">Image URL:</label>
+                <input type="text" id="image" name="image" required>
+            </div>
+            <div>
+                <label for="type">Type:</label>
+                <select id="type" name="type" required>
+                    <option value="">Select Type</option>
+                    <option value="income">Income</option>
+                    <option value="expense">Expense</option>
+                </select>
+            </div>
+            <button type="submit">Create Category</button>
+        </form>
+    </div>
+
+
+</body>
+</html>

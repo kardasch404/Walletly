@@ -4,8 +4,8 @@ var router = express.Router();
 const AuthController = require('../controllers/AuthController');
 const UserService = require('../services/UserService');
 const UserRepository = require('../repositories/UserRepository');
-const { validateRegister } = require('../requests/RegisterRequest');
-const { validateLogin } = require('../requests/LoginRequest');
+const { validateRegister } = require('../http/requests/RegisterRequest');
+const { validateLogin } = require('../http/requests/LoginRequest');
 
 const userRepository = new UserRepository();
 const userService = new UserService(userRepository);
@@ -51,6 +51,16 @@ router.get('/dashboard', function(req, res, next) {
     user: req.session.user 
   });
 });
+
+/* GET create category page */
+router.get('/create-category', function(req, res, next) {
+  if (!req.session.userId) {
+    return res.redirect('/login');
+  }
+  res.render('create-category', { title: 'Create Category - Walletly' });
+});
+
+
 
 /* POST register */
 router.post('/register', async (req, res) => {
