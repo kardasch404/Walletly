@@ -8,6 +8,7 @@ var session = require('express-session');
 var indexRouter = require('./app/routes/index');
 var usersRouter = require('./app/routes/users');
 var categoriesRouter = require('./app/routes/categories');
+var budgetsRouter = require('./app/routes/budgets');
 var db = require('./app/database/mysql');
 
 var app = express();
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/categories', categoriesRouter);
+app.use('/budgets', budgetsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
