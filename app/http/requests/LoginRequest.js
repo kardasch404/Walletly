@@ -1,13 +1,12 @@
 const Joi = require('joi');
 
-
-const loginSchema = {
+const loginSchema = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().required()
-}
+});
 
 const validateLogin = (data) => {
-    return Joi.object(loginSchema).validate(data, { abortEarly: false });
+    return loginSchema.validate(data);
 };
 
-module.exports = { loginSchema, validateLogin };
+module.exports = { validateLogin };

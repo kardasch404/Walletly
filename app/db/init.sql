@@ -24,7 +24,7 @@ CREATE TABLE categories (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE Transactions (
+CREATE TABLE transactions (
     id VARCHAR(36) PRIMARY KEY,
     user_id VARCHAR(36),
     category_id VARCHAR(36),
@@ -49,7 +49,7 @@ CREATE TABLE budgets (
     FOREIGN KEY (category_id) REFERENCES categories (id)
 );
 
-CREATE TABLE SavingsGoals (
+CREATE TABLE savingsGoals (
     id VARCHAR(36) PRIMARY KEY,
     title VARCHAR(50),
     description VARCHAR(255),
@@ -60,7 +60,7 @@ CREATE TABLE SavingsGoals (
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-CREATE TABLE Rapports (
+CREATE TABLE rapports (
     id VARCHAR(36) PRIMARY KEY,
     user_id VARCHAR(36),
     rapportType VARCHAR(50),

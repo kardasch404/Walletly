@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/css/style.css' />
+</head>
+<body>
+    <div class="container">
+        <h1>My Categories</h1>
+        <a href="/create-category">Create New Category</a>
+        <div class="categories-list">
+            <% if (categories && categories.length > 0) { %>
+                <% categories.forEach(category => { %>
+                    <div class="category-item">
+                        <h3><%= category.name %></h3>
+                        <p><%= category.description %></p>
+                        <p>Type: <%= category.type %></p>
+                        <img src="<%= category.image %>" alt="<%= category.name %>" width="50">
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p>No categories found. <a href="/create-category">Create your first category</a></p>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html>
