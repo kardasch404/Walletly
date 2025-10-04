@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/css/style.css' />
+</head>
+<body>
+    <div class="container">
+        <h1>My Transactions</h1>
+        <a href="/create-transaction">Create New Transaction</a>
+        <div class="transactions-list">
+            <% if (transactions && transactions.length > 0) { %>
+                <% transactions.forEach(transaction => { %>
+                    <div class="transaction-item">
+                        <h3><%= transaction.description %></h3>
+                        <p>Amount: <%= transaction.amount %> MAD</p>
+                        <p>Type: <%= transaction.type %></p>
+                        <p>Date: <%= new Date(transaction.transactionDate).toLocaleDateString() %></p>
+                        <p>Category ID: <%= transaction.category_id %></p>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p>No transactions found. <a href="/create-transaction">Create your first transaction</a></p>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html>
