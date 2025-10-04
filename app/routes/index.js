@@ -85,6 +85,31 @@ router.get('/create-budget', async function(req, res, next) {
   }
 });
 
+/* GET create transaction page */
+router.get('/create-transaction', async function(req, res, next) {
+  if (!req.session.userId) {
+    return res.redirect('/login');
+  }
+  
+  const CategoryService = require('../services/CategoryService');
+  const CategoryRepository = require('../repositories/CategoryRepository');
+  const categoryRepository = new CategoryRepository();
+  const categoryService = new CategoryService(categoryRepository);
+  
+  try {
+    const categories = await categoryService.getAllCategoriesFromUser(req.session.userId);
+    res.render('create-transaction', { 
+      title: 'Create Transaction - Walletly',
+      categories: categories
+    });
+  } catch (error) {
+    res.render('create-transaction', { 
+      title: 'Create Transaction - Walletly',
+      categories: []
+    });
+  }
+});
+
 
 
 /* POST register */
