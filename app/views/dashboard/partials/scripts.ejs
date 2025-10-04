@@ -1,0 +1,174 @@
+<script>
+    // Navigation - only handle non-route nav items
+    const nonRouteNavItems = document.querySelectorAll('.nav-item:not([href^="/"])');
+    const pages = document.querySelectorAll('.page-view');
+
+    nonRouteNavItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetPage = item.dataset.page;
+            
+            if (targetPage && document.getElementById(targetPage)) {
+                // Update active nav item
+                nonRouteNavItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+                
+                // Show target page
+                pages.forEach(page => page.classList.remove('active'));
+                document.getElementById(targetPage).classList.add('active');
+            }
+        });
+    });
+
+    // Filter chips
+    const filterChips = document.querySelectorAll('.filter-chip');
+    filterChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            filterChips.forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+        });
+    });
+
+    // Toggle switches
+    const toggleSwitches = document.querySelectorAll('.toggle-switch');
+    toggleSwitches.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+            toggle.classList.toggle('active');
+        });
+    });
+
+    // Money Flow Chart
+    const moneyFlowCtx = document.getElementById('moneyFlowChart');
+    if (moneyFlowCtx) {
+        new Chart(moneyFlowCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                datasets: [{
+                    label: 'Income',
+                    data: [8200, 8500, 8300, 8700, 8400, 8600, 8500],
+                    backgroundColor: '#4A6B5C',
+                    borderRadius: 8,
+                    barThickness: 24
+                }, {
+                    label: 'Expense',
+                    data: [6100, 6300, 5900, 6500, 6200, 6400, 6222],
+                    backgroundColor: '#C9A86A',
+                    borderRadius: 8,
+                    barThickness: 24
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value.toLocaleString();
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Income vs Expense Chart
+    const incomeExpenseCtx = document.getElementById('incomeExpenseChart');
+    if (incomeExpenseCtx) {
+        new Chart(incomeExpenseCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                datasets: [{
+                    label: 'Income',
+                    data: [8200, 8500, 8300, 8700, 8400, 8600, 8500],
+                    borderColor: '#4A6B5C',
+                    backgroundColor: 'rgba(74, 107, 92, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }, {
+                    label: 'Expense',
+                    data: [6100, 6300, 5900, 6500, 6200, 6400, 6222],
+                    borderColor: '#C9A86A',
+                    backgroundColor: 'rgba(201, 168, 106, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Category Chart
+    const categoryCtx = document.getElementById('categoryChart');
+    if (categoryCtx) {
+        new Chart(categoryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Dining', 'Shopping', 'Transport', 'Entertainment', 'Health'],
+                datasets: [{
+                    data: [1200, 850, 420, 280, 650],
+                    backgroundColor: [
+                        '#4A6B5C',
+                        '#C9A86A',
+                        '#8B9D93',
+                        '#B89860',
+                        '#6B8B7D'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>

@@ -1,0 +1,225 @@
+<!-- Budget Page -->
+<div id="budget" class="page-view <%= currentPage === 'budget' ? 'active' : '' %> p-8">
+  <div class="mb-8">
+    <h2 class="serif text-4xl font-semibold text-[#2C2C2C] mb-2">
+      Budget Planning
+    </h2>
+    <p class="text-[#2C2C2C]/60">
+      Manage your spending across different categories
+    </p>
+  </div>
+
+  <!-- Budget Overview -->
+  <div class="grid grid-cols-3 gap-6 mb-8">
+    <div class="card rounded-2xl p-6">
+      <div class="flex items-center gap-4">
+        <div
+          class="w-12 h-12 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center"
+        >
+          <i class="fas fa-wallet text-[#4A6B5C] text-lg"></i>
+        </div>
+        <div>
+          <p class="text-sm text-[#2C2C2C]/60 mb-1">Monthly Budget</p>
+          <p class="serif text-2xl font-semibold text-[#2C2C2C]">$8,000</p>
+        </div>
+      </div>
+    </div>
+    <div class="card rounded-2xl p-6">
+      <div class="flex items-center gap-4">
+        <div
+          class="w-12 h-12 rounded-xl bg-[#C9A86A]/10 flex items-center justify-center"
+        >
+          <i class="fas fa-chart-line text-[#C9A86A] text-lg"></i>
+        </div>
+        <div>
+          <p class="text-sm text-[#2C2C2C]/60 mb-1">Spent This Month</p>
+          <p class="serif text-2xl font-semibold text-[#2C2C2C]">$5,950</p>
+        </div>
+      </div>
+    </div>
+    <div class="card rounded-2xl p-6">
+      <div class="flex items-center gap-4">
+        <div
+          class="w-12 h-12 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center"
+        >
+          <i class="fas fa-coins text-[#4A6B5C] text-lg"></i>
+        </div>
+        <div>
+          <p class="text-sm text-[#2C2C2C]/60 mb-1">Remaining</p>
+          <p class="serif text-2xl font-semibold text-[#2C2C2C]">$2,050</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Budget Categories -->
+  <div class="card rounded-2xl p-8 mb-8">
+    <h3 class="serif text-2xl font-semibold text-[#2C2C2C] mb-6">
+      Budget by Category
+    </h3>
+    <div class="space-y-6">
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-3">
+            <div class="category-icon bg-green-50">
+              <i class="fas fa-utensils text-green-600"></i>
+            </div>
+            <div>
+              <p class="font-semibold text-[#2C2C2C]">Restaurants & Dining</p>
+              <p class="text-sm text-[#2C2C2C]/60">$1,200 of $1,500</p>
+            </div>
+          </div>
+          <span class="serif text-xl font-semibold text-[#4A6B5C]">80%</span>
+        </div>
+        <div class="w-full h-2 bg-black/5 rounded-full overflow-hidden">
+          <div
+            class="progress-bar h-full rounded-full"
+            style="width: 80%"
+          ></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-3">
+            <div class="category-icon bg-blue-50">
+              <i class="fas fa-shopping-bag text-blue-600"></i>
+            </div>
+            <div>
+              <p class="font-semibold text-[#2C2C2C]">Shopping</p>
+              <p class="text-sm text-[#2C2C2C]/60">$850 of $1,200</p>
+            </div>
+          </div>
+          <span class="serif text-xl font-semibold text-[#4A6B5C]">71%</span>
+        </div>
+        <div class="w-full h-2 bg-black/5 rounded-full overflow-hidden">
+          <div
+            class="progress-bar h-full rounded-full"
+            style="width: 71%"
+          ></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-3">
+            <div class="category-icon bg-orange-50">
+              <i class="fas fa-car text-orange-600"></i>
+            </div>
+            <div>
+              <p class="font-semibold text-[#2C2C2C]">Transportation</p>
+              <p class="text-sm text-[#2C2C2C]/60">$420 of $800</p>
+            </div>
+          </div>
+          <span class="serif text-xl font-semibold text-[#4A6B5C]">53%</span>
+        </div>
+        <div class="w-full h-2 bg-black/5 rounded-full overflow-hidden">
+          <div
+            class="progress-bar h-full rounded-full"
+            style="width: 53%"
+          ></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-3">
+            <div class="category-icon bg-purple-50">
+              <i class="fas fa-film text-purple-600"></i>
+            </div>
+            <div>
+              <p class="font-semibold text-[#2C2C2C]">Entertainment</p>
+              <p class="text-sm text-[#2C2C2C]/60">$280 of $500</p>
+            </div>
+          </div>
+          <span class="serif text-xl font-semibold text-[#4A6B5C]">56%</span>
+        </div>
+        <div class="w-full h-2 bg-black/5 rounded-full overflow-hidden">
+          <div
+            class="progress-bar h-full rounded-full"
+            style="width: 56%"
+          ></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-3">
+            <div class="category-icon bg-pink-50">
+              <i class="fas fa-heart text-pink-600"></i>
+            </div>
+            <div>
+              <p class="font-semibold text-[#2C2C2C]">Health & Beauty</p>
+              <p class="text-sm text-[#2C2C2C]/60">$650 of $1,000</p>
+            </div>
+          </div>
+          <span class="serif text-xl font-semibold text-[#4A6B5C]">65%</span>
+        </div>
+        <div class="w-full h-2 bg-black/5 rounded-full overflow-hidden">
+          <div
+            class="progress-bar h-full rounded-full"
+            style="width: 65%"
+          ></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-3">
+            <div class="category-icon bg-yellow-50">
+              <i class="fas fa-plane text-yellow-600"></i>
+            </div>
+            <div>
+              <p class="font-semibold text-[#2C2C2C]">Travel</p>
+              <p class="text-sm text-[#2C2C2C]/60">$150 of $1,500</p>
+            </div>
+          </div>
+          <span class="serif text-xl font-semibold text-[#4A6B5C]">10%</span>
+        </div>
+        <div class="w-full h-2 bg-black/5 rounded-full overflow-hidden">
+          <div
+            class="progress-bar h-full rounded-full"
+            style="width: 10%"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Spending Insights -->
+  <div class="grid grid-cols-2 gap-6">
+    <div class="card rounded-2xl p-6">
+      <h4 class="serif text-xl font-semibold text-[#2C2C2C] mb-4">
+        Top Spending Category
+      </h4>
+      <div class="flex items-center gap-4 mb-4">
+        <div class="category-icon bg-green-50">
+          <i class="fas fa-utensils text-green-600 text-xl"></i>
+        </div>
+        <div>
+          <p class="font-semibold text-[#2C2C2C] text-lg">Restaurants</p>
+          <p class="text-sm text-[#2C2C2C]/60">$1,200 this month</p>
+        </div>
+      </div>
+      <p class="text-sm text-[#2C2C2C]/60">
+        You're spending 20% of your budget on dining out
+      </p>
+    </div>
+    <div class="card rounded-2xl p-6">
+      <h4 class="serif text-xl font-semibold text-[#2C2C2C] mb-4">
+        Budget Recommendation
+      </h4>
+      <div class="flex items-center gap-3 mb-4">
+        <div
+          class="w-10 h-10 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center"
+        >
+          <i class="fas fa-lightbulb text-[#4A6B5C]"></i>
+        </div>
+        <p class="font-medium text-[#2C2C2C]">Great job staying on track!</p>
+      </div>
+      <p class="text-sm text-[#2C2C2C]/60">
+        You have $2,050 remaining for the rest of the month
+      </p>
+    </div>
+  </div>
+</div>

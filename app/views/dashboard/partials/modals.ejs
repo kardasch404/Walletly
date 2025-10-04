@@ -1,0 +1,50 @@
+<!-- Transaction Modal -->
+<div id="transactionModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50" style="display: none;">
+    <div class="card rounded-3xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="serif text-2xl font-semibold text-[#2C2C2C]" id="transactionModalTitle">Add Transaction</h3>
+            <button onclick="closeTransactionModal()" class="w-10 h-10 rounded-xl hover:bg-black/5 flex items-center justify-center transition-all">
+                <i class="fas fa-times text-[#2C2C2C]/60"></i>
+            </button>
+        </div>
+        <form id="transactionForm" action="/transactions/create" method="POST" class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Transaction Name</label>
+                    <input type="text" name="description" required class="search-input w-full px-4 py-3 rounded-xl text-sm" placeholder="e.g., Starbucks Coffee">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Amount</label>
+                    <input type="number" name="amount" required step="0.01" class="search-input w-full px-4 py-3 rounded-xl text-sm" placeholder="0.00">
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Type</label>
+                    <select name="type" required class="search-input w-full px-4 py-3 rounded-xl text-sm">
+                        <option value="expense">Expense</option>
+                        <option value="income">Income</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Category</label>
+                    <select name="category_id" required class="search-input w-full px-4 py-3 rounded-xl text-sm">
+                        <!-- Categories will be populated dynamically -->
+                    </select>
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Date</label>
+                <input type="datetime-local" name="transactionDate" required class="search-input w-full px-4 py-3 rounded-xl text-sm">
+            </div>
+            <div class="flex justify-end gap-3 pt-4">
+                <button type="button" onclick="closeTransactionModal()" class="px-6 py-3 rounded-xl text-sm font-medium text-[#2C2C2C] hover:bg-black/5 transition-colors">
+                    Cancel
+                </button>
+                <button type="submit" class="btn-primary px-6 py-3 rounded-xl text-sm font-medium">
+                    Save Transaction
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,19 @@
+<!-- Header  -->
+<header class="header px-8 py-4 flex items-center justify-between">
+    <div>
+        <h1 class="serif text-3xl font-semibold text-[#2C2C2C] mb-1">Welcome back,<%= user.lname %></h1>
+        <p class="text-sm text-[#2C2C2C]/60">Here's what's happening with your finances today</p>
+    </div>
+    <div class="flex items-center gap-4">
+        <button class="w-10 h-10 rounded-xl bg-white/60 hover:bg-white/80 flex items-center justify-center transition-all">
+            <i class="fas fa-search text-[#2C2C2C]/60"></i>
+        </button>
+        <button class="w-10 h-10 rounded-xl bg-white/60 hover:bg-white/80 flex items-center justify-center relative transition-all">
+            <i class="fas fa-bell text-[#2C2C2C]/60"></i>
+            <span class="notification-badge absolute top-1 right-1 w-2 h-2 rounded-full"></span>
+        </button>
+        <div class="avatar w-10 h-10 rounded-xl flex items-center justify-center text-sm font-medium">
+            AL
+        </div>
+    </div>
+</header>

@@ -1,0 +1,242 @@
+<!-- Transactions Page  -->
+<div id="transactions" class="page-view <%= currentPage === 'transactions' ? 'active' : '' %> p-8">
+  <div class="mb-8">
+    <h2 class="serif text-4xl font-semibold text-[#2C2C2C] mb-2">
+      Transactions
+    </h2>
+    <p class="text-[#2C2C2C]/60">
+      Track and manage all your financial transactions
+    </p>
+  </div>
+
+  <!-- Filters and Search -->
+  <div class="card rounded-2xl p-6 mb-6">
+    <div class="flex items-center gap-4 mb-6">
+      <div class="flex-1 relative">
+        <i
+          class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-[#2C2C2C]/40"
+        ></i>
+        <input
+          type="text"
+          placeholder="Search transactions..."
+          class="search-input w-full pl-12 pr-4 py-3 rounded-xl text-sm"
+        />
+      </div>
+      <button class="btn-primary px-6 py-3 rounded-xl text-sm font-medium">
+        <i class="fas fa-filter mr-2"></i>Filter
+      </button>
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="text-sm text-[#2C2C2C]/60">Filter by:</span>
+      <button
+        class="filter-chip active px-4 py-2 rounded-lg text-sm font-medium"
+      >
+        All
+      </button>
+      <button class="filter-chip px-4 py-2 rounded-lg text-sm font-medium">
+        Income
+      </button>
+      <button class="filter-chip px-4 py-2 rounded-lg text-sm font-medium">
+        Expense
+      </button>
+      <button class="filter-chip px-4 py-2 rounded-lg text-sm font-medium">
+        Subscriptions
+      </button>
+    </div>
+  </div>
+
+  <!-- Transaction Stats -->
+  <div class="grid grid-cols-3 gap-6 mb-6">
+    <div class="card rounded-2xl p-6">
+      <div class="flex items-center gap-4">
+        <div
+          class="w-12 h-12 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center"
+        >
+          <i class="fas fa-arrow-down text-[#4A6B5C] text-lg"></i>
+        </div>
+        <div>
+          <p class="text-sm text-[#2C2C2C]/60 mb-1">Total Income</p>
+          <p class="serif text-2xl font-semibold text-[#2C2C2C]">$8,500</p>
+        </div>
+      </div>
+    </div>
+    <div class="card rounded-2xl p-6">
+      <div class="flex items-center gap-4">
+        <div
+          class="w-12 h-12 rounded-xl bg-[#C9A86A]/10 flex items-center justify-center"
+        >
+          <i class="fas fa-arrow-up text-[#C9A86A] text-lg"></i>
+        </div>
+        <div>
+          <p class="text-sm text-[#2C2C2C]/60 mb-1">Total Expense</p>
+          <p class="serif text-2xl font-semibold text-[#2C2C2C]">$6,222</p>
+        </div>
+      </div>
+    </div>
+    <div class="card rounded-2xl p-6">
+      <div class="flex items-center gap-4">
+        <div
+          class="w-12 h-12 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center"
+        >
+          <i class="fas fa-receipt text-[#4A6B5C] text-lg"></i>
+        </div>
+        <div>
+          <p class="text-sm text-[#2C2C2C]/60 mb-1">Transactions</p>
+          <p class="serif text-2xl font-semibold text-[#2C2C2C]">142</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transaction List -->
+  <div class="card rounded-2xl p-6">
+    <div class="space-y-1">
+      <div
+        class="transaction-row flex items-center justify-between py-4 px-4 rounded-xl"
+      >
+        <div class="flex items-center gap-4">
+          <div class="category-icon bg-red-50">
+            <i class="fab fa-youtube text-red-600"></i>
+          </div>
+          <div>
+            <p class="font-medium text-[#2C2C2C]">YouTube Premium</p>
+            <p class="text-sm text-[#2C2C2C]/40">29 Jul 12:30 • VISA ••3284</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-6">
+          <span
+            class="px-3 py-1 rounded-lg bg-purple-50 text-purple-600 text-xs font-medium"
+            >Subscription</span
+          >
+          <p class="font-semibold text-[#2C2C2C] text-lg">-$10.00</p>
+        </div>
+      </div>
+      <div
+        class="transaction-row flex items-center justify-between py-4 px-4 rounded-xl"
+      >
+        <div class="flex items-center gap-4">
+          <div class="category-icon bg-blue-50">
+            <i class="fas fa-shopping-bag text-blue-600"></i>
+          </div>
+          <div>
+            <p class="font-medium text-[#2C2C2C]">Reserved Store</p>
+            <p class="text-sm text-[#2C2C2C]/40">
+              26 Jul 10:05 • Mastercard ••2354
+            </p>
+          </div>
+        </div>
+        <div class="flex items-center gap-6">
+          <span
+            class="px-3 py-1 rounded-lg bg-blue-50 text-blue-600 text-xs font-medium"
+            >Shopping</span
+          >
+          <p class="font-semibold text-[#2C2C2C] text-lg">-$120.00</p>
+        </div>
+      </div>
+      <div
+        class="transaction-row flex items-center justify-between py-4 px-4 rounded-xl"
+      >
+        <div class="flex items-center gap-4">
+          <div class="category-icon bg-green-50">
+            <i class="fas fa-utensils text-green-600"></i>
+          </div>
+          <div>
+            <p class="font-medium text-[#2C2C2C]">Vapiano Restaurant</p>
+            <p class="text-sm text-[#2C2C2C]/40">
+              27 Jul 9:00 • Mastercard ••2354
+            </p>
+          </div>
+        </div>
+        <div class="flex items-center gap-6">
+          <span
+            class="px-3 py-1 rounded-lg bg-green-50 text-green-600 text-xs font-medium"
+            >Dining</span
+          >
+          <p class="font-semibold text-[#2C2C2C] text-lg">-$80.00</p>
+        </div>
+      </div>
+      <div
+        class="transaction-row flex items-center justify-between py-4 px-4 rounded-xl"
+      >
+        <div class="flex items-center gap-4">
+          <div class="category-icon bg-green-50">
+            <i class="fas fa-dollar-sign text-green-600"></i>
+          </div>
+          <div>
+            <p class="font-medium text-[#2C2C2C]">Salary Deposit</p>
+            <p class="text-sm text-[#2C2C2C]/40">
+              25 Jul 8:00 • Direct Deposit
+            </p>
+          </div>
+        </div>
+        <div class="flex items-center gap-6">
+          <span
+            class="px-3 py-1 rounded-lg bg-green-50 text-green-600 text-xs font-medium"
+            >Income</span
+          >
+          <p class="font-semibold text-[#4A6B5C] text-lg">+$5,200.00</p>
+        </div>
+      </div>
+      <div
+        class="transaction-row flex items-center justify-between py-4 px-4 rounded-xl"
+      >
+        <div class="flex items-center gap-4">
+          <div class="category-icon bg-orange-50">
+            <i class="fas fa-car text-orange-600"></i>
+          </div>
+          <div>
+            <p class="font-medium text-[#2C2C2C]">Uber Ride</p>
+            <p class="text-sm text-[#2C2C2C]/40">24 Jul 18:30 • VISA ••3284</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-6">
+          <span
+            class="px-3 py-1 rounded-lg bg-orange-50 text-orange-600 text-xs font-medium"
+            >Transport</span
+          >
+          <p class="font-semibold text-[#2C2C2C] text-lg">-$24.50</p>
+        </div>
+      </div>
+      <div
+        class="transaction-row flex items-center justify-between py-4 px-4 rounded-xl"
+      >
+        <div class="flex items-center gap-4">
+          <div class="category-icon bg-purple-50">
+            <i class="fab fa-spotify text-purple-600"></i>
+          </div>
+          <div>
+            <p class="font-medium text-[#2C2C2C]">Spotify Premium</p>
+            <p class="text-sm text-[#2C2C2C]/40">23 Jul 12:00 • VISA ••3284</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-6">
+          <span
+            class="px-3 py-1 rounded-lg bg-purple-50 text-purple-600 text-xs font-medium"
+            >Subscription</span
+          >
+          <p class="font-semibold text-[#2C2C2C] text-lg">-$9.99</p>
+        </div>
+      </div>
+      <div
+        class="transaction-row flex items-center justify-between py-4 px-4 rounded-xl"
+      >
+        <div class="flex items-center gap-4">
+          <div class="category-icon bg-pink-50">
+            <i class="fas fa-heart text-pink-600"></i>
+          </div>
+          <div>
+            <p class="font-medium text-[#2C2C2C]">Health Insurance</p>
+            <p class="text-sm text-[#2C2C2C]/40">22 Jul 9:00 • Bank Transfer</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-6">
+          <span
+            class="px-3 py-1 rounded-lg bg-pink-50 text-pink-600 text-xs font-medium"
+            >Healthcare</span
+          >
+          <p class="font-semibold text-[#2C2C2C] text-lg">-$350.00</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

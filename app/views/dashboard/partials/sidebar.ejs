@@ -1,0 +1,87 @@
+<!-- Sidebar -->
+<aside class="sidebar w-64 flex flex-col">
+  <!-- Logo -->
+  <div class="p-6 border-b border-black/5">
+    <div class="flex items-center gap-3">
+      <div
+        class="w-10 h-10 bg-gradient-to-br from-[#4A6B5C] to-[#3A5A4C] rounded-xl flex items-center justify-center"
+      >
+        <i class="fas fa-chart-line text-white text-lg"></i>
+      </div>
+      <span class="serif text-2xl font-semibold text-[#2C2C2C]">Walletly</span>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="flex-1 p-4 space-y-1 overflow-y-auto scrollbar-hide">
+    <a
+      href="/dashboard"
+      class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm <%= currentPage === 'dashboard' ? 'active' : '' %>"
+    >
+      <i class="fas fa-home w-5"></i>
+      <span>Dashboard</span>
+    </a>
+    <a
+      href="/transactions"
+      class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm <%= currentPage === 'transactions' ? 'active' : '' %>"
+    >
+      <i class="fas fa-exchange-alt w-5"></i>
+      <span>Transactions</span>
+    </a>
+    <a
+      href="/wallet"
+      class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm <%= currentPage === 'wallet' ? 'active' : '' %>"
+    >
+      <i class="fas fa-wallet w-5"></i>
+      <span>Wallet</span>
+    </a>
+    <a
+      href="/goals"
+      class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm <%= currentPage === 'goals' ? 'active' : '' %>"
+    >
+      <i class="fas fa-bullseye w-5"></i>
+      <span>Goals</span>
+    </a>
+    <a
+      href="/budget"
+      class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm <%= currentPage === 'budget' ? 'active' : '' %>"
+    >
+      <i class="fas fa-chart-pie w-5"></i>
+      <span>Budget</span>
+    </a>
+    <a
+      href="/analytics"
+      class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm <%= currentPage === 'analytics' ? 'active' : '' %>"
+    >
+      <i class="fas fa-chart-bar w-5"></i>
+      <span>Analytics</span>
+    </a>
+    <a
+      href="/settings"
+      class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm <%= currentPage === 'settings' ? 'active' : '' %>"
+    >
+      <i class="fas fa-cog w-5"></i>
+      <span>Settings</span>
+    </a>
+  </nav>
+
+  <!-- Bottom Actions -->
+  <div class="p-4 border-t border-black/5 space-y-1">
+    <a
+      href="#"
+      class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm"
+    >
+      <i class="fas fa-question-circle w-5"></i>
+      <span>Help</span>
+    </a>
+    <form action="/logout" method="POST" class="inline">
+      <button
+        type="submit"
+        class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm w-full text-left"
+      >
+        <i class="fas fa-sign-out-alt w-5"></i>
+        <span>Log out</span>
+      </button>
+    </form>
+  </div>
+</aside>
