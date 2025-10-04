@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Walletly</title>
+    <link rel='stylesheet' href='/css/style.css'>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <%- include('components/navbar') %>
+    
+    <div class="profile-page">
+        <div class="container">
+            <div class="profile-header">
+                <div class="terminal-mockup">
+                    <div class="terminal-header">
+                        <span class="terminal-title">user@walletly:~$ whoami</span>
+                        <span class="terminal-status">ONLINE</span>
+                    </div>
+                    <div class="terminal-content">
+                        <div class="profile-info">
+                            <div class="ascii-avatar">
+                                <pre>
+    ████████████████
+    ██            ██
+    ██  ●      ●  ██
+    ██            ██
+    ██     ___    ██
+    ██            ██
+    ████████████████
+                                </pre>
+                            </div>
+                            <div class="user-details">
+                                <div class="terminal-line">
+                                    <span class="prompt">root@walletly:~$</span>
+                                    <span class="command">cat /etc/user.conf</span>
+                                </div>
+                                <div class="terminal-output">
+                                    <div class="user-field">
+                                        <span class="field-label">[USER_ID]</span>
+                                        <span class="field-value"><%= user.id %></span>
+                                    </div>
+                                    <div class="user-field">
+                                        <span class="field-label">[FULL_NAME]</span>
+                                        <span class="field-value"><%= user.fname %> <%= user.lname %></span>
+                                    </div>
+                                    <div class="user-field">
+                                        <span class="field-label">[EMAIL]</span>
+                                        <span class="field-value"><%= user.email %></span>
+                                    </div>
+                                    <div class="user-field">
+                                        <span class="field-label">[CURRENCY]</span>
+                                        <span class="field-value"><%= user.currency || 'USD' %></span>
+                                    </div>
+                                    <div class="user-field">
+                                        <span class="field-label">[CREATED]</span>
+                                        <span class="field-value"><%= new Date(user.created_at).toISOString().split('T')[0] %></span>
+                                    </div>
+                                    <div class="user-field">
+                                        <span class="field-label">[STATUS]</span>
+                                        <span class="field-value status-active">ACTIVE</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-actions">
+                <div class="terminal-mockup">
+                    <div class="terminal-header">
+                        <span class="terminal-title">user@walletly:~$ ./profile_manager.sh</span>
+                        <span class="terminal-status">READY</span>
+                    </div>
+                    <div class="terminal-content">
+                        <div class="terminal-line">
+                            <span class="prompt">root@walletly:~$</span>
+                            <span class="command">ls -la /user/actions/</span>
+                        </div>
+                        <div class="terminal-output">
+                            <div class="action-grid">
+                                <a href="/dashboard" class="action-item">
+                                    <div class="action-icon">📊</div>
+                                    <div class="action-text">
+                                        <span class="action-name">./dashboard</span>
+                                        <span class="action-desc">View financial overview</span>
+                                    </div>
+                                </a>
+                                <a href="/transactions" class="action-item">
+                                    <div class="action-icon">💰</div>
+                                    <div class="action-text">
+                                        <span class="action-name">./transactions</span>
+                                        <span class="action-desc">Manage transactions</span>
+                                    </div>
+                                </a>
+                                <a href="/budgets" class="action-item">
+                                    <div class="action-icon">📈</div>
+                                    <div class="action-text">
+                                        <span class="action-name">./budgets</span>
+                                        <span class="action-desc">Budget management</span>
+                                    </div>
+                                </a>
+                                <a href="/settings" class="action-item">
+                                    <div class="action-icon">⚙️</div>
+                                    <div class="action-text">
+                                        <span class="action-name">./settings</span>
+                                        <span class="action-desc">Account settings</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="terminal-line">
+                            <span class="prompt">root@walletly:~$</span>
+                            <span class="cursor">_</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="system-stats">
+                <div class="terminal-mockup">
+                    <div class="terminal-header">
+                        <span class="terminal-title">user@walletly:~$ system_monitor</span>
+                        <span class="terminal-status">MONITORING</span>
+                    </div>
+                    <div class="terminal-content">
+                        <div class="terminal-line">
+                            <span class="prompt">root@walletly:~$</span>
+                            <span class="command">ps aux | grep wallet</span>
+                        </div>
+                        <div class="terminal-output">
+                            <div class="stats-grid">
+                                <div class="stat-box">
+                                    <div class="stat-label">TOTAL_BALANCE</div>
+                                    <div class="stat-value">$0.00</div>
+                                    <div class="stat-bar">
+                                        <div class="stat-fill" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-label">TRANSACTIONS</div>
+                                    <div class="stat-value">0</div>
+                                    <div class="stat-bar">
+                                        <div class="stat-fill" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-label">BUDGETS</div>
+                                    <div class="stat-value">0</div>
+                                    <div class="stat-bar">
+                                        <div class="stat-fill" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-label">GOALS</div>
+                                    <div class="stat-value">0</div>
+                                    <div class="stat-bar">
+                                        <div class="stat-fill" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src='/javascripts/main.js'></script>
+</body>
+</html>

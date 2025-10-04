@@ -1,41 +1,44 @@
+const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
 
-class UserService {   
+class UserService {
+    #userRepository;
+
     constructor(userRepository) {
-        this.userRepository = userRepository;
+        this.#userRepository = userRepository;
     }
 
     async register(data) {
-        const { v4: uuidv4 } = await import('uuid');
-        const hashedPassword = await bcrypt.hash(data.password, 10);
-        const userData = {
-            id: uuidv4(),
-            fname: data.fname,
-            lname: data.lname,
-            email: data.email,
-            password: hashedPassword,
-            image: null
-        };
-        return this.userRepository.create(userData);
+        try {
+            const hashedPassword = await bcrypt.hash(data.password, 16);
+         
+            const userData = {
+                id: uuidv4(),
+                fname: data.fname,
+                lname: data.lname,
+                email: data.email,
+                currency: 'MAD',
+                password: hashedPassword,
+                image: null
+            };
+            
+            const result = await this.#userRepository.create(userData);
+            return result;
+        } catch (error) {
+            throw error;
+        }
     }
 
-    async login(data) {
-        const user = await this.userRepository.findByEmail(data.email);
+    async login(email, password) {
+        const user = await this.#userRepository.findByEmail(email);
         if (!user) {
-            throw new Error('Invalid email or password');
+            throw new Error('User not found');
         }
-        
-        const isValidPassword = await bcrypt.compare(data.password, user.password);
-        if (!isValidPassword) {
-            throw new Error('Invalid email or password');
+        const isValid = await bcrypt.compare(password, user.password);
+        if (!isValid) {
+            throw new Error('Incorrect password');
         }
-        
-        return {
-            id: user.id,
-            fname: user.fname,
-            lname: user.lname,
-            email: user.email
-        };
+        return user;
     }
 }
 

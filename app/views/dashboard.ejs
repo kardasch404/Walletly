@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Walletly</title>
+    <link rel='stylesheet' href='/css/style.css'>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard">
+        <nav class="dashboard-nav">
+            <div class="nav-brand">
+                <h2>Walletly</h2>
+            </div>
+            <div class="nav-user">
+                <span>Welcome, <%= user.fname %>!</span>
+                <form action="/logout" method="POST" style="display: inline;">
+                    <button type="submit" class="btn-logout">Logout</button>
+                </form>
+            </div>
+        </nav>
+        
+        <div class="dashboard-content">
+            <div class="dashboard-header">
+                <h1>Financial Dashboard</h1>
+                <p>Manage your finances with ease</p>
+            </div>
+            
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Total Balance</h3>
+                        <span class="card-icon">💰</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="balance-amount">€0.00</div>
+                        <div class="balance-change">+0% from last month</div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Monthly Budget</h3>
+                        <span class="card-icon">📊</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="budget-amount">€0.00</div>
+                        <div class="budget-progress">
+                            <div class="progress-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Savings Goals</h3>
+                        <span class="card-icon">🎯</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="goals-count">0 Goals</div>
+                        <div class="goals-status">Start setting your financial goals</div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Recent Transactions</h3>
+                        <span class="card-icon">📈</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="transactions-empty">
+                            <p>No transactions yet</p>
+                            <button class="btn-primary">Add Transaction</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+    .dashboard {
+        min-height: 100vh;
+        background: var(--light);
+    }
+    
+    .dashboard-nav {
+        background: white;
+        padding: 1rem 2rem;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .nav-brand h2 {
+        background: var(--gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .nav-user {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .btn-logout {
+        padding: 0.5rem 1rem;
+        background: #ef4444;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+    }
+    
+    .dashboard-content {
+        padding: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .dashboard-header {
+        margin-bottom: 2rem;
+    }
+    
+    .dashboard-header h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--dark);
+        margin-bottom: 0.5rem;
+    }
+    
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+    
+    .dashboard-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        border: 1px solid #e5e7eb;
+    }
+    
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    
+    .card-header h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--dark);
+    }
+    
+    .card-icon {
+        font-size: 1.5rem;
+    }
+    
+    .balance-amount, .budget-amount {
+        font-size: 2rem;
+        font-weight: 800;
+        background: var(--gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+    }
+    
+    .balance-change {
+        color: var(--accent);
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+    
+    .budget-progress {
+        height: 8px;
+        background: #e2e8f0;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 1rem;
+    }
+    
+    .progress-bar {
+        height: 100%;
+        background: var(--gradient);
+        transition: width 0.3s;
+    }
+    
+    .goals-count {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 0.5rem;
+    }
+    
+    .goals-status {
+        color: var(--gray);
+        font-size: 0.9rem;
+    }
+    
+    .transactions-empty {
+        text-align: center;
+        padding: 2rem 0;
+    }
+    
+    .transactions-empty p {
+        color: var(--gray);
+        margin-bottom: 1rem;
+    }
+    </style>
+</body>
+</html>

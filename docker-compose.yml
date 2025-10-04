@@ -1,11 +1,10 @@
 services:
   db:
     image: mysql:5.7
-    container_name: walletly_db
     environment:
       - MYSQL_ROOT_PASSWORD=rootpassword123
       - MYSQL_DATABASE=walletly
-      - MYSQL_USER=user 
+      - MYSQL_USER=user
       - MYSQL_PASSWORD=userpassword123
     volumes:
       - "./app/db:/docker-entrypoint-initdb.d"
@@ -14,33 +13,23 @@ services:
       - "3306:3306"
     networks:
       - app-network
-    restart: unless-stopped
 
-  app:
+
+  www:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: walletly_app
     depends_on:
       - db
     volumes:
-      - "./:/usr/src/app"
-      - "/usr/src/app/node_modules"
+      - "./:/var/www/html"
     ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=development
-      - DB_HOST=db
-      - DB_USER=user
-      - DB_PASSWORD=userpassword123
-      - DB_NAME=walletly
+      - "8080:3000"
     networks:
       - app-network
-    restart: unless-stopped
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: walletly_phpmyadmin
     restart: always
     ports:
       - "8001:80"
