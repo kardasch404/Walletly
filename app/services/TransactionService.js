@@ -8,7 +8,7 @@ class TransactionService {
     async create(data, userId) {
         try {
             const transactionData = {
-                id: Math.random().toString(36).substring(2, 38),
+                id: Math.random().toString(36).substring(2, 12),
                 user_id: userId,
                 category_id: data.category_id,
                 amount: data.amount,

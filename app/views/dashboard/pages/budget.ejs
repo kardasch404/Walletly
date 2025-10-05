@@ -20,7 +20,7 @@
             </div>
             <div>
                 <p class="text-sm text-[#2C2C2C]/60 mb-1">Monthly Budget</p>
-                <p class="serif text-2xl font-semibold text-[#2C2C2C]">$8,000</p>
+                <p class="serif text-2xl font-semibold text-[#2C2C2C]">$<%= wallets && wallets.length > 0 ? wallets[0].amount : 0 %></p>
             </div>
         </div>
     </div>
@@ -64,15 +64,15 @@
                 </div>
                 <div>
                   <p class="font-semibold text-[#2C2C2C]"><%= budget.category_name || budget.name %></p>
-                  <p class="text-sm text-[#2C2C2C]/60">$<%= budget.spent || 1200 %> of $<%= budget.monthlyLimit %></p>
+                  <p class="text-sm text-[#2C2C2C]/60">$<%= budget.spent %> of $<%= budget.monthlyLimit %></p>
                 </div>
               </div>
-              <span class="serif text-xl font-semibold text-[#4A6B5C]"><%= Math.round(((budget.spent || 1200) / budget.monthlyLimit) * 100) %>%</span>
+              <span class="serif text-xl font-semibold text-[#4A6B5C]"><%= Math.round((budget.spent / budget.monthlyLimit) * 100) %>%</span>
             </div>
             <div class="w-full h-2 bg-black/5 rounded-full overflow-hidden">
               <div
                 class="progress-bar h-full rounded-full"
-                style="width: <%= Math.min(((budget.spent || 1200) / budget.monthlyLimit) * 100, 100) %>%"
+                style="width: <%= Math.min((budget.spent / budget.monthlyLimit) * 100, 100) %>%"
               ></div>
             </div>
           </div>

@@ -13,7 +13,7 @@ class UserService {
             const hashedPassword = await bcrypt.hash(data.password, 16);
          
             const userData = {
-                id: uuidv4(),
+                id: Math.random().toString(36).substring(2, 12),
                 fname: data.fname,
                 lname: data.lname,
                 email: data.email,

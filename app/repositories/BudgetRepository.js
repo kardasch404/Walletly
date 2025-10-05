@@ -32,10 +32,18 @@ class BudgetRepository {
     async getAllByUserId(userId) {
         try {
             return new Promise((resolve, reject) => {
-                const query = `SELECT b.*, c.name as category_name 
-                              FROM budgets b 
-                              JOIN categories c ON b.category_id = c.id 
-                              WHERE b.user_id = ?`;
+                const query = `SELECT 
+                    b.*, 
+                    c.name as category_name,
+                    COALESCE(SUM(CASE WHEN t.type = 'expense' THEN t.amount ELSE 0 END), 0) as spent
+                FROM budgets b 
+                JOIN categories c ON b.category_id = c.id 
+                LEFT JOIN transactions t ON b.category_id = t.category_id 
+                    AND t.user_id = b.user_id 
+                    AND MONTH(t.transactionDate) = b.mounth 
+                    AND YEAR(t.transactionDate) = b.year
+                WHERE b.user_id = ?
+                GROUP BY b.id, c.name`;
                 db.query(query, [userId], (err, result) => {
                     if (err) {
                         reject(err);

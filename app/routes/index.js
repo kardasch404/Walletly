@@ -270,22 +270,28 @@ router.get('/budget', async function(req, res, next) {
   const CategoryRepository = require('../repositories/CategoryRepository');
   const BudgetService = require('../services/BudgetService');
   const BudgetRepository = require('../repositories/BudgetRepository');
+  const WalletService = require('../services/WalletService');
+  const WalletRepository = require('../repositories/WalletRepository');
   const categoryRepository = new CategoryRepository();
   const categoryService = new CategoryService(categoryRepository);
   const budgetRepository = new BudgetRepository();
   const budgetService = new BudgetService(budgetRepository);
+  const walletRepository = new WalletRepository();
+  const walletService = new WalletService(walletRepository);
   
   try {
     const user = await userService.getUserById(req.session.userId);
     const categories = await categoryService.getAllCategoriesFromUser(req.session.userId);
     const budgets = await budgetService.getAllBudgetsFromUser(req.session.userId);
+    const wallets = await walletService.getAllWalletsFromUser(req.session.userId);
     res.render('dashboard/layouts/main', { 
       title: 'Budget - Walletly',
       user: user,
       body: '../pages/budget',
       currentPage: 'budget',
       categories: categories,
-      budgets: budgets
+      budgets: budgets,
+      wallets: wallets
     });
   } catch (error) {
     res.render('dashboard/layouts/main', { 
@@ -294,7 +300,8 @@ router.get('/budget', async function(req, res, next) {
       body: '../pages/budget',
       currentPage: 'budget',
       categories: [],
-      budgets: []
+      budgets: [],
+      wallets: []
     });
   }
 });
