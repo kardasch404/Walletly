@@ -136,14 +136,21 @@ router.get('/create-transaction', async function(req, res, next) {
   const categoryService = new CategoryService(categoryRepository);
   
   try {
+    const user = await userService.getUserById(req.session.userId);
     const categories = await categoryService.getAllCategoriesFromUser(req.session.userId);
-    res.render('create-transaction', { 
+    res.render('dashboard/layouts/main', { 
       title: 'Create Transaction - Walletly',
+      user: user,
+      body: '../pages/create-transaction',
+      currentPage: 'create-transaction',
       categories: categories
     });
   } catch (error) {
-    res.render('create-transaction', { 
+    res.render('dashboard/layouts/main', { 
       title: 'Create Transaction - Walletly',
+      user: req.session.user,
+      body: '../pages/create-transaction',
+      currentPage: 'create-transaction',
       categories: []
     });
   }

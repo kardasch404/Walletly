@@ -8,7 +8,6 @@
             </button>
         </div>
         <form id="transactionForm" action="/transactions" method="POST" class="space-y-4">
-            <input type="hidden" name="userId" value="<%= user.id %>">
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Transaction Name</label>
@@ -30,7 +29,12 @@
                 <div>
                     <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Category</label>
                     <select name="category_id" required class="search-input w-full px-4 py-3 rounded-xl text-sm">
-                        <!-- Categories will be populated dynamically -->
+                        <option value="">Select category</option>
+                        <% if (typeof categories !== 'undefined' && categories && categories.length > 0) { %>
+                            <% categories.forEach(category => { %>
+                                <option value="<%= category.id %>"><%= category.name %></option>
+                            <% }) %>
+                        <% } %>
                     </select>
                 </div>
             </div>
