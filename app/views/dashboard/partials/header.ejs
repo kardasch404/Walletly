@@ -13,7 +13,11 @@
             <span class="notification-badge absolute top-1 right-1 w-2 h-2 rounded-full"></span>
         </button>
         <div class="avatar w-10 h-10 rounded-xl flex items-center justify-center text-sm font-medium">
-            AL
+            <% if (user.image) { %>
+                <img src="/uploads/<%= user.image %>" alt="user photo" class="w-full h-full object-cover rounded-xl">
+            <% } else { %>
+                <%= user.fname.charAt(0) %><%= user.lname.charAt(0) %>
+            <% } %>
         </div>
     </div>
 </header>

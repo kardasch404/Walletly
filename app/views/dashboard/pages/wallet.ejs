@@ -1,4 +1,4 @@
-<!-- Wallet Page  -->
+<!-- Wallet Page -->
 <div id="wallet" class="page-view <%= currentPage === 'wallet' ? 'active' : '' %> p-8">
   <div class="mb-8">
     <h2 class="serif text-4xl font-semibold text-[#2C2C2C] mb-2">Wallet</h2>
@@ -7,7 +7,7 @@
 
   <!-- Quick Actions -->
   <div class="grid grid-cols-4 gap-4 mb-8">
-    <button class="card rounded-2xl p-6 hover:scale-105 transition-transform">
+    <button onclick="openCreateWalletModal()" class="card rounded-2xl p-6 hover:scale-105 transition-transform">
       <div
         class="w-12 h-12 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center mb-4 mx-auto"
       >
@@ -45,110 +45,151 @@
   <div class="mb-8">
     <h3 class="serif text-2xl font-semibold text-[#2C2C2C] mb-6">My Cards</h3>
     <div class="grid grid-cols-2 gap-6">
-      <div class="wallet-card rounded-2xl p-8 relative">
-        <div class="flex items-start justify-between mb-12">
-          <div>
-            <p class="text-white/60 text-sm mb-2">Current Balance</p>
-            <p class="serif text-3xl font-semibold text-white">$12,450.00</p>
-          </div>
-          <i class="fas fa-credit-card text-white/40 text-2xl"></i>
-        </div>
-        <div class="flex items-end justify-between">
-          <div>
-            <p class="text-white/60 text-xs mb-1">Card Number</p>
-            <p class="text-white font-medium tracking-wider">
-              •••• •••• •••• 3284
-            </p>
-          </div>
-          <div class="text-right">
-            <p class="text-white/60 text-xs mb-1">Expires</p>
-            <p class="text-white font-medium">12/25</p>
-          </div>
-        </div>
-        <div class="absolute bottom-8 right-8">
-          <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-full bg-white/20"></div>
-            <div class="w-8 h-8 rounded-full bg-white/20 -ml-4"></div>
-          </div>
-        </div>
-      </div>
-      <div
-        class="wallet-card rounded-2xl p-8 relative"
-        style="background: linear-gradient(135deg, #4a6b5c 0%, #3a5a4c 100%)"
-      >
-        <div class="flex items-start justify-between mb-12">
-          <div>
-            <p class="text-white/60 text-sm mb-2">Current Balance</p>
-            <p class="serif text-3xl font-semibold text-white">$3,250.00</p>
-          </div>
-          <i class="fas fa-credit-card text-white/40 text-2xl"></i>
-        </div>
-        <div class="flex items-end justify-between">
-          <div>
-            <p class="text-white/60 text-xs mb-1">Card Number</p>
-            <p class="text-white font-medium tracking-wider">
-              •••• •••• •••• 2354
-            </p>
-          </div>
-          <div class="text-right">
-            <p class="text-white/60 text-xs mb-1">Expires</p>
-            <p class="text-white font-medium">08/26</p>
-          </div>
-        </div>
-        <div class="absolute bottom-8 right-8">
-          <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-full bg-white/20"></div>
-            <div class="w-8 h-8 rounded-full bg-white/20 -ml-4"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Connected Accounts -->
-  <div>
-    <h3 class="serif text-2xl font-semibold text-[#2C2C2C] mb-6">
-      Connected Accounts
-    </h3>
-    <div class="grid grid-cols-2 gap-6">
-      <div class="card rounded-2xl p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center gap-4">
-            <div
-              class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center"
-            >
-              <i class="fas fa-university text-blue-600 text-lg"></i>
+      <% if (wallets && wallets.length > 0) { %>
+        <% wallets.forEach((wallet, index) => { %>
+          <div class="wallet-card rounded-2xl p-8 relative" style="background: linear-gradient(135deg, <%= index % 2 === 0 ? '#4a6b5c' : '#C9A86A' %> 0%, <%= index % 2 === 0 ? '#3a5a4c' : '#B8976A' %> 100%)">
+            <div class="flex items-start justify-between mb-12">
+              <div>
+                <p class="text-white/60 text-sm mb-2">Current Balance</p>
+                <p class="serif text-3xl font-semibold text-white">$<%= wallet.amount %></p>
+              </div>
+              <i class="fas fa-credit-card text-white/40 text-2xl"></i>
             </div>
-            <div>
-              <p class="font-semibold text-[#2C2C2C]">Chase Bank</p>
-              <p class="text-sm text-[#2C2C2C]/40">••••5678</p>
+            <div class="flex items-end justify-between">
+              <div>
+                <p class="text-white/60 text-xs mb-1">Card Number</p>
+                <p class="text-white font-medium tracking-wider">
+                  •••• •••• •••• <%= wallet.cardNumber.slice(-4) %>
+                </p>
+              </div>
+              <div class="text-right">
+                <p class="text-white/60 text-xs mb-1">Expires</p>
+                <p class="text-white font-medium"><%= wallet.mounth.toString().padStart(2, '0') %>/<%= wallet.year.toString().slice(-2) %></p>
+              </div>
+            </div>
+            <div class="absolute bottom-8 right-8">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-full bg-white/20"></div>
+                <div class="w-8 h-8 rounded-full bg-white/20 -ml-4"></div>
+              </div>
             </div>
           </div>
-          <div class="text-right">
-            <p class="font-semibold text-[#2C2C2C]">$8,450.00</p>
-            <p class="text-xs text-[#4A6B5C]">Connected</p>
+        <% }) %>
+      <% } else { %>
+        <div class="col-span-2 text-center py-12">
+          <div class="w-16 h-16 bg-[#4A6B5C]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-credit-card text-[#4A6B5C] text-2xl"></i>
           </div>
+          <h3 class="text-xl font-semibold text-[#2C2C2C] mb-2">No cards yet</h3>
+          <p class="text-[#2C2C2C]/60 mb-6">Add your first card to start managing your wallet</p>
+          <button onclick="openCreateWalletModal()" class="btn-primary px-6 py-3 rounded-xl text-sm font-medium">
+            <i class="fas fa-plus mr-2"></i>
+            Add Card
+          </button>
         </div>
-      </div>
-      <div class="card rounded-2xl p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center gap-4">
-            <div
-              class="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center"
-            >
-              <i class="fab fa-paypal text-purple-600 text-lg"></i>
-            </div>
-            <div>
-              <p class="font-semibold text-[#2C2C2C]">PayPal</p>
-              <p class="text-sm text-[#2C2C2C]/40">zakaria@email.com</p>
-            </div>
-          </div>
-          <div class="text-right">
-            <p class="font-semibold text-[#2C2C2C]">$1,250.00</p>
-            <p class="text-xs text-[#4A6B5C]">Connected</p>
-          </div>
-        </div>
-      </div>
+      <% } %>
     </div>
   </div>
 </div>
+
+<!-- Create Wallet Modal -->
+<div id="createWalletModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+  <div class="bg-white rounded-2xl p-8 w-full max-w-md mx-4">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="serif text-2xl font-semibold text-[#2C2C2C]">Add New Card</h3>
+      <button onclick="closeCreateWalletModal()" class="text-[#2C2C2C]/60 hover:text-[#2C2C2C]">
+        <i class="fas fa-times text-xl"></i>
+      </button>
+    </div>
+    
+    <form action="/wallets" method="POST">
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Card Number</label>
+          <input
+            type="text"
+            name="cardNumber"
+            maxlength="16"
+            pattern="[0-9]{16}"
+            required
+            class="search-input w-full px-4 py-3 rounded-xl text-sm"
+            placeholder="1234567890123456"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Initial Amount ($)</label>
+          <input
+            type="number"
+            name="amount"
+            step="0.01"
+            min="0"
+            required
+            class="search-input w-full px-4 py-3 rounded-xl text-sm"
+            placeholder="Enter initial amount"
+          />
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Expiry Month</label>
+            <select name="mounth" required class="search-input w-full px-4 py-3 rounded-xl text-sm">
+              <option value="">Month</option>
+              <option value="1">01</option>
+              <option value="2">02</option>
+              <option value="3">03</option>
+              <option value="4">04</option>
+              <option value="5">05</option>
+              <option value="6">06</option>
+              <option value="7">07</option>
+              <option value="8">08</option>
+              <option value="9">09</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Expiry Year</label>
+            <select name="year" required class="search-input w-full px-4 py-3 rounded-xl text-sm">
+              <option value="">Year</option>
+              <option value="2024">2024</option>
+              <option value="2025">2025</option>
+              <option value="2026">2026</option>
+              <option value="2027">2027</option>
+              <option value="2028">2028</option>
+              <option value="2029">2029</option>
+              <option value="2030">2030</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <div class="flex justify-end gap-3 mt-6">
+        <button
+          type="button"
+          onclick="closeCreateWalletModal()"
+          class="px-6 py-3 rounded-xl text-sm font-medium text-[#2C2C2C] hover:bg-black/5 transition-colors"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="btn-primary px-6 py-3 rounded-xl text-sm font-medium"
+        >
+          Add Card
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function openCreateWalletModal() {
+  document.getElementById('createWalletModal').classList.remove('hidden');
+  document.getElementById('createWalletModal').classList.add('flex');
+}
+
+function closeCreateWalletModal() {
+  document.getElementById('createWalletModal').classList.add('hidden');
+  document.getElementById('createWalletModal').classList.remove('flex');
+}
+</script>

@@ -12,24 +12,41 @@
         <h3 class="serif text-2xl font-semibold text-[#2C2C2C] mb-6">
           Profile Information
         </h3>
+
+        <!-- user photo  -->
         <div class="flex items-center gap-6 mb-8">
-          <div
-            class="avatar w-20 h-20 rounded-2xl flex items-center justify-center text-2xl font-medium"
-          >
-            AL
-          </div>
-          <div>
-            <button
-              class="btn-primary px-6 py-2.5 rounded-xl text-sm font-medium mb-2"
+
+          <form action="/update-photo" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="userId" value="<%= user.id %>">
+            <div
+              class="avatar w-20 h-20 rounded-2xl flex items-center justify-center text-2xl font-medium"
             >
-              Change Photo
-            </button>
-            <p class="text-xs text-[#2C2C2C]/60">
-              JPG, PNG or GIF. Max size 2MB
-            </p>
-          </div>
+              <% if (user.image) { %>
+                <img src="/uploads/<%= user.image %>" alt="user photo" class="w-full h-full object-cover rounded-2xl">
+              <% } else { %>
+                <%= user.fname.charAt(0) %><%= user.lname.charAt(0) %>
+              <% } %>
+            </div>
+            <div>
+              <input type="file" name="image" accept="image/*" class="mb-2" required>
+              <button
+                class="btn-primary px-6 py-2.5 rounded-xl text-sm font-medium mb-2" type="submit"
+              >
+                Change Photo
+              </button>
+              <p class="text-xs text-[#2C2C2C]/60">
+                JPG, PNG or GIF. Max size 2MB
+              </p>
+            </div>
+            
+          </form>
         </div>
+
+        <!-- user info  -->
         <div class="space-y-4">
+
+          <form action="/update-profile" method="POST">
+            <input type="hidden" name="userId" value="<%= user.id %>">
           <div class="grid grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium text-[#2C2C2C] mb-2"
@@ -37,7 +54,8 @@
               >
               <input
                 type="text"
-                value="zakaria"
+                name="fname"
+                value="<%= user.fname %>"
                 class="search-input w-full px-4 py-3 rounded-xl text-sm"
               />
             </div>
@@ -47,7 +65,8 @@
               >
               <input
                 type="text"
-                value="Lively"
+                name="lname"
+                value="<%= user.lname %>"
                 class="search-input w-full px-4 py-3 rounded-xl text-sm"
               />
             </div>
@@ -58,11 +77,12 @@
             >
             <input
               type="email"
-              value="zakaria.lively@email.com"
+              name="email"
+              value="<%= user.email %>"
               class="search-input w-full px-4 py-3 rounded-xl text-sm"
             />
           </div>
-          <div>
+          <!-- <div>
             <label class="block text-sm font-medium text-[#2C2C2C] mb-2"
               >Phone</label
             >
@@ -71,7 +91,7 @@
               value="+1 (555) 123-4567"
               class="search-input w-full px-4 py-3 rounded-xl text-sm"
             />
-          </div>
+          </div> -->
         </div>
         <div class="flex justify-end gap-3 mt-6">
           <button
@@ -82,6 +102,7 @@
           <button class="btn-primary px-6 py-3 rounded-xl text-sm font-medium">
             Save Changes
           </button>
+          </form>
         </div>
       </div>
 

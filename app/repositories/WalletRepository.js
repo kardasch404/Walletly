@@ -1,17 +1,17 @@
 const db = require('../database/mysql.js');
 
-class BudgetRepository {
+class WalletRepository {
 
     async create(data) {
         try {
             return new Promise((resolve, reject) => {
-                const query = `INSERT INTO budgets (id, user_id, category_id, monthlyLimit, mounth, year) 
+                const query = `INSERT INTO wallets (id, user_id, cardNumber, amount, mounth, year) 
                             VALUES (?, ?, ?, ?, ?, ?)`;
                 const values = [
                     data.id,
                     data.user_id,
-                    data.category_id,
-                    data.monthlyLimit,
+                    data.cardNumber,
+                    data.amount,
                     data.mounth,
                     data.year
                 ];
@@ -32,10 +32,7 @@ class BudgetRepository {
     async getAllByUserId(userId) {
         try {
             return new Promise((resolve, reject) => {
-                const query = `SELECT b.*, c.name as category_name 
-                              FROM budgets b 
-                              JOIN categories c ON b.category_id = c.id 
-                              WHERE b.user_id = ?`;
+                const query = 'SELECT * FROM wallets WHERE user_id = ?';
                 db.query(query, [userId], (err, result) => {
                     if (err) {
                         reject(err);
@@ -50,4 +47,4 @@ class BudgetRepository {
     }
 }
 
-module.exports = BudgetRepository;
+module.exports = WalletRepository;

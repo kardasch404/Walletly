@@ -40,6 +40,40 @@ class UserService {
         }
         return user;
     }
+
+    async getUserById(id) {
+        return await this.#userRepository.findById(id);
+    }
+
+    async updateUserProfile (data) {
+        try {
+            const userData = {
+                id: data.userId,
+                fname: data.fname,
+                lname: data.lname,
+                email: data.email,
+            };
+
+            const result = await this.#userRepository.update(userData);
+            return result;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async UpdateUserPhoto (image) {
+        try {
+            const userData = {
+                id: image.userId,
+                image: image.image
+            };
+
+            const result = await this.#userRepository.updateImage(userData);
+            return result;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = UserService;

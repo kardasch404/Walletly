@@ -1,56 +1,52 @@
 <!-- Budget Page -->
 <div id="budget" class="page-view <%= currentPage === 'budget' ? 'active' : '' %> p-8">
-  <div class="mb-8">
-    <h2 class="serif text-4xl font-semibold text-[#2C2C2C] mb-2">
-      Budget Planning
-    </h2>
-    <p class="text-[#2C2C2C]/60">
-      Manage your spending across different categories
-    </p>
+  <div class="flex justify-between items-center mb-8">
+    <div>
+      <h2 class="serif text-4xl font-semibold text-[#2C2C2C] mb-2">Budget Planning</h2>
+      <p class="text-[#2C2C2C]/60">Track and manage your monthly spending limits</p>
+    </div>
+    <button onclick="openCreateBudgetModal()" class="btn-primary px-6 py-3 rounded-xl text-sm font-medium">
+      <i class="fas fa-plus mr-2"></i>
+      Create Budget
+    </button>
   </div>
 
   <!-- Budget Overview -->
   <div class="grid grid-cols-3 gap-6 mb-8">
     <div class="card rounded-2xl p-6">
-      <div class="flex items-center gap-4">
-        <div
-          class="w-12 h-12 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center"
-        >
-          <i class="fas fa-wallet text-[#4A6B5C] text-lg"></i>
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center">
+                <i class="fas fa-wallet text-[#4A6B5C] text-lg"></i>
+            </div>
+            <div>
+                <p class="text-sm text-[#2C2C2C]/60 mb-1">Monthly Budget</p>
+                <p class="serif text-2xl font-semibold text-[#2C2C2C]">$8,000</p>
+            </div>
         </div>
-        <div>
-          <p class="text-sm text-[#2C2C2C]/60 mb-1">Monthly Budget</p>
-          <p class="serif text-2xl font-semibold text-[#2C2C2C]">$8,000</p>
-        </div>
-      </div>
     </div>
     <div class="card rounded-2xl p-6">
-      <div class="flex items-center gap-4">
-        <div
-          class="w-12 h-12 rounded-xl bg-[#C9A86A]/10 flex items-center justify-center"
-        >
-          <i class="fas fa-chart-line text-[#C9A86A] text-lg"></i>
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-[#C9A86A]/10 flex items-center justify-center">
+                <i class="fas fa-chart-line text-[#C9A86A] text-lg"></i>
+            </div>
+            <div>
+                <p class="text-sm text-[#2C2C2C]/60 mb-1">Spent This Month</p>
+                <p class="serif text-2xl font-semibold text-[#2C2C2C]">$5,950</p>
+            </div>
         </div>
-        <div>
-          <p class="text-sm text-[#2C2C2C]/60 mb-1">Spent This Month</p>
-          <p class="serif text-2xl font-semibold text-[#2C2C2C]">$5,950</p>
-        </div>
-      </div>
     </div>
     <div class="card rounded-2xl p-6">
-      <div class="flex items-center gap-4">
-        <div
-          class="w-12 h-12 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center"
-        >
-          <i class="fas fa-coins text-[#4A6B5C] text-lg"></i>
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center">
+                <i class="fas fa-coins text-[#4A6B5C] text-lg"></i>
+            </div>
+            <div>
+                <p class="text-sm text-[#2C2C2C]/60 mb-1">Remaining</p>
+                <p class="serif text-2xl font-semibold text-[#2C2C2C]">$2,050</p>
+            </div>
         </div>
-        <div>
-          <p class="text-sm text-[#2C2C2C]/60 mb-1">Remaining</p>
-          <p class="serif text-2xl font-semibold text-[#2C2C2C]">$2,050</p>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
 
   <!-- Budget Categories -->
   <div class="card rounded-2xl p-8 mb-8">
@@ -58,168 +54,141 @@
       Budget by Category
     </h3>
     <div class="space-y-6">
-      <div>
-        <div class="flex items-center justify-between mb-3">
-          <div class="flex items-center gap-3">
-            <div class="category-icon bg-green-50">
-              <i class="fas fa-utensils text-green-600"></i>
+      <% if (budgets && budgets.length > 0) { %>
+        <% budgets.forEach(budget => { %>
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-3">
+                <div class="category-icon bg-green-50">
+                  <i class="fas fa-utensils text-green-600"></i>
+                </div>
+                <div>
+                  <p class="font-semibold text-[#2C2C2C]"><%= budget.category_name || budget.name %></p>
+                  <p class="text-sm text-[#2C2C2C]/60">$<%= budget.spent || 1200 %> of $<%= budget.monthlyLimit %></p>
+                </div>
+              </div>
+              <span class="serif text-xl font-semibold text-[#4A6B5C]"><%= Math.round(((budget.spent || 1200) / budget.monthlyLimit) * 100) %>%</span>
             </div>
-            <div>
-              <p class="font-semibold text-[#2C2C2C]">Restaurants & Dining</p>
-              <p class="text-sm text-[#2C2C2C]/60">$1,200 of $1,500</p>
-            </div>
-          </div>
-          <span class="serif text-xl font-semibold text-[#4A6B5C]">80%</span>
-        </div>
-        <div class="w-full h-2 bg-black/5 rounded-full overflow-hidden">
-          <div
-            class="progress-bar h-full rounded-full"
-            style="width: 80%"
-          ></div>
-        </div>
-      </div>
-
-      <div>
-        <div class="flex items-center justify-between mb-3">
-          <div class="flex items-center gap-3">
-            <div class="category-icon bg-blue-50">
-              <i class="fas fa-shopping-bag text-blue-600"></i>
-            </div>
-            <div>
-              <p class="font-semibold text-[#2C2C2C]">Shopping</p>
-              <p class="text-sm text-[#2C2C2C]/60">$850 of $1,200</p>
+            <div class="w-full h-2 bg-black/5 rounded-full overflow-hidden">
+              <div
+                class="progress-bar h-full rounded-full"
+                style="width: <%= Math.min(((budget.spent || 1200) / budget.monthlyLimit) * 100, 100) %>%"
+              ></div>
             </div>
           </div>
-          <span class="serif text-xl font-semibold text-[#4A6B5C]">71%</span>
-        </div>
-        <div class="w-full h-2 bg-black/5 rounded-full overflow-hidden">
-          <div
-            class="progress-bar h-full rounded-full"
-            style="width: 71%"
-          ></div>
-        </div>
-      </div>
-
-      <div>
-        <div class="flex items-center justify-between mb-3">
-          <div class="flex items-center gap-3">
-            <div class="category-icon bg-orange-50">
-              <i class="fas fa-car text-orange-600"></i>
-            </div>
-            <div>
-              <p class="font-semibold text-[#2C2C2C]">Transportation</p>
-              <p class="text-sm text-[#2C2C2C]/60">$420 of $800</p>
-            </div>
+        <% }) %>
+      <% } else { %>
+        <div class="text-center py-12">
+          <div class="w-16 h-16 bg-[#4A6B5C]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-chart-pie text-[#4A6B5C] text-2xl"></i>
           </div>
-          <span class="serif text-xl font-semibold text-[#4A6B5C]">53%</span>
+          <h3 class="text-xl font-semibold text-[#2C2C2C] mb-2">No budgets yet</h3>
+          <p class="text-[#2C2C2C]/60 mb-6">Create your first budget to start tracking your spending</p>
+          <button onclick="openCreateBudgetModal()" class="btn-primary px-6 py-3 rounded-xl text-sm font-medium">
+            <i class="fas fa-plus mr-2"></i>
+            Create Budget
+          </button>
         </div>
-        <div class="w-full h-2 bg-black/5 rounded-full overflow-hidden">
-          <div
-            class="progress-bar h-full rounded-full"
-            style="width: 53%"
-          ></div>
-        </div>
-      </div>
-
-      <div>
-        <div class="flex items-center justify-between mb-3">
-          <div class="flex items-center gap-3">
-            <div class="category-icon bg-purple-50">
-              <i class="fas fa-film text-purple-600"></i>
-            </div>
-            <div>
-              <p class="font-semibold text-[#2C2C2C]">Entertainment</p>
-              <p class="text-sm text-[#2C2C2C]/60">$280 of $500</p>
-            </div>
-          </div>
-          <span class="serif text-xl font-semibold text-[#4A6B5C]">56%</span>
-        </div>
-        <div class="w-full h-2 bg-black/5 rounded-full overflow-hidden">
-          <div
-            class="progress-bar h-full rounded-full"
-            style="width: 56%"
-          ></div>
-        </div>
-      </div>
-
-      <div>
-        <div class="flex items-center justify-between mb-3">
-          <div class="flex items-center gap-3">
-            <div class="category-icon bg-pink-50">
-              <i class="fas fa-heart text-pink-600"></i>
-            </div>
-            <div>
-              <p class="font-semibold text-[#2C2C2C]">Health & Beauty</p>
-              <p class="text-sm text-[#2C2C2C]/60">$650 of $1,000</p>
-            </div>
-          </div>
-          <span class="serif text-xl font-semibold text-[#4A6B5C]">65%</span>
-        </div>
-        <div class="w-full h-2 bg-black/5 rounded-full overflow-hidden">
-          <div
-            class="progress-bar h-full rounded-full"
-            style="width: 65%"
-          ></div>
-        </div>
-      </div>
-
-      <div>
-        <div class="flex items-center justify-between mb-3">
-          <div class="flex items-center gap-3">
-            <div class="category-icon bg-yellow-50">
-              <i class="fas fa-plane text-yellow-600"></i>
-            </div>
-            <div>
-              <p class="font-semibold text-[#2C2C2C]">Travel</p>
-              <p class="text-sm text-[#2C2C2C]/60">$150 of $1,500</p>
-            </div>
-          </div>
-          <span class="serif text-xl font-semibold text-[#4A6B5C]">10%</span>
-        </div>
-        <div class="w-full h-2 bg-black/5 rounded-full overflow-hidden">
-          <div
-            class="progress-bar h-full rounded-full"
-            style="width: 10%"
-          ></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Spending Insights -->
-  <div class="grid grid-cols-2 gap-6">
-    <div class="card rounded-2xl p-6">
-      <h4 class="serif text-xl font-semibold text-[#2C2C2C] mb-4">
-        Top Spending Category
-      </h4>
-      <div class="flex items-center gap-4 mb-4">
-        <div class="category-icon bg-green-50">
-          <i class="fas fa-utensils text-green-600 text-xl"></i>
-        </div>
-        <div>
-          <p class="font-semibold text-[#2C2C2C] text-lg">Restaurants</p>
-          <p class="text-sm text-[#2C2C2C]/60">$1,200 this month</p>
-        </div>
-      </div>
-      <p class="text-sm text-[#2C2C2C]/60">
-        You're spending 20% of your budget on dining out
-      </p>
-    </div>
-    <div class="card rounded-2xl p-6">
-      <h4 class="serif text-xl font-semibold text-[#2C2C2C] mb-4">
-        Budget Recommendation
-      </h4>
-      <div class="flex items-center gap-3 mb-4">
-        <div
-          class="w-10 h-10 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center"
-        >
-          <i class="fas fa-lightbulb text-[#4A6B5C]"></i>
-        </div>
-        <p class="font-medium text-[#2C2C2C]">Great job staying on track!</p>
-      </div>
-      <p class="text-sm text-[#2C2C2C]/60">
-        You have $2,050 remaining for the rest of the month
-      </p>
+      <% } %>
     </div>
   </div>
 </div>
+
+<!-- Create Budget Modal -->
+<div id="createBudgetModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+  <div class="bg-white rounded-2xl p-8 w-full max-w-md mx-4">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="serif text-2xl font-semibold text-[#2C2C2C]">Create Budget</h3>
+      <button onclick="closeCreateBudgetModal()" class="text-[#2C2C2C]/60 hover:text-[#2C2C2C]">
+        <i class="fas fa-times text-xl"></i>
+      </button>
+    </div>
+    
+    <form action="/budgets" method="POST">
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Category</label>
+          <select name="category_id" required class="search-input w-full px-4 py-3 rounded-xl text-sm">
+            <option value="">Select a category</option>
+            <% if (categories && categories.length > 0) { %>
+              <% categories.forEach(category => { %>
+                <option value="<%= category.id %>"><%= category.name %></option>
+              <% }) %>
+            <% } %>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Monthly Limit ($)</label>
+          <input
+            type="number"
+            name="monthlyLimit"
+            step="0.01"
+            min="0"
+            required
+            class="search-input w-full px-4 py-3 rounded-xl text-sm"
+            placeholder="Enter monthly limit"
+          />
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Month</label>
+            <select name="mounth" required class="search-input w-full px-4 py-3 rounded-xl text-sm">
+              <option value="1">January</option>
+              <option value="2">February</option>
+              <option value="3">March</option>
+              <option value="4">April</option>
+              <option value="5">May</option>
+              <option value="6">June</option>
+              <option value="7">July</option>
+              <option value="8">August</option>
+              <option value="9">September</option>
+              <option value="10">October</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Year</label>
+            <input
+              type="number"
+              name="year"
+              min="2020"
+              max="2030"
+              value="<%= new Date().getFullYear() %>"
+              required
+              class="search-input w-full px-4 py-3 rounded-xl text-sm"
+            />
+          </div>
+        </div>
+      </div>
+      
+      <div class="flex justify-end gap-3 mt-6">
+        <button
+          type="button"
+          onclick="closeCreateBudgetModal()"
+          class="px-6 py-3 rounded-xl text-sm font-medium text-[#2C2C2C] hover:bg-black/5 transition-colors"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="btn-primary px-6 py-3 rounded-xl text-sm font-medium"
+        >
+          Create Budget
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function openCreateBudgetModal() {
+  document.getElementById('createBudgetModal').classList.remove('hidden');
+  document.getElementById('createBudgetModal').classList.add('flex');
+}
+
+function closeCreateBudgetModal() {
+  document.getElementById('createBudgetModal').classList.add('hidden');
+  document.getElementById('createBudgetModal').classList.remove('flex');
+}
+</script>

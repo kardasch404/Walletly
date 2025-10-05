@@ -60,6 +60,17 @@ CREATE TABLE savingsGoals (
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
+CREATE TABLE wallets (
+    id VARCHAR(36) PRIMARY KEY,
+    user_id VARCHAR(36),
+    cardNumber VARCHAR(16),
+    amount DECIMAL(10, 2),
+    mounth INT,
+    year INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users (id)
+);
+
 CREATE TABLE rapports (
     id VARCHAR(36) PRIMARY KEY,
     user_id VARCHAR(36),
