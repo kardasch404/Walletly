@@ -1,11 +1,11 @@
-class BudgetController {
-    #budgetService;
+class WalletController {
+    #walletService;
 
-    constructor(budgetService) {
-        this.#budgetService = budgetService;
+    constructor(walletService) {
+        this.#walletService = walletService;
     }
 
-    async createBudget(req, res) {
+    async createWallet(req, res) {
         try {
             const data = req.body;
             const userId = req.session.userId;
@@ -14,14 +14,14 @@ class BudgetController {
                 return res.status(400).json({ error: 'User not found' });
             }
 
-            const budget = await this.#budgetService.create(data, userId);
-            return res.redirect('/budget');
+            const wallet = await this.#walletService.create(data, userId);
+            return res.redirect('/wallet');
         } catch (error) {
             return res.status(400).json({ error: error.message });
         }
     }
 
-    async getAllBudgetsFromUser(req, res) {
+    async getAllWalletsFromUser(req, res) {
         try {
             const userId = req.session.userId;
 
@@ -29,10 +29,10 @@ class BudgetController {
                 return res.redirect('/login');
             }
 
-            const budgets = await this.#budgetService.getAllBudgetsFromUser(userId);
-            return res.render('budgets', {
-                title: 'My Budgets - Walletly',
-                budgets: budgets
+            const wallets = await this.#walletService.getAllWalletsFromUser(userId);
+            return res.render('wallets', {
+                title: 'My Wallets - Walletly',
+                wallets: wallets
             });
         } catch (error) {
             return res.status(400).json({ error: error.message });
@@ -40,4 +40,4 @@ class BudgetController {
     }
 }
 
-module.exports = BudgetController;
+module.exports = WalletController;

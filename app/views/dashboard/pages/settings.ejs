@@ -1,0 +1,343 @@
+<!-- Settings Page -->
+<div id="settings" class="page-view <%= currentPage === 'settings' ? 'active' : '' %> p-8">
+  <div class="mb-8">
+    <h2 class="serif text-4xl font-semibold text-[#2C2C2C] mb-2">Settings</h2>
+    <p class="text-[#2C2C2C]/60">Manage your account and preferences</p>
+  </div>
+
+  <div class="grid grid-cols-3 gap-6">
+    <!-- Profile Settings -->
+    <div class="col-span-2 space-y-6">
+      <div class="card rounded-2xl p-8">
+        <h3 class="serif text-2xl font-semibold text-[#2C2C2C] mb-6">
+          Profile Information
+        </h3>
+
+        <!-- user photo  -->
+        <div class="flex items-center gap-6 mb-8">
+
+          <form action="/update-photo" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="userId" value="<%= user.id %>">
+            <div
+              class="avatar w-20 h-20 rounded-2xl flex items-center justify-center text-2xl font-medium"
+            >
+              <% if (user.image) { %>
+                <img src="/uploads/<%= user.image %>" alt="user photo" class="w-full h-full object-cover rounded-2xl">
+              <% } else { %>
+                <%= user.fname.charAt(0) %><%= user.lname.charAt(0) %>
+              <% } %>
+            </div>
+            <div>
+              <input type="file" name="image" accept="image/*" class="mb-2" required>
+              <button
+                class="btn-primary px-6 py-2.5 rounded-xl text-sm font-medium mb-2" type="submit"
+              >
+                Change Photo
+              </button>
+              <p class="text-xs text-[#2C2C2C]/60">
+                JPG, PNG or GIF. Max size 2MB
+              </p>
+            </div>
+            
+          </form>
+        </div>
+
+        <!-- user info  -->
+        <div class="space-y-4">
+
+          <form action="/update-profile" method="POST">
+            <input type="hidden" name="userId" value="<%= user.id %>">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-[#2C2C2C] mb-2"
+                >First Name</label
+              >
+              <input
+                type="text"
+                name="fname"
+                value="<%= user.fname %>"
+                class="search-input w-full px-4 py-3 rounded-xl text-sm"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-[#2C2C2C] mb-2"
+                >Last Name</label
+              >
+              <input
+                type="text"
+                name="lname"
+                value="<%= user.lname %>"
+                class="search-input w-full px-4 py-3 rounded-xl text-sm"
+              />
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-[#2C2C2C] mb-2"
+              >Email</label
+            >
+            <input
+              type="email"
+              name="email"
+              value="<%= user.email %>"
+              class="search-input w-full px-4 py-3 rounded-xl text-sm"
+            />
+          </div>
+          <!-- <div>
+            <label class="block text-sm font-medium text-[#2C2C2C] mb-2"
+              >Phone</label
+            >
+            <input
+              type="tel"
+              value="+1 (555) 123-4567"
+              class="search-input w-full px-4 py-3 rounded-xl text-sm"
+            />
+          </div> -->
+        </div>
+        <div class="flex justify-end gap-3 mt-6">
+          <button
+            class="px-6 py-3 rounded-xl text-sm font-medium text-[#2C2C2C] hover:bg-black/5 transition-colors"
+          >
+            Cancel
+          </button>
+          <button class="btn-primary px-6 py-3 rounded-xl text-sm font-medium">
+            Save Changes
+          </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- <div class="card rounded-2xl p-8">
+        <h3 class="serif text-2xl font-semibold text-[#2C2C2C] mb-6">
+          Security
+        </h3>
+        <div class="space-y-6">
+          <div
+            class="flex items-center justify-between py-4 border-b border-black/5"
+          >
+            <div>
+              <p class="font-medium text-[#2C2C2C] mb-1">
+                Two-Factor Authentication
+              </p>
+              <p class="text-sm text-[#2C2C2C]/60">
+                Add an extra layer of security
+              </p>
+            </div>
+            <div class="toggle-switch active"></div>
+          </div>
+          <div
+            class="flex items-center justify-between py-4 border-b border-black/5"
+          >
+            <div>
+              <p class="font-medium text-[#2C2C2C] mb-1">Biometric Login</p>
+              <p class="text-sm text-[#2C2C2C]/60">
+                Use fingerprint or face ID
+              </p>
+            </div>
+            <div class="toggle-switch active"></div>
+          </div>
+          <div class="flex items-center justify-between py-4">
+            <div>
+              <p class="font-medium text-[#2C2C2C] mb-1">Change Password</p>
+              <p class="text-sm text-[#2C2C2C]/60">Last changed 3 months ago</p>
+            </div>
+            <button
+              class="text-sm text-[#4A6B5C] hover:text-[#3A5A4C] font-medium"
+            >
+              Update <i class="fas fa-arrow-right text-xs ml-1"></i>
+            </button>
+          </div>
+        </div>
+      </div> -->
+
+      <!-- <div class="card rounded-2xl p-8">
+        <h3 class="serif text-2xl font-semibold text-[#2C2C2C] mb-6">
+          Notifications
+        </h3>
+        <div class="space-y-6">
+          <div
+            class="flex items-center justify-between py-4 border-b border-black/5"
+          >
+            <div>
+              <p class="font-medium text-[#2C2C2C] mb-1">Transaction Alerts</p>
+              <p class="text-sm text-[#2C2C2C]/60">
+                Get notified of all transactions
+              </p>
+            </div>
+            <div class="toggle-switch active"></div>
+          </div>
+          <div
+            class="flex items-center justify-between py-4 border-b border-black/5"
+          >
+            <div>
+              <p class="font-medium text-[#2C2C2C] mb-1">Budget Alerts</p>
+              <p class="text-sm text-[#2C2C2C]/60">
+                Notify when approaching budget limits
+              </p>
+            </div>
+            <div class="toggle-switch active"></div>
+          </div>
+          <div
+            class="flex items-center justify-between py-4 border-b border-black/5"
+          >
+            <div>
+              <p class="font-medium text-[#2C2C2C] mb-1">Goal Milestones</p>
+              <p class="text-sm text-[#2C2C2C]/60">
+                Celebrate savings achievements
+              </p>
+            </div>
+            <div class="toggle-switch active"></div>
+          </div>
+          <div class="flex items-center justify-between py-4">
+            <div>
+              <p class="font-medium text-[#2C2C2C] mb-1">Marketing Emails</p>
+              <p class="text-sm text-[#2C2C2C]/60">Receive tips and updates</p>
+            </div>
+            <div class="toggle-switch"></div>
+          </div>
+        </div>
+      </div> -->
+    </div>
+
+    <!-- Quick Settings -->
+    <div class="space-y-6">
+      <div class="card rounded-2xl p-6">
+        <h3 class="serif text-xl font-semibold text-[#2C2C2C] mb-6">
+          Preferences
+        </h3>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-[#2C2C2C] mb-2"
+              >Currency</label
+            >
+            <select class="search-input w-full px-4 py-3 rounded-xl text-sm">
+              <option>USD ($)</option>
+              <option>EUR (€)</option>
+              <option>GBP (£)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-[#2C2C2C] mb-2"
+              >Language</label
+            >
+            <select class="search-input w-full px-4 py-3 rounded-xl text-sm">
+              <option>English</option>
+              <option>Spanish</option>
+              <option>French</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-[#2C2C2C] mb-2"
+              >Time Zone</label
+            >
+            <select class="search-input w-full px-4 py-3 rounded-xl text-sm">
+              <option>EST (UTC-5)</option>
+              <option>PST (UTC-8)</option>
+              <option>GMT (UTC+0)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="card rounded-2xl p-6">
+        <h3 class="serif text-xl font-semibold text-[#2C2C2C] mb-6">
+          Data & Privacy
+        </h3>
+        <div class="space-y-4">
+          <button
+            class="w-full text-left px-4 py-3 rounded-xl hover:bg-black/5 transition-colors"
+          >
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-medium text-[#2C2C2C]"
+                >Export Data</span
+              >
+              <i class="fas fa-download text-[#2C2C2C]/40"></i>
+            </div>
+          </button>
+          <button
+            class="w-full text-left px-4 py-3 rounded-xl hover:bg-black/5 transition-colors"
+          >
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-medium text-[#2C2C2C]"
+                >Privacy Policy</span
+              >
+              <i class="fas fa-external-link-alt text-[#2C2C2C]/40"></i>
+            </div>
+          </button>
+          <button
+            class="w-full text-left px-4 py-3 rounded-xl hover:bg-black/5 transition-colors"
+          >
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-medium text-[#2C2C2C]"
+                >Terms of Service</span
+              >
+              <i class="fas fa-external-link-alt text-[#2C2C2C]/40"></i>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <div class="card rounded-2xl p-6 border-2 border-red-100">
+        <h3 class="serif text-xl font-semibold text-red-600 mb-4">
+          Danger Zone
+        </h3>
+        <button
+          class="w-full px-4 py-3 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 font-medium text-sm transition-colors"
+        >
+          Delete Account
+        </button>
+      </div>
+    </div>
+
+    <!-- Change Password -->
+    <div class="col-span-2 space-y-6">
+      <div class="card rounded-2xl p-8">
+        <h3 class="serif text-2xl font-semibold text-[#2C2C2C] mb-6">
+          Change Password
+        </h3>
+
+        <form action="/update-password" method="POST">
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Current Password</label>
+              <input
+                type="password"
+                name="currentPassword"
+                required
+                class="search-input w-full px-4 py-3 rounded-xl text-sm"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-[#2C2C2C] mb-2">New Password</label>
+              <input
+                type="password"
+                name="newPassword"
+                required
+                class="search-input w-full px-4 py-3 rounded-xl text-sm"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Confirm New Password</label>
+              <input
+                type="password"
+                name="confirmPassword"
+                required
+                class="search-input w-full px-4 py-3 rounded-xl text-sm"
+              />
+            </div>
+          </div>
+          <div class="flex justify-end gap-3 mt-6">
+            <button
+              type="button"
+              class="px-6 py-3 rounded-xl text-sm font-medium text-[#2C2C2C] hover:bg-black/5 transition-colors"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn-primary px-6 py-3 rounded-xl text-sm font-medium">
+              Update Password
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+</div>
+</div>

@@ -1,0 +1,121 @@
+<!-- Categories Page -->
+<div id="categories" class="page-view <%= currentPage === 'categories' ? 'active' : '' %> p-8">
+  <div class="flex justify-between items-center mb-8">
+    <div>
+      <h2 class="serif text-4xl font-semibold text-[#2C2C2C] mb-2">Categories</h2>
+      <p class="text-[#2C2C2C]/60">Organize your transactions with custom categories</p>
+    </div>
+    <button onclick="openCreateModal()" class="btn-primary px-6 py-3 rounded-xl text-sm font-medium">
+      <i class="fas fa-plus mr-2"></i>
+      Create Category
+    </button>
+  </div>
+
+  <!-- Categories Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% if (categories && categories.length > 0) { %>
+      <% categories.forEach(category => { %>
+        <div class="card rounded-2xl p-6">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-12 h-12 bg-[#4A6B5C]/10 rounded-xl flex items-center justify-center">
+              <i class="fas fa-tag text-[#4A6B5C] text-lg"></i>
+            </div>
+            <div>
+              <h3 class="font-semibold text-[#2C2C2C]"><%= category.name %></h3>
+              <p class="text-sm text-[#2C2C2C]/60"><%= category.description || 'No description' %></p>
+            </div>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-sm text-[#2C2C2C]/60">
+              Created <%= new Date(category.created_at).toLocaleDateString() %>
+            </span>
+            <div class="flex gap-2">
+              <button class="text-[#4A6B5C] hover:text-[#3A5A4C] text-sm">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="text-red-500 hover:text-red-600 text-sm">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <div class="col-span-full text-center py-12">
+        <div class="w-16 h-16 bg-[#4A6B5C]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-tags text-[#4A6B5C] text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-semibold text-[#2C2C2C] mb-2">No categories yet</h3>
+        <p class="text-[#2C2C2C]/60 mb-6">Create your first category to start organizing your transactions</p>
+        <button onclick="openCreateModal()" class="btn-primary px-6 py-3 rounded-xl text-sm font-medium">
+          <i class="fas fa-plus mr-2"></i>
+          Create Category
+        </button>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<!-- Create Category Modal -->
+<div id="createCategoryModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+  <div class="bg-white rounded-2xl p-8 w-full max-w-md mx-4">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="serif text-2xl font-semibold text-[#2C2C2C]">Create Category</h3>
+      <button onclick="closeCreateModal()" class="text-[#2C2C2C]/60 hover:text-[#2C2C2C]">
+        <i class="fas fa-times text-xl"></i>
+      </button>
+    </div>
+    
+    <form action="/categories" method="POST">
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Category Name</label>
+          <input
+            type="text"
+            name="name"
+            required
+            class="search-input w-full px-4 py-3 rounded-xl text-sm"
+            placeholder="Enter category name"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Description (Optional)</label>
+          <textarea
+            name="description"
+            rows="3"
+            class="search-input w-full px-4 py-3 rounded-xl text-sm resize-none"
+            placeholder="Enter category description"
+          ></textarea>
+        </div>
+      </div>
+      
+      <div class="flex justify-end gap-3 mt-6">
+        <button
+          type="button"
+          onclick="closeCreateModal()"
+          class="px-6 py-3 rounded-xl text-sm font-medium text-[#2C2C2C] hover:bg-black/5 transition-colors"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="btn-primary px-6 py-3 rounded-xl text-sm font-medium"
+        >
+          Create Category
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function openCreateModal() {
+  document.getElementById('createCategoryModal').classList.remove('hidden');
+  document.getElementById('createCategoryModal').classList.add('flex');
+}
+
+function closeCreateModal() {
+  document.getElementById('createCategoryModal').classList.add('hidden');
+  document.getElementById('createCategoryModal').classList.remove('flex');
+}
+</script>

@@ -24,17 +24,19 @@ CREATE TABLE categories (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE Transactions (
+CREATE TABLE transactions (
     id VARCHAR(36) PRIMARY KEY,
     user_id VARCHAR(36),
     category_id VARCHAR(36),
+    wallet_id VARCHAR(36),
     amount DECIMAL(10, 2),
     description VARCHAR(255),
     type VARCHAR(50),
     transactionDate TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (category_id) REFERENCES categories (id)
+    FOREIGN KEY (category_id) REFERENCES categories (id),
+    FOREIGN KEY (wallet_id) REFERENCES wallets (id)
 );
 
 CREATE TABLE budgets (
@@ -49,7 +51,7 @@ CREATE TABLE budgets (
     FOREIGN KEY (category_id) REFERENCES categories (id)
 );
 
-CREATE TABLE SavingsGoals (
+CREATE TABLE savingsGoals (
     id VARCHAR(36) PRIMARY KEY,
     title VARCHAR(50),
     description VARCHAR(255),
@@ -60,7 +62,18 @@ CREATE TABLE SavingsGoals (
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-CREATE TABLE Rapports (
+CREATE TABLE wallets (
+    id VARCHAR(36) PRIMARY KEY,
+    user_id VARCHAR(36),
+    cardNumber VARCHAR(16),
+    amount DECIMAL(10, 2),
+    mounth INT,
+    year INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users (id)
+);
+
+CREATE TABLE rapports (
     id VARCHAR(36) PRIMARY KEY,
     user_id VARCHAR(36),
     rapportType VARCHAR(50),
