@@ -20,7 +20,7 @@
             </div>
             <div>
                 <p class="text-sm text-[#2C2C2C]/60 mb-1">Monthly Budget</p>
-                <p class="serif text-2xl font-semibold text-[#2C2C2C]">$<%= wallets && wallets.length > 0 ? wallets[0].amount : 0 %></p>
+                <p class="serif text-2xl font-semibold text-[#2C2C2C]">$<%= budgets.reduce((sum, b) => sum + (b.monthlyLimit || 0), 0).toLocaleString() %></p>
             </div>
         </div>
     </div>
@@ -31,7 +31,7 @@
             </div>
             <div>
                 <p class="text-sm text-[#2C2C2C]/60 mb-1">Spent This Month</p>
-                <p class="serif text-2xl font-semibold text-[#2C2C2C]">$5,950</p>
+                <p class="serif text-2xl font-semibold text-[#2C2C2C]">$<%= budgets.reduce((sum, b) => sum + (b.spent || 0), 0).toLocaleString() %></p>
             </div>
         </div>
     </div>
@@ -42,7 +42,7 @@
             </div>
             <div>
                 <p class="text-sm text-[#2C2C2C]/60 mb-1">Remaining</p>
-                <p class="serif text-2xl font-semibold text-[#2C2C2C]">$2,050</p>
+                <p class="serif text-2xl font-semibold text-[#2C2C2C]">$<%= (budgets.reduce((sum, b) => sum + (b.monthlyLimit || 0), 0) - budgets.reduce((sum, b) => sum + (b.spent || 0), 0)).toLocaleString() %></p>
             </div>
         </div>
     </div>

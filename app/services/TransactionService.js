@@ -30,6 +30,38 @@ class TransactionService {
             throw error;
         }
     }
+
+    async getRecentTransactions(userId, limit = 4) {
+        try {
+            return await this.#transactionRepository.getRecentByUserId(userId, limit);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getTotalIncome(userId) {
+        try {
+            return await this.#transactionRepository.getTotalIncomeByUserId(userId);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getTotalExpense(userId) {
+        try {
+            return await this.#transactionRepository.getTotalExpenseByUserId(userId);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getTotalBalance(userId) {
+        try {
+            return await this.#transactionRepository.getTotalBalanceByUserId(userId);
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = TransactionService;

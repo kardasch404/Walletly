@@ -5,8 +5,11 @@ class TransactionRepository {
     async create(data) {
         try {
             return new Promise((resolve, reject) => {
-                const query = `INSERT INTO transactions (id, user_id, category_id, amount, description, type, transactionDate) 
-                            VALUES (?, ?, ?, ?, ?, ?, ?)`;
+                const query = `
+                    INSERT INTO transactions 
+                    (id, user_id, category_id, amount, description, type, transactionDate) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                `;
                 const values = [
                     data.id,
                     data.user_id,
@@ -33,31 +36,97 @@ class TransactionRepository {
     async getAllByUserId(userId) {
         try {
             return new Promise((resolve, reject) => {
-                console.log('getAllByUserId called with userId:', userId);
-                const query = `SELECT 
-  t.id, 
-  t.user_id, 
-  t.category_id, 
-  t.amount, 
-  t.description, 
-  t.type, 
-  t.transactionDate, 
-  t.created_at, 
-  c.name AS category_name
-FROM transactions t
-LEFT JOIN categories c ON t.category_id = c.id
-WHERE t.user_id = ?
-ORDER BY t.transactionDate DESC`;
-                console.log('Query:', query);
-                console.log('Parameters:', [userId]);
+                const query = `
+                    SELECT 
+                        transactions.*, 
+                        categories.name AS category_name 
+                    FROM transactions 
+                    LEFT JOIN categories ON transactions.category_id = categories.id 
+                    WHERE transactions.user_id = ? 
+                    ORDER BY transactions.transactionDate DESC
+                `;
                 db.query(query, [userId], (err, result) => {
-                    if (err) {
-                        console.error('Database error:', err);
-                        reject(err);
-                    } else {
-                        console.log('Query result:', result);
-                        resolve(result);
-                    }
+                    if (err) reject(err);
+                    else resolve(result);
+                });
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getRecentByUserId(userId, limit = 4) {
+        try {
+            return new Promise((resolve, reject) => {
+                const query = `
+                    SELECT 
+                        transactions.*, 
+                        categories.name AS category_name 
+                    FROM transactions 
+                    LEFT JOIN categories ON transactions.category_id = categories.id 
+                    WHERE transactions.user_id = ? 
+                    ORDER BY transactions.transactionDate DESC 
+                    LIMIT ?
+                `;
+                db.query(query, [userId, limit], (err, result) => {
+                    if (err) reject(err);
+                    else resolve(result);
+                });
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getTotalIncomeByUserId(userId) {
+        try {
+            return new Promise((resolve, reject) => {
+                const query = `
+                    SELECT COALESCE(SUM(amount), 0) AS total 
+                    FROM transactions 
+                    WHERE user_id = ? AND type = 'income'
+                `;
+                db.query(query, [userId], (err, result) => {
+                    if (err) reject(err);
+                    else resolve(result[0].total);
+                });
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getTotalExpenseByUserId(userId) {
+        try {
+            return new Promise((resolve, reject) => {
+                const query = `
+                    SELECT COALESCE(SUM(amount), 0) AS total 
+                    FROM transactions 
+                    WHERE user_id = ? AND type = 'expense'
+                `;
+                db.query(query, [userId], (err, result) => {
+                    if (err) reject(err);
+                    else resolve(result[0].total);
+                });
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getTotalBalanceByUserId(userId) {
+        try {
+            return new Promise((resolve, reject) => {
+                const query = `
+                    SELECT 
+                        COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END), 0) - 
+                        COALESCE(SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END), 0) AS balance 
+                    FROM transactions 
+                    WHERE user_id = ?
+                `;
+                db.query(query, [userId], (err, result) => {
+                    if (err) reject(err);
+                    else resolve(result[0].balance);
                 });
             });
         } catch (error) {

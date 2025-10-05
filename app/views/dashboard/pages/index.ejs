@@ -1,23 +1,12 @@
 <!-- Dashboard Page -->
 <div id="dashboard" class="page-view active p-8">
-  <!-- Time Period Selector -->
-  <div class="mb-6">
-    <div
-      class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/60 border border-black/5"
-    >
-      <i class="fas fa-calendar text-[#4A6B5C]"></i>
-      <span class="text-sm font-medium">This month</span>
-      <i class="fas fa-chevron-down text-xs text-[#2C2C2C]/40"></i>
-    </div>
-  </div>
-
   <!-- Metrics Grid -->
   <div class="grid grid-cols-4 gap-6 mb-8">
     <div class="card metric-card rounded-2xl p-6 fade-in-up stagger-1">
       <div class="flex items-start justify-between mb-4">
         <div>
           <p class="text-sm text-[#2C2C2C]/60 mb-1">Total balance</p>
-          <h3 class="serif text-3xl font-semibold text-[#2C2C2C]">$15,700</h3>
+          <h3 class="serif text-3xl font-semibold text-[#2C2C2C]">$<%= totalBalance.toLocaleString() %></h3>
         </div>
         <div
           class="w-10 h-10 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center"
@@ -25,13 +14,9 @@
           <i class="fas fa-arrow-trend-up text-[#4A6B5C]"></i>
         </div>
       </div>
+
       <div class="flex items-center gap-2">
-        <span
-          class="stat-badge px-2 py-1 rounded-lg text-xs font-medium text-[#4A6B5C]"
-        >
-          <i class="fas fa-arrow-up text-xs"></i> 12.5%
-        </span>
-        <span class="text-xs text-[#2C2C2C]/40">vs last month</span>
+        <span class="text-xs text-[#2C2C2C]/40"><%= new Date().toLocaleDateString('en-US', { month: 'long' }) %></span>
       </div>
     </div>
 
@@ -39,7 +24,7 @@
       <div class="flex items-start justify-between mb-4">
         <div>
           <p class="text-sm text-[#2C2C2C]/60 mb-1">Income</p>
-          <h3 class="serif text-3xl font-semibold text-[#2C2C2C]">$8,500</h3>
+          <h3 class="serif text-3xl font-semibold text-[#2C2C2C]">$<%= totalIncome.toLocaleString() %></h3>
         </div>
         <div
           class="w-10 h-10 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center"
@@ -47,13 +32,9 @@
           <i class="fas fa-arrow-down text-[#4A6B5C]"></i>
         </div>
       </div>
+
       <div class="flex items-center gap-2">
-        <span
-          class="stat-badge px-2 py-1 rounded-lg text-xs font-medium text-[#4A6B5C]"
-        >
-          <i class="fas fa-arrow-up text-xs"></i> 6.3%
-        </span>
-        <span class="text-xs text-[#2C2C2C]/40">vs last month</span>
+        <span class="text-xs text-[#2C2C2C]/40"><%= new Date().toLocaleDateString('en-US', { month: 'long' }) %></span>
       </div>
     </div>
 
@@ -61,7 +42,7 @@
       <div class="flex items-start justify-between mb-4">
         <div>
           <p class="text-sm text-[#2C2C2C]/60 mb-1">Expense</p>
-          <h3 class="serif text-3xl font-semibold text-[#2C2C2C]">$6,222</h3>
+          <h3 class="serif text-3xl font-semibold text-[#2C2C2C]">$<%= totalExpense.toLocaleString() %></h3>
         </div>
         <div
           class="w-10 h-10 rounded-xl bg-[#C9A86A]/10 flex items-center justify-center"
@@ -69,13 +50,9 @@
           <i class="fas fa-arrow-up text-[#C9A86A]"></i>
         </div>
       </div>
+
       <div class="flex items-center gap-2">
-        <span
-          class="stat-badge px-2 py-1 rounded-lg text-xs font-medium text-[#C9A86A]"
-        >
-          <i class="fas fa-arrow-down text-xs"></i> 2.4%
-        </span>
-        <span class="text-xs text-[#2C2C2C]/40">vs last month</span>
+        <span class="text-xs text-[#2C2C2C]/40"><%= new Date().toLocaleDateString('en-US', { month: 'long' }) %></span>
       </div>
     </div>
 
@@ -91,122 +68,9 @@
           <i class="fas fa-piggy-bank text-[#4A6B5C]"></i>
         </div>
       </div>
+
       <div class="flex items-center gap-2">
-        <span
-          class="stat-badge px-2 py-1 rounded-lg text-xs font-medium text-[#4A6B5C]"
-        >
-          <i class="fas fa-arrow-up text-xs"></i> 32.1%
-        </span>
-        <span class="text-xs text-[#2C2C2C]/40">vs last month</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Charts Row -->
-  <div class="grid grid-cols-3 gap-6 mb-8">
-    <!-- Money Flow Chart -->
-    <div class="col-span-2 card rounded-2xl p-6">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="serif text-xl font-semibold text-[#2C2C2C]">Money flow</h3>
-        <div class="flex items-center gap-3">
-          <div class="flex items-center gap-2">
-            <div class="w-3 h-3 rounded-full bg-[#4A6B5C]"></div>
-            <span class="text-xs text-[#2C2C2C]/60">Income</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <div class="w-3 h-3 rounded-full bg-[#C9A86A]"></div>
-            <span class="text-xs text-[#2C2C2C]/60">Expense</span>
-          </div>
-          <select
-            class="px-3 py-1.5 rounded-lg bg-white/60 border border-black/5 text-xs"
-          >
-            <option>This year</option>
-            <option>Last year</option>
-          </select>
-        </div>
-      </div>
-      <div class="chart-container">
-        <canvas id="moneyFlowChart"></canvas>
-      </div>
-    </div>
-
-    <!-- Budget Overview -->
-    <div class="card rounded-2xl p-6">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="serif text-xl font-semibold text-[#2C2C2C]">Budget</h3>
-        <button
-          class="w-8 h-8 rounded-lg bg-white/60 hover:bg-white/80 flex items-center justify-center transition-all"
-        >
-          <i class="fas fa-arrow-right text-xs text-[#2C2C2C]/60"></i>
-        </button>
-      </div>
-      <div class="flex items-center justify-center mb-6">
-        <div class="relative w-40 h-40">
-          <svg class="transform -rotate-90" width="160" height="160">
-            <circle
-              cx="80"
-              cy="80"
-              r="70"
-              fill="none"
-              stroke="rgba(0,0,0,0.05)"
-              stroke-width="12"
-            />
-            <circle
-              cx="80"
-              cy="80"
-              r="70"
-              fill="none"
-              stroke="url(#gradient)"
-              stroke-width="12"
-              stroke-dasharray="439.6"
-              stroke-dashoffset="110"
-              stroke-linecap="round"
-            />
-            <defs>
-              <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop
-                  offset="0%"
-                  style="stop-color: #4a6b5c; stop-opacity: 1"
-                />
-                <stop
-                  offset="100%"
-                  style="stop-color: #c9a86a; stop-opacity: 1"
-                />
-              </linearGradient>
-            </defs>
-          </svg>
-          <div
-            class="absolute inset-0 flex flex-col items-center justify-center"
-          >
-            <span class="serif text-2xl font-semibold text-[#2C2C2C]"
-              >$5,950</span
-            >
-            <span class="text-xs text-[#2C2C2C]/40">of $8,000</span>
-          </div>
-        </div>
-      </div>
-      <div class="space-y-3">
-        <div class="flex items-center justify-between text-sm">
-          <div class="flex items-center gap-2">
-            <div class="w-2 h-2 rounded-full bg-[#4A6B5C]"></div>
-            <span class="text-[#2C2C2C]/60">Restaurants</span>
-          </div>
-          <span class="font-medium text-[#2C2C2C]">$1,200</span>
-        </div>
-        <div class="flex items-center justify-between text-sm">
-          <div class="flex items-center gap-2">
-            <div class="w-2 h-2 rounded-full bg-[#C9A86A]"></div>
-            <span class="text-[#2C2C2C]/60">Shopping</span>
-          </div>
-          <span class="font-medium text-[#2C2C2C]">$850</span>
-        </div>
-        <div class="flex items-center justify-between text-sm">
-          <div class="flex items-center gap-2">
-            <div class="w-2 h-2 rounded-full bg-[#8B9D93]"></div>
-            <span class="text-[#2C2C2C]/60">Transport</span>
-          </div>
-          <span class="font-medium text-[#2C2C2C]">$420</span>
-        </div>
+        <span class="text-xs text-[#2C2C2C]/40"><%= new Date().toLocaleDateString('en-US', { month: 'long' }) %></span>
       </div>
     </div>
   </div>
@@ -227,59 +91,29 @@
         </button>
       </div>
       <div class="space-y-1">
-        <div
-          class="transaction-row flex items-center justify-between py-4 px-2 rounded-lg"
-        >
-          <div class="flex items-center gap-4">
-            <div class="category-icon bg-red-50">
-              <i class="fab fa-youtube text-red-600"></i>
-            </div>
-            <div>
-              <p class="font-medium text-[#2C2C2C] text-sm">YouTube Premium</p>
-              <p class="text-xs text-[#2C2C2C]/40">29 Jul 12:30</p>
-            </div>
+        <% if (recentTransactions.length === 0) { %>
+          <div class="text-center py-8 text-[#2C2C2C]/40">
+            No transactions found
           </div>
-          <div class="text-right">
-            <p class="font-semibold text-[#2C2C2C]">-$10</p>
-            <p class="text-xs text-[#2C2C2C]/40">Subscription</p>
-          </div>
-        </div>
-        <div
-          class="transaction-row flex items-center justify-between py-4 px-2 rounded-lg"
-        >
-          <div class="flex items-center gap-4">
-            <div class="category-icon bg-blue-50">
-              <i class="fas fa-shopping-bag text-blue-600"></i>
+        <% } else { %>
+          <% recentTransactions.forEach(transaction => { %>
+            <div class="transaction-row flex items-center justify-between py-4 px-2 rounded-lg">
+              <div class="flex items-center gap-4">
+                <div class="category-icon bg-blue-50">
+                  <i class="fas fa-circle text-blue-600"></i>
+                </div>
+                <div>
+                  <p class="font-medium text-[#2C2C2C] text-sm"><%= transaction.description %></p>
+                  <p class="text-xs text-[#2C2C2C]/40"><%= new Date(transaction.transactionDate).toLocaleDateString() %></p>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="font-semibold text-[#2C2C2C]"><%= transaction.type === 'expense' ? '-' : '+' %>$<%= transaction.amount %></p>
+                <p class="text-xs text-[#2C2C2C]/40"><%= transaction.category_name || 'Uncategorized' %></p>
+              </div>
             </div>
-            <div>
-              <p class="font-medium text-[#2C2C2C] text-sm">Reserved Store</p>
-              <p class="text-xs text-[#2C2C2C]/40">26 Jul 10:05</p>
-            </div>
-          </div>
-          <div class="text-right">
-            <p class="font-semibold text-[#2C2C2C]">-$120</p>
-            <p class="text-xs text-[#2C2C2C]/40">Shopping</p>
-          </div>
-        </div>
-        <div
-          class="transaction-row flex items-center justify-between py-4 px-2 rounded-lg"
-        >
-          <div class="flex items-center gap-4">
-            <div class="category-icon bg-green-50">
-              <i class="fas fa-utensils text-green-600"></i>
-            </div>
-            <div>
-              <p class="font-medium text-[#2C2C2C] text-sm">
-                Vapiano Restaurant
-              </p>
-              <p class="text-xs text-[#2C2C2C]/40">27 Jul 9:00</p>
-            </div>
-          </div>
-          <div class="text-right">
-            <p class="font-semibold text-[#2C2C2C]">-$80</p>
-            <p class="text-xs text-[#2C2C2C]/40">Dining</p>
-          </div>
-        </div>
+          <% }); %>
+        <% } %>
       </div>
     </div>
 
@@ -336,3 +170,4 @@
     </div>
   </div>
 </div>
+

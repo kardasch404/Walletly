@@ -106,7 +106,7 @@
         </div>
       </div>
 
-      <div class="card rounded-2xl p-8">
+      <!-- <div class="card rounded-2xl p-8">
         <h3 class="serif text-2xl font-semibold text-[#2C2C2C] mb-6">
           Security
         </h3>
@@ -147,9 +147,9 @@
             </button>
           </div>
         </div>
-      </div>
+      </div> -->
 
-      <div class="card rounded-2xl p-8">
+      <!-- <div class="card rounded-2xl p-8">
         <h3 class="serif text-2xl font-semibold text-[#2C2C2C] mb-6">
           Notifications
         </h3>
@@ -195,7 +195,7 @@
             <div class="toggle-switch"></div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <!-- Quick Settings -->
@@ -287,5 +287,57 @@
         </button>
       </div>
     </div>
-  </div>
+
+    <!-- Change Password -->
+    <div class="col-span-2 space-y-6">
+      <div class="card rounded-2xl p-8">
+        <h3 class="serif text-2xl font-semibold text-[#2C2C2C] mb-6">
+          Change Password
+        </h3>
+
+        <form action="/update-password" method="POST">
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Current Password</label>
+              <input
+                type="password"
+                name="currentPassword"
+                required
+                class="search-input w-full px-4 py-3 rounded-xl text-sm"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-[#2C2C2C] mb-2">New Password</label>
+              <input
+                type="password"
+                name="newPassword"
+                required
+                class="search-input w-full px-4 py-3 rounded-xl text-sm"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Confirm New Password</label>
+              <input
+                type="password"
+                name="confirmPassword"
+                required
+                class="search-input w-full px-4 py-3 rounded-xl text-sm"
+              />
+            </div>
+          </div>
+          <div class="flex justify-end gap-3 mt-6">
+            <button
+              type="button"
+              class="px-6 py-3 rounded-xl text-sm font-medium text-[#2C2C2C] hover:bg-black/5 transition-colors"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn-primary px-6 py-3 rounded-xl text-sm font-medium">
+              Update Password
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+</div>
 </div>

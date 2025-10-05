@@ -74,6 +74,21 @@ class UserService {
             throw error;
         }
     }
+
+    async updatePassword(userId, currentPassword, newPassword) {
+        try {
+            const user = await this.#userRepository.findById(userId);
+            const isValidPassword = await bcrypt.compare(currentPassword, user.password);
+            if (!isValidPassword) {
+                throw new Error('Current password is incorrect');
+            }
+            
+            const hashedPassword = await bcrypt.hash(newPassword, 16);
+            return await this.#userRepository.updatePassword(userId, hashedPassword);
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = UserService;

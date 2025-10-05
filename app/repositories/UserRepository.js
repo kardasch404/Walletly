@@ -111,6 +111,24 @@ class UserRepository {
             throw error;
         }
     }
+
+    async updatePassword(userId, hashedPassword) {
+        try {
+            return new Promise((resolve, reject) => {
+                const query = 'UPDATE users SET password = ? WHERE id = ?';
+                const values = [hashedPassword, userId];
+                db.query(query, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = UserRepository;

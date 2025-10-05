@@ -38,10 +38,14 @@ class AuthController {
     }
 
     logout(req, res) {
+        console.log('Logout called, session before destroy:', req.session.userId);
         req.session.destroy((err) => {
             if (err) {
+                console.log('Session destroy error:', err);
                 return res.status(500).json({ error: 'Could not log out' });
             }
+            console.log('Session destroyed, redirecting to /');
+            res.clearCookie('connect.sid'); // Clear session cookie
             return res.redirect('/');
         });
     }
@@ -78,6 +82,18 @@ class AuthController {
             // Update session with new image
             req.session.user.image = data.image;
             
+            return res.redirect('/settings');
+        } catch (error) {
+            return res.status(400).json({ error: error.message });
+        }
+    }
+
+    async updatePassword(req, res) {
+        try {
+            const { currentPassword, newPassword } = req.body;
+            const userId = req.session.userId;
+            
+            await this.#userServise.updatePassword(userId, currentPassword, newPassword);
             return res.redirect('/settings');
         } catch (error) {
             return res.status(400).json({ error: error.message });

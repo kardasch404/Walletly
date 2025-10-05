@@ -1,17 +1,42 @@
 var express = require('express');
 var router = express.Router();
 
+// Controllers
 const AuthController = require('../controllers/AuthController');
+const CategoryController = require('../controllers/CategoryController');
+const BudgetController = require('../controllers/BudgetController');
+const WalletController = require('../controllers/WalletController');
+const TransactionController = require('../controllers/TransactionController');
+
+// Services
 const UserService = require('../services/UserService');
+const CategoryService = require('../services/CategoryService');
+const BudgetService = require('../services/BudgetService');
+const WalletService = require('../services/WalletService');
+const TransactionService = require('../services/TransactionService');
+
+// Repositories
 const UserRepository = require('../repositories/UserRepository');
+const CategoryRepository = require('../repositories/CategoryRepository');
+const BudgetRepository = require('../repositories/BudgetRepository');
+const WalletRepository = require('../repositories/WalletRepository');
+const TransactionRepository = require('../repositories/TransactionRepository');
+
+// Request Validations
 const { validateRegister } = require('../http/requests/RegisterRequest');
 const { validateLogin } = require('../http/requests/LoginRequest');
 const { validateUserUpdate } = require('../http/requests/userUpdateRequest');
 const { validateUserPhotoUpdate } = require('../http/requests/UserPhotoUpdateRequest');
+const { validateUserUpdatePassword } = require('../http/requests/UserUpdatePasswordRequest');
+const { validateCategoryStore } = require('../http/requests/CategoryStoreRequest');
+const { validateBudgetStore } = require('../http/requests/BudgetStoreRequest');
+const { validateWalletStore } = require('../http/requests/WalletStoreRequest');
+const { validateTransactionStore } = require('../http/requests/TransactionStoreRequest');
+
 const multer = require('multer');
 const path = require('path');
 
-// Multer configuration for file uploads
+// Multer configuration
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'public/uploads/')
@@ -33,9 +58,26 @@ const upload = multer({
   }
 });
 
+// Initialize dependencies
 const userRepository = new UserRepository();
 const userService = new UserService(userRepository);
 const authController = new AuthController(userService);
+
+const categoryRepository = new CategoryRepository();
+const categoryService = new CategoryService(categoryRepository);
+const categoryController = new CategoryController(categoryService);
+
+const budgetRepository = new BudgetRepository();
+const budgetService = new BudgetService(budgetRepository);
+const budgetController = new BudgetController(budgetService);
+
+const walletRepository = new WalletRepository();
+const walletService = new WalletService(walletRepository);
+const walletController = new WalletController(walletService);
+
+const transactionRepository = new TransactionRepository();
+const transactionService = new TransactionService(transactionRepository);
+const transactionController = new TransactionController(transactionService);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -75,18 +117,31 @@ router.get('/dashboard', async function(req, res, next) {
   
   try {
     const user = await userService.getUserById(req.session.userId);
+    const recentTransactions = await transactionService.getRecentTransactions(req.session.userId);
+    const totalIncome = await transactionService.getTotalIncome(req.session.userId);
+    const totalExpense = await transactionService.getTotalExpense(req.session.userId);
+    const totalBalance = await transactionService.getTotalBalance(req.session.userId);
+    
     res.render('dashboard/layouts/main', { 
       title: 'Dashboard - Walletly',
       user: user,
       body: '../pages/index',
-      currentPage: 'dashboard'
+      currentPage: 'dashboard',
+      recentTransactions: recentTransactions,
+      totalIncome: totalIncome,
+      totalExpense: totalExpense,
+      totalBalance: totalBalance
     });
   } catch (error) {
     res.render('dashboard/layouts/main', { 
       title: 'Dashboard - Walletly',
       user: req.session.user,
       body: '../pages/index',
-      currentPage: 'dashboard'
+      currentPage: 'dashboard',
+      recentTransactions: [],
+      totalIncome: 0,
+      totalExpense: 0,
+      totalBalance: 0
     });
   }
 });
@@ -105,11 +160,6 @@ router.get('/create-budget', async function(req, res, next) {
     return res.redirect('/login');
   }
   
-  const CategoryService = require('../services/CategoryService');
-  const CategoryRepository = require('../repositories/CategoryRepository');
-  const categoryRepository = new CategoryRepository();
-  const categoryService = new CategoryService(categoryRepository);
-  
   try {
     const categories = await categoryService.getAllCategoriesFromUser(req.session.userId);
     res.render('create-budget', { 
@@ -124,37 +174,9 @@ router.get('/create-budget', async function(req, res, next) {
   }
 });
 
-/* GET create transaction page */
-router.get('/create-transaction', async function(req, res, next) {
-  if (!req.session.userId) {
-    return res.redirect('/login');
-  }
-  
-  const CategoryService = require('../services/CategoryService');
-  const CategoryRepository = require('../repositories/CategoryRepository');
-  const categoryRepository = new CategoryRepository();
-  const categoryService = new CategoryService(categoryRepository);
-  
-  try {
-    const user = await userService.getUserById(req.session.userId);
-    const categories = await categoryService.getAllCategoriesFromUser(req.session.userId);
-    res.render('dashboard/layouts/main', { 
-      title: 'Create Transaction - Walletly',
-      user: user,
-      body: '../pages/create-transaction',
-      currentPage: 'create-transaction',
-      categories: categories
-    });
-  } catch (error) {
-    res.render('dashboard/layouts/main', { 
-      title: 'Create Transaction - Walletly',
-      user: req.session.user,
-      body: '../pages/create-transaction',
-      currentPage: 'create-transaction',
-      categories: []
-    });
-  }
-});
+/*---------------------- GET create transaction page -------------------------- */
+// -----------------------------------------------------------------------------
+
 
 /* GET transactions page */
 router.get('/transactions', async function(req, res, next) {
@@ -162,22 +184,7 @@ router.get('/transactions', async function(req, res, next) {
     return res.redirect('/login');
   }
   
-  const CategoryService = require('../services/CategoryService');
-  const CategoryRepository = require('../repositories/CategoryRepository');
-  const WalletService = require('../services/WalletService');
-  const WalletRepository = require('../repositories/WalletRepository');
-  const TransactionService = require('../services/TransactionService');
-  const TransactionRepository = require('../repositories/TransactionRepository');
-  
-  const categoryRepository = new CategoryRepository();
-  const categoryService = new CategoryService(categoryRepository);
-  const walletRepository = new WalletRepository();
-  const walletService = new WalletService(walletRepository);
-  const transactionRepository = new TransactionRepository();
-  const transactionService = new TransactionService(transactionRepository);
-  
   try {
-    console.log('Session userId:', req.session.userId);
     const user = await userService.getUserById(req.session.userId);
     const categories = await categoryService.getAllCategoriesFromUser(req.session.userId);
     const wallets = await walletService.getAllWalletsFromUser(req.session.userId);
@@ -209,11 +216,6 @@ router.get('/wallet', async function(req, res, next) {
   if (!req.session.userId) {
     return res.redirect('/login');
   }
-  
-  const WalletService = require('../services/WalletService');
-  const WalletRepository = require('../repositories/WalletRepository');
-  const walletRepository = new WalletRepository();
-  const walletService = new WalletService(walletRepository);
   
   try {
     const user = await userService.getUserById(req.session.userId);
@@ -265,19 +267,6 @@ router.get('/budget', async function(req, res, next) {
   if (!req.session.userId) {
     return res.redirect('/login');
   }
-  
-  const CategoryService = require('../services/CategoryService');
-  const CategoryRepository = require('../repositories/CategoryRepository');
-  const BudgetService = require('../services/BudgetService');
-  const BudgetRepository = require('../repositories/BudgetRepository');
-  const WalletService = require('../services/WalletService');
-  const WalletRepository = require('../repositories/WalletRepository');
-  const categoryRepository = new CategoryRepository();
-  const categoryService = new CategoryService(categoryRepository);
-  const budgetRepository = new BudgetRepository();
-  const budgetService = new BudgetService(budgetRepository);
-  const walletRepository = new WalletRepository();
-  const walletService = new WalletService(walletRepository);
   
   try {
     const user = await userService.getUserById(req.session.userId);
@@ -336,11 +325,6 @@ router.get('/categories', async function(req, res, next) {
     return res.redirect('/login');
   }
   
-  const CategoryService = require('../services/CategoryService');
-  const CategoryRepository = require('../repositories/CategoryRepository');
-  const categoryRepository = new CategoryRepository();
-  const categoryService = new CategoryService(categoryRepository);
-  
   try {
     const user = await userService.getUserById(req.session.userId);
     const categories = await categoryService.getAllCategoriesFromUser(req.session.userId);
@@ -388,6 +372,8 @@ router.get('/settings', async function(req, res, next) {
 
 
 
+// ============= POST ROUTES =============
+
 /* POST register */
 router.post('/register', async (req, res) => {
   const { error } = validateRegister(req.body);
@@ -408,6 +394,11 @@ router.post('/login', async (req, res) => {
 
 /* POST logout */
 router.post('/logout', (req, res) => {
+  authController.logout(req, res);
+});
+
+/* GET logout */
+router.get('/logout-get', (req, res) => {
   authController.logout(req, res);
 });
 
@@ -449,14 +440,12 @@ router.post('/categories', async (req, res) => {
     return res.redirect('/login');
   }
   
-  const CategoryService = require('../services/CategoryService');
-  const CategoryRepository = require('../repositories/CategoryRepository');
-  const CategoryController = require('../controllers/CategoryController');
-  const categoryRepository = new CategoryRepository();
-  const categoryService = new CategoryService(categoryRepository);
-  const categoryController = new CategoryController(categoryService);
-  
-  await categoryController.createCategory(req, res);
+  try {
+    validateCategoryStore(req.body);
+    await categoryController.createCategory(req, res);
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
 });
 
 /* POST create budget */
@@ -465,14 +454,12 @@ router.post('/budgets', async (req, res) => {
     return res.redirect('/login');
   }
   
-  const BudgetService = require('../services/BudgetService');
-  const BudgetRepository = require('../repositories/BudgetRepository');
-  const BudgetController = require('../controllers/BudgetController');
-  const budgetRepository = new BudgetRepository();
-  const budgetService = new BudgetService(budgetRepository);
-  const budgetController = new BudgetController(budgetService);
-  
-  await budgetController.createBudget(req, res);
+  try {
+    validateBudgetStore(req.body);
+    await budgetController.createBudget(req, res);
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
 });
 
 /* POST create wallet */
@@ -481,16 +468,8 @@ router.post('/wallets', async (req, res) => {
     return res.redirect('/login');
   }
   
-  const { validateWalletStore } = require('../http/requests/WalletStoreRequest');
-  const WalletService = require('../services/WalletService');
-  const WalletRepository = require('../repositories/WalletRepository');
-  const WalletController = require('../controllers/WalletController');
-  
   try {
     validateWalletStore(req.body);
-    const walletRepository = new WalletRepository();
-    const walletService = new WalletService(walletRepository);
-    const walletController = new WalletController(walletService);
     await walletController.createWallet(req, res);
   } catch (error) {
     return res.status(400).json({ error: error.message });
@@ -503,20 +482,28 @@ router.post('/transactions', async (req, res) => {
     return res.redirect('/login');
   }
   
-  const { validateTransactionStore } = require('../http/requests/TransactionStoreRequest');
-  const TransactionService = require('../services/TransactionService');
-  const TransactionRepository = require('../repositories/TransactionRepository');
-  const TransactionController = require('../controllers/TransactionController');
-  
   try {
     validateTransactionStore(req.body);
-    const transactionRepository = new TransactionRepository();
-    const transactionService = new TransactionService(transactionRepository);
-    const transactionController = new TransactionController(transactionService);
     await transactionController.createTransaction(req, res);
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
 });
+
+/* POST update password */
+router.post('/update-password', async (req, res) => {
+  if (!req.session.userId) {
+    return res.redirect('/login');
+  }
+  
+  try {
+    validateUserUpdatePassword(req.body);
+    await authController.updatePassword(req, res);
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+});
+
+
 
 module.exports = router;

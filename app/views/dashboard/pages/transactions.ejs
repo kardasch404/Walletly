@@ -1,21 +1,43 @@
 <!-- Transactions Page -->
 <div id="transactions" class="page-view <%= currentPage === 'transactions' ? 'active' : '' %> p-8">
-  <div class="flex justify-between items-center mb-8">
-    <div>
+  <div class="flex justify-between items-center mb-4">
+    <div class="mb-8">
       <h2 class="serif text-4xl font-semibold text-[#2C2C2C] mb-2">Transactions</h2>
       <p class="text-[#2C2C2C]/60">Track and manage all your financial transactions</p>
     </div>
 
-    
-    <button onclick="openTransactionModal()" class="btn-primary px-6 py-3 rounded-xl text-sm font-medium">
-      <i class="fas fa-plus mr-2"></i>
-      Add Transaction
-    </button>
   </div>
+
+   <!-- Filters and Search -->
+   <!-- <div class="card rounded-2xl p-6 mb-6">
+    <div class="flex items-center gap-4 mb-6">
+        <div class="flex-1 relative">
+            <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-[#2C2C2C]/40"></i>
+            <input type="text" id="searchInput" placeholder="Search transactions..." class="search-input w-full pl-12 pr-4 py-3 rounded-xl text-sm">
+        </div>
+        <button onclick="applyFilters()" class="btn-primary px-6 py-3 rounded-xl text-sm font-medium">
+            <i class="fas fa-filter mr-2"></i>Filter
+        </button>
+    </div>
+    <div class="flex items-center gap-3">
+        <span class="text-sm text-[#2C2C2C]/60">Filter by:</span>
+        <button class="filter-chip active px-4 py-2 rounded-lg text-sm font-medium" data-filter="all">All</button>
+        <button class="filter-chip px-4 py-2 rounded-lg text-sm font-medium" data-filter="income">Income</button>
+        <button class="filter-chip px-4 py-2 rounded-lg text-sm font-medium" data-filter="expense">Expense</button>
+    </div>
+</div> -->
 
   <!-- Transaction List -->
   <div class="card rounded-2xl p-6">
-    <div class="space-y-1">
+
+      <!-- Adding create transaction button -->
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="serif text-xl font-semibold text-[#2C2C2C]">All Transactions</h3>
+        <button onclick="openTransactionModal()" class="btn-primary px-4 py-2 rounded-xl text-sm font-medium">
+            <i class="fas fa-plus mr-2"></i>Add Transaction
+        </button>
+    </div>
+    <div class="space-y-1 transaction-list">
       <% if (transactions && transactions.length > 0) { %>
         <% transactions.forEach(transaction => { %>
           <div class="transaction-row flex items-center justify-between py-4 px-4 rounded-xl">
@@ -49,6 +71,6 @@
       <% } %>
     </div>
   </div>
-</div>
+  
 
 
