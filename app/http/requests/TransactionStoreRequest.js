@@ -3,8 +3,8 @@ const Joi = require('joi');
 const transactionStoreSchema = Joi.object({
     category_id: Joi.string().required(),
     amount: Joi.number().positive().required(),
-    description: Joi.string().required(),
-    type: Joi.string().required(),
+    description: Joi.string().allow('').optional(),
+    type: Joi.string().valid('income', 'expense').required(),
     transactionDate: Joi.date().required()
 }); 
 

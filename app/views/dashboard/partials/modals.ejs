@@ -7,7 +7,8 @@
                 <i class="fas fa-times text-[#2C2C2C]/60"></i>
             </button>
         </div>
-        <form id="transactionForm" action="/transactions/create" method="POST" class="space-y-4">
+        <form id="transactionForm" action="/transactions" method="POST" class="space-y-4">
+            <input type="hidden" name="userId" value="<%= user.id %>">
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Transaction Name</label>

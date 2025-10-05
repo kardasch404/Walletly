@@ -28,13 +28,15 @@ CREATE TABLE transactions (
     id VARCHAR(36) PRIMARY KEY,
     user_id VARCHAR(36),
     category_id VARCHAR(36),
+    wallet_id VARCHAR(36),
     amount DECIMAL(10, 2),
     description VARCHAR(255),
     type VARCHAR(50),
     transactionDate TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (category_id) REFERENCES categories (id)
+    FOREIGN KEY (category_id) REFERENCES categories (id),
+    FOREIGN KEY (wallet_id) REFERENCES wallets (id)
 );
 
 CREATE TABLE budgets (

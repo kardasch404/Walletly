@@ -155,20 +155,44 @@ router.get('/transactions', async function(req, res, next) {
     return res.redirect('/login');
   }
   
+  const CategoryService = require('../services/CategoryService');
+  const CategoryRepository = require('../repositories/CategoryRepository');
+  const WalletService = require('../services/WalletService');
+  const WalletRepository = require('../repositories/WalletRepository');
+  const TransactionService = require('../services/TransactionService');
+  const TransactionRepository = require('../repositories/TransactionRepository');
+  
+  const categoryRepository = new CategoryRepository();
+  const categoryService = new CategoryService(categoryRepository);
+  const walletRepository = new WalletRepository();
+  const walletService = new WalletService(walletRepository);
+  const transactionRepository = new TransactionRepository();
+  const transactionService = new TransactionService(transactionRepository);
+  
   try {
+    console.log('Session userId:', req.session.userId);
     const user = await userService.getUserById(req.session.userId);
+    const categories = await categoryService.getAllCategoriesFromUser(req.session.userId);
+    const wallets = await walletService.getAllWalletsFromUser(req.session.userId);
+    const transactions = await transactionService.getAllTransactionsFromUser(req.session.userId);
     res.render('dashboard/layouts/main', { 
       title: 'Transactions - Walletly',
       user: user,
       body: '../pages/transactions',
-      currentPage: 'transactions'
+      currentPage: 'transactions',
+      categories: categories,
+      wallets: wallets,
+      transactions: transactions
     });
   } catch (error) {
     res.render('dashboard/layouts/main', { 
       title: 'Transactions - Walletly',
       user: req.session.user,
       body: '../pages/transactions',
-      currentPage: 'transactions'
+      currentPage: 'transactions',
+      categories: [],
+      wallets: [],
+      transactions: []
     });
   }
 });
@@ -454,6 +478,28 @@ router.post('/wallets', async (req, res) => {
     const walletService = new WalletService(walletRepository);
     const walletController = new WalletController(walletService);
     await walletController.createWallet(req, res);
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+});
+
+/* POST create transaction */
+router.post('/transactions', async (req, res) => {
+  if (!req.session.userId) {
+    return res.redirect('/login');
+  }
+  
+  const { validateTransactionStore } = require('../http/requests/TransactionStoreRequest');
+  const TransactionService = require('../services/TransactionService');
+  const TransactionRepository = require('../repositories/TransactionRepository');
+  const TransactionController = require('../controllers/TransactionController');
+  
+  try {
+    validateTransactionStore(req.body);
+    const transactionRepository = new TransactionRepository();
+    const transactionService = new TransactionService(transactionRepository);
+    const transactionController = new TransactionController(transactionService);
+    await transactionController.createTransaction(req, res);
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }

@@ -39,8 +39,36 @@ class TransactionController {
         }
     }
 
+    async CountAllTransactionsFromUser(req, res)
+    {
 
+    }
 
+    async TotalIncome (req, res)
+    {
+
+    }
+
+    async TotalExpense (req, res)
+    {
+
+    }
+
+    async search (req, res)
+    {
+
+    }
+
+    async filter (req, res)
+    {
+
+    }
+
+    async RecentTransactions(req, res)
+    {
+
+    }
+    
 }
 
 module.exports = TransactionController;
