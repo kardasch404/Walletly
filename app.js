@@ -34,7 +34,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/categories', categoriesRouter);
 app.use('/budgets', budgetsRouter);
-// app.use('/transactions', transactionsRouter); // Commented out to avoid conflicts
+app.use('/transactions', transactionsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

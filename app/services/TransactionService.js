@@ -88,6 +88,22 @@ class TransactionService {
             throw error;
         }
     }
+
+    async searchAndFilter(userId, searchTerm, filterType) {
+        try {
+            return await this.#transactionRepository.searchAndFilter(userId, searchTerm, filterType);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getStatsByFilter(userId, filterType) {
+        try {
+            return await this.#transactionRepository.getStatsByFilter(userId, filterType);
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = TransactionService;

@@ -912,3 +912,36 @@ button[type="submit"]:hover {
     align-items: center;
   }
 }
+
+/* Filter Chips */
+.filter-chip {
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-chip:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.filter-chip.active {
+  background: #4A6B5C;
+  color: white;
+  border-color: #4A6B5C;
+}
+
+/* Search Input */
+.search-input {
+  border: 1px solid #e5e7eb;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #4A6B5C;
+  box-shadow: 0 0 0 3px rgba(74, 107, 92, 0.1);
+}

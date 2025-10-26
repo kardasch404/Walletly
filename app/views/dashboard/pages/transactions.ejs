@@ -5,72 +5,316 @@
       <h2 class="serif text-4xl font-semibold text-[#2C2C2C] mb-2">Transactions</h2>
       <p class="text-[#2C2C2C]/60">Track and manage all your financial transactions</p>
     </div>
-
   </div>
 
-   <!-- Filters and Search -->
-   <!-- <div class="card rounded-2xl p-6 mb-6">
+  <!-- Filters and Search -->
+  <div class="card rounded-2xl p-6 mb-6">
     <div class="flex items-center gap-4 mb-6">
-        <div class="flex-1 relative">
-            <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-[#2C2C2C]/40"></i>
-            <input type="text" id="searchInput" placeholder="Search transactions..." class="search-input w-full pl-12 pr-4 py-3 rounded-xl text-sm">
-        </div>
-        <button onclick="applyFilters()" class="btn-primary px-6 py-3 rounded-xl text-sm font-medium">
-            <i class="fas fa-filter mr-2"></i>Filter
-        </button>
+      <div class="flex-1 relative">
+        <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-[#2C2C2C]/40"></i>
+        <input type="text" id="searchInput" placeholder="Search transactions..."
+          class="search-input w-full pl-12 pr-4 py-3 rounded-xl text-sm">
+      </div>
+      <button onclick="applyFilters()" class="btn-primary px-6 py-3 rounded-xl text-sm font-medium">
+        <i class="fas fa-filter mr-2"></i>Filter
+      </button>
     </div>
     <div class="flex items-center gap-3">
-        <span class="text-sm text-[#2C2C2C]/60">Filter by:</span>
-        <button class="filter-chip active px-4 py-2 rounded-lg text-sm font-medium" data-filter="all">All</button>
-        <button class="filter-chip px-4 py-2 rounded-lg text-sm font-medium" data-filter="income">Income</button>
-        <button class="filter-chip px-4 py-2 rounded-lg text-sm font-medium" data-filter="expense">Expense</button>
+      <span class="text-sm text-[#2C2C2C]/60">Filter by:</span>
+      <button class="filter-chip active px-4 py-2 rounded-lg text-sm font-medium" data-filter="all">All</button>
+      <button class="filter-chip px-4 py-2 rounded-lg text-sm font-medium" data-filter="income">Income</button>
+      <button class="filter-chip px-4 py-2 rounded-lg text-sm font-medium" data-filter="expense">Expense</button>
     </div>
-</div> -->
+  </div>
+
+  <div class="grid grid-cols-3 gap-6 mb-6">
+    <div class="card rounded-2xl p-6">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center">
+          <i class="fas fa-arrow-down text-[#4A6B5C] text-lg"></i>
+        </div>
+        <div>
+          <p class="text-sm text-[#2C2C2C]/60 mb-1">Total Income</p>
+          <p class="serif text-2xl font-semibold text-[#2C2C2C]" id="totalIncomeDisplay">
+            $<%= transactions.reduce((sum, t) => t.type === 'income' ? sum + parseFloat(t.amount) : sum, 0).toFixed(2) %>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="card rounded-2xl p-6">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-[#C9A86A]/10 flex items-center justify-center">
+          <i class="fas fa-arrow-up text-[#C9A86A] text-lg"></i>
+        </div>
+        <div>
+          <p class="text-sm text-[#2C2C2C]/60 mb-1">Total Expense</p>
+          <p class="serif text-2xl font-semibold text-[#2C2C2C]" id="totalExpenseDisplay">
+            $<%= transactions.reduce((sum, t) => t.type === 'expense' ? sum + parseFloat(t.amount) : sum, 0).toFixed(2) %>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="card rounded-2xl p-6">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center">
+          <i class="fas fa-receipt text-[#4A6B5C] text-lg"></i>
+        </div>
+        <div>
+          <p class="text-sm text-[#2C2C2C]/60 mb-1">Transactions</p>
+          <p class="serif text-2xl font-semibold text-[#2C2C2C]" id="transactionCountDisplay">
+            <%= transactions.length %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Transaction List -->
   <div class="card rounded-2xl p-6">
-
-      <!-- Adding create transaction button -->
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="serif text-xl font-semibold text-[#2C2C2C]">All Transactions</h3>
-        <button onclick="openTransactionModal()" class="btn-primary px-4 py-2 rounded-xl text-sm font-medium">
-            <i class="fas fa-plus mr-2"></i>Add Transaction
-        </button>
+    <!-- Header with Add Button -->
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="serif text-xl font-semibold text-[#2C2C2C]">All Transactions</h3>
+      <button onclick="openTransactionModal()" class="btn-primary px-4 py-2 rounded-xl text-sm font-medium">
+        <i class="fas fa-plus mr-2"></i>Add Transaction
+      </button>
     </div>
-    <div class="space-y-1 transaction-list">
-      <% if (transactions && transactions.length > 0) { %>
-        <% transactions.forEach(transaction => { %>
-          <div class="transaction-row flex items-center justify-between py-4 px-4 rounded-xl">
+
+    <div class="space-y-1" id="transactionsList">
+      <% if (transactions && transactions.length> 0) { %>
+        <% transactions.forEach(transaction=> {
+          // Category icon and color mapping
+          const categoryIcons = {
+          'Food & Dining': { icon: 'fas fa-utensils', color: 'green' },
+          'Transportation': { icon: 'fas fa-car', color: 'orange' },
+          'Entertainment': { icon: 'fas fa-film', color: 'purple' },
+          'Shopping': { icon: 'fas fa-shopping-bag', color: 'blue' },
+          'Freelance': { icon: 'fas fa-laptop-code', color: 'indigo' },
+          'Salary': { icon: 'fas fa-dollar-sign', color: 'green' },
+          'Healthcare': { icon: 'fas fa-heart', color: 'pink' },
+          'Subscription': { icon: 'fas fa-repeat', color: 'red' },
+          'Utilities': { icon: 'fas fa-bolt', color: 'yellow' },
+          'Groceries': { icon: 'fas fa-shopping-cart', color: 'emerald' },
+          'Default': { icon: 'fas fa-circle', color: 'gray' }
+          };
+
+          const categoryName = transaction.category_name || 'Other';
+          const categoryData = categoryIcons[categoryName] || categoryIcons['Default'];
+          const isIncome = transaction.type === 'income';
+          const amountColor = isIncome ? 'text-[#4A6B5C]' : 'text-[#2C2C2C]';
+          const badgeColor = isIncome ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600';
+          %>
+          <div
+            class="transaction-row flex items-center justify-between py-4 px-4 rounded-xl group hover:bg-black/5 transition-all">
             <div class="flex items-center gap-4">
-              <div class="category-icon bg-red-50">
-                <i class="fas fa-tag text-red-600"></i>
+              <div
+                class="category-icon bg-<%= categoryData.color %>-50 w-12 h-12 rounded-xl flex items-center justify-center">
+                <i class="<%= categoryData.icon %> text-<%= categoryData.color %>-600"></i>
               </div>
               <div>
-                <p class="font-medium text-[#2C2C2C]"><%= transaction.category_name || 'No Category' %></p>
-                <p class="text-sm text-[#2C2C2C]/40"><%= new Date(transaction.transactionDate).toLocaleDateString() %></p>
+                <p class="font-medium text-[#2C2C2C]">
+                  <%= transaction.description || categoryName %>
+                </p>
+                <p class="text-sm text-[#2C2C2C]/40">
+                  <%= new Date(transaction.transactionDate).toLocaleDateString('en-US', { day: 'numeric' ,
+                    month: 'short' }) %>
+                    <%= new Date(transaction.transactionDate).toLocaleTimeString('en-US', { hour: '2-digit' ,
+                      minute: '2-digit' }) %>
+                </p>
               </div>
             </div>
             <div class="flex items-center gap-6">
-              <span class="px-3 py-1 rounded-lg bg-purple-50 text-purple-600 text-xs font-medium"><%= transaction.type %></span>
-              <p class="font-semibold text-[#2C2C2C] text-lg"><%= transaction.type === 'income' ? '+' : '-' %>$<%= transaction.amount %></p>
+              <span class="px-3 py-1 rounded-lg <%= badgeColor %> text-xs font-medium">
+                <%= categoryName %>
+              </span>
+              <p class="font-semibold <%= amountColor %> text-lg min-w-[100px] text-right">
+                <%= isIncome ? '+' : '-' %>$<%= parseFloat(transaction.amount).toFixed(2) %>
+              </p>
+              <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button onclick="editTransaction('<%= transaction.id %>')"
+                  class="w-8 h-8 rounded-lg hover:bg-[#4A6B5C]/10 flex items-center justify-center transition-all">
+                  <i class="fas fa-edit text-[#4A6B5C] text-sm"></i>
+                </button>
+                <button onclick="deleteTransaction('<%= transaction.id %>')"
+                  class="w-8 h-8 rounded-lg hover:bg-red-50 flex items-center justify-center transition-all">
+                  <i class="fas fa-trash text-red-600 text-sm"></i>
+                </button>
+              </div>
             </div>
           </div>
-        <% }) %>
-      <% } else { %>
+          <% }) %>
+            <% } else { %>
+              <div class="text-center py-12">
+                <div class="w-16 h-16 bg-[#4A6B5C]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i class="fas fa-receipt text-[#4A6B5C] text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-[#2C2C2C] mb-2">No transactions yet</h3>
+                <p class="text-[#2C2C2C]/60 mb-6">Add your first transaction to start tracking your finances</p>
+                <button onclick="openTransactionModal()" class="btn-primary px-6 py-3 rounded-xl text-sm font-medium">
+                  <i class="fas fa-plus mr-2"></i>Add Transaction
+                </button>
+              </div>
+              <% } %>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentFilter = 'all';
+  let searchTimeout = null;
+
+  // Category icon mapping
+  const categoryIcons = {
+    'Food & Dining': { icon: 'fas fa-utensils', color: 'green' },
+    'Transportation': { icon: 'fas fa-car', color: 'orange' },
+    'Entertainment': { icon: 'fas fa-film', color: 'purple' },
+    'Shopping': { icon: 'fas fa-shopping-bag', color: 'blue' },
+    'Freelance': { icon: 'fas fa-laptop-code', color: 'indigo' },
+    'Salary': { icon: 'fas fa-dollar-sign', color: 'green' },
+    'Healthcare': { icon: 'fas fa-heart', color: 'pink' },
+    'Subscription': { icon: 'fas fa-repeat', color: 'red' },
+    'Utilities': { icon: 'fas fa-bolt', color: 'yellow' },
+    'Groceries': { icon: 'fas fa-shopping-cart', color: 'emerald' },
+    'Default': { icon: 'fas fa-circle', color: 'gray' }
+  };
+
+  // Initialize filter chips
+  document.addEventListener('DOMContentLoaded', function() {
+    const filterChips = document.querySelectorAll('.filter-chip');
+    const searchInput = document.getElementById('searchInput');
+
+    // Filter chip click handler
+    filterChips.forEach(chip => {
+      chip.addEventListener('click', function() {
+        // Remove active class from all chips
+        filterChips.forEach(c => c.classList.remove('active'));
+        // Add active class to clicked chip
+        this.classList.add('active');
+        // Update current filter
+        currentFilter = this.dataset.filter;
+        // Apply filters
+        applyFilters();
+      });
+    });
+
+    // Search input handler with debounce
+    searchInput.addEventListener('input', function() {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        applyFilters();
+      }, 300); // Wait 300ms after user stops typing
+    });
+  });
+
+  function applyFilters() {
+    const searchTerm = document.getElementById('searchInput').value;
+    
+    // Show loading state
+    const transactionsList = document.getElementById('transactionsList');
+    transactionsList.innerHTML = '<div class="text-center py-12"><i class="fas fa-spinner fa-spin text-[#4A6B5C] text-3xl"></i><p class="text-[#2C2C2C]/60 mt-4">Loading...</p></div>';
+
+    // Make AJAX request
+    fetch(`/transactions/api/search?search=${encodeURIComponent(searchTerm)}&type=${currentFilter}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          updateStats(data.stats);
+          renderTransactions(data.transactions);
+        } else {
+          throw new Error(data.error || 'Failed to fetch transactions');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        transactionsList.innerHTML = '<div class="text-center py-12"><i class="fas fa-exclamation-circle text-red-600 text-3xl"></i><p class="text-[#2C2C2C]/60 mt-4">Error loading transactions</p></div>';
+      });
+  }
+
+  function updateStats(stats) {
+    document.getElementById('totalIncomeDisplay').textContent = `$${stats.totalIncome.toFixed(2)}`;
+    document.getElementById('totalExpenseDisplay').textContent = `$${stats.totalExpense.toFixed(2)}`;
+    document.getElementById('transactionCountDisplay').textContent = stats.transactionCount;
+  }
+
+  function renderTransactions(transactions) {
+    const transactionsList = document.getElementById('transactionsList');
+    
+    if (!transactions || transactions.length === 0) {
+      transactionsList.innerHTML = `
         <div class="text-center py-12">
           <div class="w-16 h-16 bg-[#4A6B5C]/10 rounded-full flex items-center justify-center mx-auto mb-4">
             <i class="fas fa-receipt text-[#4A6B5C] text-2xl"></i>
           </div>
-          <h3 class="text-xl font-semibold text-[#2C2C2C] mb-2">No transactions yet</h3>
-          <p class="text-[#2C2C2C]/60 mb-6">Add your first transaction to start tracking your finances</p>
-          <button onclick="openTransactionModal()" class="btn-primary px-6 py-3 rounded-xl text-sm font-medium">
-            <i class="fas fa-plus mr-2"></i>
-            Add Transaction
-          </button>
+          <h3 class="text-xl font-semibold text-[#2C2C2C] mb-2">No transactions found</h3>
+          <p class="text-[#2C2C2C]/60 mb-6">Try adjusting your filters or search term</p>
         </div>
-      <% } %>
-    </div>
-  </div>
-  
+      `;
+      return;
+    }
 
+    const transactionsHTML = transactions.map(transaction => {
+      const categoryName = transaction.category_name || 'Other';
+      const categoryData = categoryIcons[categoryName] || categoryIcons['Default'];
+      const isIncome = transaction.type === 'income';
+      const amountColor = isIncome ? 'text-[#4A6B5C]' : 'text-[#2C2C2C]';
+      const badgeColor = isIncome ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600';
+      const date = new Date(transaction.transactionDate);
+      const formattedDate = date.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+      const formattedTime = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 
+      return `
+        <div class="transaction-row flex items-center justify-between py-4 px-4 rounded-xl group hover:bg-black/5 transition-all">
+          <div class="flex items-center gap-4">
+            <div class="category-icon bg-${categoryData.color}-50 w-12 h-12 rounded-xl flex items-center justify-center">
+              <i class="${categoryData.icon} text-${categoryData.color}-600"></i>
+            </div>
+            <div>
+              <p class="font-medium text-[#2C2C2C]">${transaction.description || categoryName}</p>
+              <p class="text-sm text-[#2C2C2C]/40">${formattedDate} ${formattedTime}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-6">
+            <span class="px-3 py-1 rounded-lg ${badgeColor} text-xs font-medium">${categoryName}</span>
+            <p class="font-semibold ${amountColor} text-lg min-w-[100px] text-right">
+              ${isIncome ? '+' : '-'}$${parseFloat(transaction.amount).toFixed(2)}
+            </p>
+            <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button onclick="editTransaction('${transaction.id}')" class="w-8 h-8 rounded-lg hover:bg-[#4A6B5C]/10 flex items-center justify-center transition-all">
+                <i class="fas fa-edit text-[#4A6B5C] text-sm"></i>
+              </button>
+              <button onclick="deleteTransaction('${transaction.id}')" class="w-8 h-8 rounded-lg hover:bg-red-50 flex items-center justify-center transition-all">
+                <i class="fas fa-trash text-red-600 text-sm"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    transactionsList.innerHTML = transactionsHTML;
+  }
+
+  function editTransaction(id) {
+    // TODO: Implement edit functionality
+    alert('Edit transaction: ' + id);
+  }
+
+  function deleteTransaction(id) {
+    if (confirm('Are you sure you want to delete this transaction?')) {
+      fetch('/transactions/' + id, {
+        method: 'DELETE',
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            applyFilters(); // Refresh the list
+          } else {
+            alert('Error deleting transaction');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Error deleting transaction');
+        });
+    }
+  }
+</script>

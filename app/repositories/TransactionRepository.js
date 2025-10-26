@@ -156,6 +156,76 @@ class TransactionRepository {
             throw error;
         }
     }
+
+    async searchAndFilter(userId, searchTerm = '', filterType = 'all') {
+        try {
+            return new Promise((resolve, reject) => {
+                let query = `
+                    SELECT 
+                        transactions.*, 
+                        categories.name AS category_name 
+                    FROM transactions 
+                    LEFT JOIN categories ON transactions.category_id = categories.id 
+                    WHERE transactions.user_id = ?
+                `;
+                const params = [userId];
+
+                // Add filter by type
+                if (filterType !== 'all') {
+                    query += ` AND transactions.type = ?`;
+                    params.push(filterType);
+                }
+
+                // Add search term
+                if (searchTerm && searchTerm.trim() !== '') {
+                    query += ` AND (
+                        transactions.description LIKE ? OR 
+                        categories.name LIKE ? OR
+                        transactions.amount LIKE ?
+                    )`;
+                    const searchPattern = `%${searchTerm}%`;
+                    params.push(searchPattern, searchPattern, searchPattern);
+                }
+
+                query += ` ORDER BY transactions.transactionDate DESC`;
+
+                db.query(query, params, (err, result) => {
+                    if (err) reject(err);
+                    else resolve(result);
+                });
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getStatsByFilter(userId, filterType = 'all') {
+        try {
+            return new Promise((resolve, reject) => {
+                let query = `
+                    SELECT 
+                        COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END), 0) as totalIncome,
+                        COALESCE(SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END), 0) as totalExpense,
+                        COUNT(*) as transactionCount
+                    FROM transactions 
+                    WHERE user_id = ?
+                `;
+                const params = [userId];
+
+                if (filterType !== 'all') {
+                    query += ` AND type = ?`;
+                    params.push(filterType);
+                }
+
+                db.query(query, params, (err, result) => {
+                    if (err) reject(err);
+                    else resolve(result[0]);
+                });
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = TransactionRepository;
