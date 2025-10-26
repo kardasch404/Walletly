@@ -2,23 +2,11 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../database/sequelize');
 const User = require('./User');
 
-const Category = sequelize.define('Category', {
+const Wallet = sequelize.define('Wallet', {
     id: {
         type: DataTypes.STRING(36),
         primaryKey: true,
         allowNull: false
-    },
-    name: {
-        type: DataTypes.STRING(50),
-        allowNull: true
-    },
-    description: {
-        type: DataTypes.STRING(255),
-        allowNull: true
-    },
-    type: {
-        type: DataTypes.STRING(50),
-        allowNull: true
     },
     user_id: {
         type: DataTypes.STRING(36),
@@ -28,16 +16,32 @@ const Category = sequelize.define('Category', {
             key: 'id'
         }
     },
+    cardNumber: {
+        type: DataTypes.STRING(16),
+        allowNull: true
+    },
+    amount: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: true
+    },
+    mounth: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    year: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
     created_at: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW
     }
 }, {
-    tableName: 'categories',
+    tableName: 'wallets',
     timestamps: false
 });
 
 // Define associations
-Category.belongsTo(User, { foreignKey: 'user_id' });
+Wallet.belongsTo(User, { foreignKey: 'user_id' });
 
-module.exports = Category;
+module.exports = Wallet;

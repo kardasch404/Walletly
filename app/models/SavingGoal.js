@@ -1,112 +1,73 @@
-class SavingGoal 
-{
-    #id;
-    #title; 
-    #description; 
-    #userId ; 
-    #goalAmount;
-    #currentAmount;
-    #targetDate;
-    #icon;
-    #status;
+const { DataTypes } = require('sequelize');
+const sequelize = require('../database/sequelize');
+const User = require('./User');
 
-
-    constructor(id, title, description, userId, goalAmount, currentAmount, targetDate, icon, status) {
-        this.#id = id;
-        this.#title = title;
-        this.#description = description;
-        this.#userId = userId;
-        this.#goalAmount = goalAmount;
-        this.#currentAmount = currentAmount;
-        this.#targetDate = targetDate;
-        this.#icon = icon;
-        this.#status = status;
+const SavingGoal = sequelize.define('SavingGoal', {
+    id: {
+        type: DataTypes.STRING(36),
+        primaryKey: true,
+        allowNull: false
+    },
+    title: {
+        type: DataTypes.STRING(100),
+        allowNull: true
+    },
+    description: {
+        type: DataTypes.STRING(255),
+        allowNull: true
+    },
+    user_id: {
+        type: DataTypes.STRING(36),
+        allowNull: true,
+        references: {
+            model: 'users',
+            key: 'id'
+        }
+    },
+    goalAmount: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: true
+    },
+    currentAmount: {
+        type: DataTypes.DECIMAL(10, 2),
+        defaultValue: 0
+    },
+    targetDate: {
+        type: DataTypes.DATEONLY,
+        allowNull: true
+    },
+    icon: {
+        type: DataTypes.STRING(50),
+        defaultValue: 'fa-bullseye'
+    },
+    status: {
+        type: DataTypes.ENUM('active', 'completed', 'cancelled'),
+        defaultValue: 'active'
+    },
+    created_at: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
     }
+}, {
+    tableName: 'savingsGoals',
+    timestamps: false
+});
 
+// Define associations
+SavingGoal.belongsTo(User, { foreignKey: 'user_id' });
 
-    get id() {
-        return this.#id;
-    }
-    set id(id) {
-        this.#id = id;
-    }
+// Instance methods
+SavingGoal.prototype.getProgress = function() {
+    if (this.goalAmount === 0) return 0;
+    return Math.min(100, (this.currentAmount / this.goalAmount) * 100);
+};
 
-    get title() {
-        return this.#title;
-    }
+SavingGoal.prototype.getRemainingAmount = function() {
+    return Math.max(0, this.goalAmount - this.currentAmount);
+};
 
-    set title(title) {
-        this.#title = title;
-    }
-
-    get description() {
-        return this.#description;
-    }
-
-    set description(description) {
-        this.#description = description;
-    }
-
-    get userId() {
-        return this.#userId;
-    }
-
-    set userId(userId) {
-        this.#userId = userId;
-    }
-
-    get goalAmount() {
-        return this.#goalAmount;
-    }
-
-    set goalAmount(goalAmount) {
-        this.#goalAmount = goalAmount;
-    }
-
-    get currentAmount() {
-        return this.#currentAmount;
-    }
-
-    set currentAmount(currentAmount) {
-        this.#currentAmount = currentAmount;
-    }
-
-    get targetDate() {
-        return this.#targetDate;
-    }
-
-    set targetDate(targetDate) {
-        this.#targetDate = targetDate;
-    }
-
-    get icon() {
-        return this.#icon;
-    }
-
-    set icon(icon) {
-        this.#icon = icon;
-    }
-
-    get status() {
-        return this.#status;
-    }
-
-    set status(status) {
-        this.#status = status;
-    }
-
-    getProgress() {
-        if (this.#goalAmount === 0) return 0;
-        return Math.min(100, (this.#currentAmount / this.#goalAmount) * 100);
-    }
-
-    getRemainingAmount() {
-        return Math.max(0, this.#goalAmount - this.#currentAmount);
-    }
-
-    isCompleted() {
-        return this.#currentAmount >= this.#goalAmount || this.#status === 'completed';
-    }
-}
+SavingGoal.prototype.isCompleted = function() {
+    return this.currentAmount >= this.goalAmount || this.status === 'completed';
+};
 
 module.exports = SavingGoal;

@@ -1,29 +1,17 @@
-const db = require('../database/mysql.js');
+const Category = require('../models/Category');
 
 class CategoryRepository {
 
-    async create(data) 
-    {
+    async create(data) {
         try {
-            return new Promise((resolve, reject) => {
-                const query = `INSERT INTO categories (id, name, description, type, user_id) 
-                            VALUES (?, ?, ?, ?, ?)`;
-                const values = [
-                    data.id,
-                    data.name,
-                    data.description,
-                    data.type,
-                    data.user_id
-                ];
-    
-                db.query(query, values, (err, result) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(data);
-                    }
-                });
+            const category = await Category.create({
+                id: data.id,
+                name: data.name,
+                description: data.description,
+                type: data.type,
+                user_id: data.user_id
             });
+            return category.toJSON();
         } catch (error) {
             throw error;
         }
@@ -31,42 +19,25 @@ class CategoryRepository {
 
     async getAllByUserId(userId) {
         try {
-            return new Promise((resolve, reject) => {
-                const query = 'SELECT * FROM categories WHERE user_id = ?';
-                db.query(query, [userId], (err, result) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(result);
-                    }
-                });
+            const categories = await Category.findAll({
+                where: { user_id: userId }
             });
+            return categories.map(cat => cat.toJSON());
         } catch (error) {
             throw error;
         }
     }
 
-    async getAllCategoriesFromUser (userId)
-    {
+    async getAllCategoriesFromUser(userId) {
         try {
-            return new Promise((resolve, reject) => {
-                const query = `SELECT * FROM categories WHERE user_id = ?`;
-                const values = [userId];
-
-                db.query(query, values, (err, result) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(result);
-                    }
-                });
+            const categories = await Category.findAll({
+                where: { user_id: userId }
             });
+            return categories.map(cat => cat.toJSON());
         } catch (error) {
             throw error;
         }
     }
-
-    
 }
 
 module.exports = CategoryRepository;

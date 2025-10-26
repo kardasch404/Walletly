@@ -1,78 +1,65 @@
-class Transaction 
-{
-    #id;
-    #userId; 
-    #categoryId; 
-    #amount;
-    #description;
-    #type;
-    #transactionDate;
+const { DataTypes } = require('sequelize');
+const sequelize = require('../database/sequelize');
+const User = require('./User');
+const Category = require('./Category');
 
-    constructor(id, userId, categoryId, amount, description, type, transactionDate) 
-    {
-        this.#id = id
-        this.#userId = userId;
-        this.#categoryId = categoryId;
-        this.#amount = amount;
-        this.#description = description;
-        this.#type = type;
-        this.#transactionDate = transactionDate;
+const Transaction = sequelize.define('Transaction', {
+    id: {
+        type: DataTypes.STRING(36),
+        primaryKey: true,
+        allowNull: false
+    },
+    user_id: {
+        type: DataTypes.STRING(36),
+        allowNull: true,
+        references: {
+            model: 'users',
+            key: 'id'
+        }
+    },
+    category_id: {
+        type: DataTypes.STRING(36),
+        allowNull: true,
+        references: {
+            model: 'categories',
+            key: 'id'
+        }
+    },
+    wallet_id: {
+        type: DataTypes.STRING(36),
+        allowNull: true,
+        references: {
+            model: 'wallets',
+            key: 'id'
+        }
+    },
+    amount: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: true
+    },
+    description: {
+        type: DataTypes.STRING(255),
+        allowNull: true
+    },
+    type: {
+        type: DataTypes.STRING(50),
+        allowNull: true
+    },
+    transactionDate: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
+    created_at: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
     }
+}, {
+    tableName: 'transactions',
+    timestamps: false
+});
 
-    get id() {
-        return this.#id;
-    }
+// Define associations
+Transaction.belongsTo(User, { foreignKey: 'user_id' });
+Transaction.belongsTo(Category, { foreignKey: 'category_id' });
 
-    set id(id) {
-        this.#id = id;
-    }
-
-    set userId(userId) {
-        this.#userId = userId;
-    }
-
-    get userId() {
-        return this.#userId;
-    }
-
-    set categoryId(categoryId) {
-        this.#categoryId = categoryId;
-    }
-
-    get categoryId() {
-        return this.#categoryId;
-    }
-
-    set amount(amount) {
-        this.#amount = amount;
-    }
-    get amount() {
-        return this.#amount;
-    }
-
-    get description() {
-        return this.#description;
-    }
-
-    set description(description) {
-        this.#description = description;
-    }
-
-    get type() {
-        return this.#type;
-    }
-
-    set type(type) {
-        this.#type = type;
-    }
-
-    get transactionDate() {
-        return this.#transactionDate;
-    }
-
-    set transactionDate(transactionDate) {
-        this.#transactionDate = transactionDate;
-    }
-
-    
-}
+module.exports = Transaction;

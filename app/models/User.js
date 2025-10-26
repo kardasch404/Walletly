@@ -1,61 +1,47 @@
-class User {
-    #id;
-    #fname; 
-    #lname; 
-    #email; 
-    #password;
-    #image; 
+const { DataTypes } = require('sequelize');
+const sequelize = require('../database/sequelize');
 
-    constructor(id, fname, lname, email, password, image) {
-        this.#id = id;
-        this.#fname = fname;
-        this.#lname = lname;
-        this.#email = email;
-        this.#password = password;
-        this.#image = image;
+const User = sequelize.define('User', {
+    id: {
+        type: DataTypes.STRING(36),
+        primaryKey: true,
+        allowNull: false
+    },
+    fname: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+        field: 'fname'
+    },
+    lname: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+        field: 'lname'
+    },
+    email: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+        unique: true
+    },
+    password: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+    },
+    currency: {
+        type: DataTypes.STRING(3),
+        defaultValue: 'MAD'
+    },
+    image: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+        defaultValue: null
+    },
+    created_at: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
     }
-
-    get id() {
-        return this.#id;
-    }
-    set id(id) {
-        this.#id = id;
-    }
-
-    get fname() {
-        return this.#fname;
-    }
-    set fname(fname) {
-        this.#fname = fname;
-    }
-    
-    get lname() {
-        return this.#lname;
-    }
-    set lname(lname) {
-        this.#lname = lname;
-    }
-    
-    get email() {
-        return this.#email;
-    }
-    set email(email) {
-        this.#email = email;
-    }
-    
-    get password() {
-        return this.#password;
-    }
-    set password(password) {
-        this.#password = password;
-    }
-    
-    get image() {
-        return this.#image;
-    }
-    set image(image) {
-        this.#image = image;
-    }
-}
+}, {
+    tableName: 'users',
+    timestamps: false
+});
 
 module.exports = User;

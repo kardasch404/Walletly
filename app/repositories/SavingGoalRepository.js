@@ -1,35 +1,22 @@
-const db = require('../database/mysql.js');
+const SavingGoal = require('../models/SavingGoal');
+const sequelize = require('../database/sequelize');
 
 class SavingGoalRepository {
 
     async create(data) {
         try {
-            return new Promise((resolve, reject) => {
-                const query = `
-                    INSERT INTO savingsGoals 
-                    (id, title, description, user_id, goalAmount, currentAmount, targetDate, icon, status) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                `;
-                const values = [
-                    data.id,
-                    data.title,
-                    data.description,
-                    data.user_id,
-                    data.goalAmount,
-                    data.currentAmount || 0,
-                    data.targetDate,
-                    data.icon || 'fa-bullseye',
-                    data.status || 'active'
-                ];
-
-                db.query(query, values, (err, result) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(data);
-                    }
-                });
+            const goal = await SavingGoal.create({
+                id: data.id,
+                title: data.title,
+                description: data.description,
+                user_id: data.user_id,
+                goalAmount: data.goalAmount,
+                currentAmount: data.currentAmount || 0,
+                targetDate: data.targetDate,
+                icon: data.icon || 'fa-bullseye',
+                status: data.status || 'active'
             });
+            return goal.toJSON();
         } catch (error) {
             throw error;
         }
@@ -37,23 +24,14 @@ class SavingGoalRepository {
 
     async getAllByUserId(userId) {
         try {
-            return new Promise((resolve, reject) => {
-                const query = `
-                    SELECT * FROM savingsGoals 
-                    WHERE user_id = ? 
-                    ORDER BY 
-                        CASE 
-                            WHEN status = 'active' THEN 1
-                            WHEN status = 'completed' THEN 2
-                            ELSE 3
-                        END,
-                        created_at DESC
-                `;
-                db.query(query, [userId], (err, result) => {
-                    if (err) reject(err);
-                    else resolve(result);
-                });
+            const goals = await SavingGoal.findAll({
+                where: { user_id: userId },
+                order: [
+                    [sequelize.literal("CASE WHEN status = 'active' THEN 1 WHEN status = 'completed' THEN 2 ELSE 3 END"), 'ASC'],
+                    ['created_at', 'DESC']
+                ]
             });
+            return goals.map(goal => goal.toJSON());
         } catch (error) {
             throw error;
         }
@@ -61,16 +39,13 @@ class SavingGoalRepository {
 
     async getById(id, userId) {
         try {
-            return new Promise((resolve, reject) => {
-                const query = `
-                    SELECT * FROM savingsGoals 
-                    WHERE id = ? AND user_id = ?
-                `;
-                db.query(query, [id, userId], (err, result) => {
-                    if (err) reject(err);
-                    else resolve(result[0]);
-                });
+            const goal = await SavingGoal.findOne({
+                where: { 
+                    id: id,
+                    user_id: userId
+                }
             });
+            return goal ? goal.toJSON() : null;
         } catch (error) {
             throw error;
         }
@@ -78,30 +53,25 @@ class SavingGoalRepository {
 
     async update(id, userId, data) {
         try {
-            return new Promise((resolve, reject) => {
-                const query = `
-                    UPDATE savingsGoals 
-                    SET title = ?, description = ?, goalAmount = ?, currentAmount = ?, 
-                        targetDate = ?, icon = ?, status = ?
-                    WHERE id = ? AND user_id = ?
-                `;
-                const values = [
-                    data.title,
-                    data.description,
-                    data.goalAmount,
-                    data.currentAmount,
-                    data.targetDate,
-                    data.icon,
-                    data.status,
-                    id,
-                    userId
-                ];
-
-                db.query(query, values, (err, result) => {
-                    if (err) reject(err);
-                    else resolve(result);
-                });
+            const [updated] = await SavingGoal.update({
+                title: data.title,
+                description: data.description,
+                goalAmount: data.goalAmount,
+                currentAmount: data.currentAmount,
+                targetDate: data.targetDate,
+                icon: data.icon,
+                status: data.status
+            }, {
+                where: {
+                    id: id,
+                    user_id: userId
+                }
             });
+            
+            if (updated) {
+                return await this.getById(id, userId);
+            }
+            return null;
         } catch (error) {
             throw error;
         }
@@ -109,21 +79,23 @@ class SavingGoalRepository {
 
     async updateAmount(id, userId, amount) {
         try {
-            return new Promise((resolve, reject) => {
-                const query = `
-                    UPDATE savingsGoals 
-                    SET currentAmount = currentAmount + ?,
-                        status = CASE 
-                            WHEN (currentAmount + ?) >= goalAmount THEN 'completed'
-                            ELSE status
-                        END
-                    WHERE id = ? AND user_id = ?
-                `;
-                db.query(query, [amount, amount, id, userId], (err, result) => {
-                    if (err) reject(err);
-                    else resolve(result);
-                });
+            const goal = await this.getById(id, userId);
+            if (!goal) return null;
+
+            const newAmount = parseFloat(goal.currentAmount) + parseFloat(amount);
+            const newStatus = newAmount >= goal.goalAmount ? 'completed' : goal.status;
+
+            await SavingGoal.update({
+                currentAmount: newAmount,
+                status: newStatus
+            }, {
+                where: {
+                    id: id,
+                    user_id: userId
+                }
             });
+
+            return await this.getById(id, userId);
         } catch (error) {
             throw error;
         }
@@ -131,16 +103,13 @@ class SavingGoalRepository {
 
     async delete(id, userId) {
         try {
-            return new Promise((resolve, reject) => {
-                const query = `
-                    DELETE FROM savingsGoals 
-                    WHERE id = ? AND user_id = ?
-                `;
-                db.query(query, [id, userId], (err, result) => {
-                    if (err) reject(err);
-                    else resolve(result);
-                });
+            const deleted = await SavingGoal.destroy({
+                where: {
+                    id: id,
+                    user_id: userId
+                }
             });
+            return deleted > 0;
         } catch (error) {
             throw error;
         }
@@ -148,21 +117,23 @@ class SavingGoalRepository {
 
     async getStats(userId) {
         try {
-            return new Promise((resolve, reject) => {
-                const query = `
-                    SELECT 
-                        COUNT(CASE WHEN status = 'active' THEN 1 END) as activeGoals,
-                        COUNT(CASE WHEN status = 'completed' THEN 1 END) as completedGoals,
-                        COALESCE(SUM(currentAmount), 0) as totalSaved,
-                        COALESCE(SUM(goalAmount), 0) as totalGoalAmount
-                    FROM savingsGoals 
-                    WHERE user_id = ?
-                `;
-                db.query(query, [userId], (err, result) => {
-                    if (err) reject(err);
-                    else resolve(result[0]);
-                });
+            const result = await SavingGoal.findOne({
+                attributes: [
+                    [sequelize.fn('COUNT', sequelize.literal("CASE WHEN status = 'active' THEN 1 END")), 'activeGoals'],
+                    [sequelize.fn('COUNT', sequelize.literal("CASE WHEN status = 'completed' THEN 1 END")), 'completedGoals'],
+                    [sequelize.fn('COALESCE', sequelize.fn('SUM', sequelize.col('currentAmount')), 0), 'totalSaved'],
+                    [sequelize.fn('COALESCE', sequelize.fn('SUM', sequelize.col('goalAmount')), 0), 'totalGoalAmount']
+                ],
+                where: { user_id: userId },
+                raw: true
             });
+
+            return {
+                activeGoals: parseInt(result.activeGoals) || 0,
+                completedGoals: parseInt(result.completedGoals) || 0,
+                totalSaved: parseFloat(result.totalSaved) || 0,
+                totalGoalAmount: parseFloat(result.totalGoalAmount) || 0
+            };
         } catch (error) {
             throw error;
         }
@@ -170,3 +141,4 @@ class SavingGoalRepository {
 }
 
 module.exports = SavingGoalRepository;
+
