@@ -7,6 +7,7 @@ const CategoryController = require('../controllers/CategoryController');
 const BudgetController = require('../controllers/BudgetController');
 const WalletController = require('../controllers/WalletController');
 const TransactionController = require('../controllers/TransactionController');
+const SavingGoalController = require('../controllers/SavingGoalController');
 
 // Services
 const UserService = require('../services/UserService');
@@ -14,6 +15,7 @@ const CategoryService = require('../services/CategoryService');
 const BudgetService = require('../services/BudgetService');
 const WalletService = require('../services/WalletService');
 const TransactionService = require('../services/TransactionService');
+const SavingGoalService = require('../services/SavingGoalService');
 
 // Repositories
 const UserRepository = require('../repositories/UserRepository');
@@ -21,6 +23,7 @@ const CategoryRepository = require('../repositories/CategoryRepository');
 const BudgetRepository = require('../repositories/BudgetRepository');
 const WalletRepository = require('../repositories/WalletRepository');
 const TransactionRepository = require('../repositories/TransactionRepository');
+const SavingGoalRepository = require('../repositories/SavingGoalRepository');
 
 // Request Validations
 const { validateRegister } = require('../http/requests/RegisterRequest');
@@ -78,6 +81,10 @@ const walletController = new WalletController(walletService);
 const transactionRepository = new TransactionRepository();
 const transactionService = new TransactionService(transactionRepository);
 const transactionController = new TransactionController(transactionService);
+
+const savingGoalRepository = new SavingGoalRepository();
+const savingGoalService = new SavingGoalService(savingGoalRepository);
+const savingGoalController = new SavingGoalController(savingGoalService);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -275,13 +282,18 @@ router.get('/goals', async function(req, res, next) {
     const user = await userService.getUserById(req.session.userId);
     const monthlyData = await transactionService.getMonthlyData(req.session.userId);
     const analytics = await transactionService.getAnalyticsData(req.session.userId);
+    const goals = await savingGoalService.getAllGoalsFromUser(req.session.userId);
+    const goalsStats = await savingGoalService.getStats(req.session.userId);
+    
     res.render('dashboard/layouts/main', { 
       title: 'Goals - Walletly',
       user: user,
       body: '../pages/goals',
       currentPage: 'goals',
       monthlyData: monthlyData,
-      analytics: analytics
+      analytics: analytics,
+      goals: goals,
+      goalsStats: goalsStats
     });
   } catch (error) {
     console.error('Goals error:', error);
@@ -291,7 +303,9 @@ router.get('/goals', async function(req, res, next) {
       body: '../pages/goals',
       currentPage: 'goals',
       monthlyData: [],
-      analytics: null
+      analytics: null,
+      goals: [],
+      goalsStats: { activeGoals: 0, completedGoals: 0, totalSaved: 0 }
     });
   }
 });

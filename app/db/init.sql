@@ -23,6 +23,17 @@ CREATE TABLE categories (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE wallets (
+    id VARCHAR(36) PRIMARY KEY,
+    user_id VARCHAR(36),
+    cardNumber VARCHAR(16),
+    amount DECIMAL(10, 2),
+    mounth INT,
+    year INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users (id)
+);
+
 CREATE TABLE transactions (
     id VARCHAR(36) PRIMARY KEY,
     user_id VARCHAR(36),
@@ -52,22 +63,14 @@ CREATE TABLE budgets (
 
 CREATE TABLE savingsGoals (
     id VARCHAR(36) PRIMARY KEY,
-    title VARCHAR(50),
+    title VARCHAR(100),
     description VARCHAR(255),
     user_id VARCHAR(36),
     goalAmount DECIMAL(10, 2),
-    currentAmount DECIMAL(10, 2),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users (id)
-);
-
-CREATE TABLE wallets (
-    id VARCHAR(36) PRIMARY KEY,
-    user_id VARCHAR(36),
-    cardNumber VARCHAR(16),
-    amount DECIMAL(10, 2),
-    mounth INT,
-    year INT,
+    currentAmount DECIMAL(10, 2) DEFAULT 0,
+    targetDate DATE,
+    icon VARCHAR(50) DEFAULT 'fa-bullseye',
+    status ENUM('active', 'completed', 'cancelled') DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
@@ -83,3 +86,15 @@ CREATE TABLE rapports (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
+
+-- Insert sample user (password is 'password123' hashed with bcrypt)
+INSERT INTO users (id, fname, lname, email, password, currency) VALUES
+('tjmt5pke1j', 'John', 'Doe', 'john@example.com', '$2b$10$d3NuDyPj2mUGfHs5mVDGhOXrjbfRRcobNQfpiWC1zUugGNshEUHNO', 'USD')
+ON DUPLICATE KEY UPDATE id=id;
+
+-- Insert saving goals 
+INSERT INTO savingsGoals (id, title, description, user_id, goalAmount, currentAmount, targetDate, icon, status) VALUES
+('goal1', 'MacBook Pro', 'Saving for a new MacBook Pro for work', 'tjmt5pke1j', 1650.00, 1650.00, '2025-10-31', 'fa-laptop', 'completed'),
+('goal2', 'New Car', 'Down payment for a new car', 'tjmt5pke1j', 60000.00, 27000.00, '2025-06-30', 'fa-car', 'active'),
+('goal3', 'New House', 'Down payment for dream house', 'tjmt5pke1j', 150000.00, 18000.00, '2026-12-31', 'fa-home', 'active')
+ON DUPLICATE KEY UPDATE id=id;

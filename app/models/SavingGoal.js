@@ -6,15 +6,21 @@ class SavingGoal
     #userId ; 
     #goalAmount;
     #currentAmount;
+    #targetDate;
+    #icon;
+    #status;
 
 
-    constructor(id, title, description, userId, goalAmount, currentAmount) {
+    constructor(id, title, description, userId, goalAmount, currentAmount, targetDate, icon, status) {
         this.#id = id;
         this.#title = title;
         this.#description = description;
         this.#userId = userId;
         this.#goalAmount = goalAmount;
         this.#currentAmount = currentAmount;
+        this.#targetDate = targetDate;
+        this.#icon = icon;
+        this.#status = status;
     }
 
 
@@ -65,20 +71,42 @@ class SavingGoal
         this.#currentAmount = currentAmount;
     }
 
-    get goalAmount() {
-        return this.#goalAmount;
+    get targetDate() {
+        return this.#targetDate;
     }
 
-    set goalAmount(goalAmount) {
-        this.#goalAmount = goalAmount;
+    set targetDate(targetDate) {
+        this.#targetDate = targetDate;
     }
 
-    get currentAmount() {
-        return this.#currentAmount;
+    get icon() {
+        return this.#icon;
     }
 
-    set currentAmount(currentAmount) {
-        this.#currentAmount = currentAmount;
+    set icon(icon) {
+        this.#icon = icon;
     }
 
+    get status() {
+        return this.#status;
+    }
+
+    set status(status) {
+        this.#status = status;
+    }
+
+    getProgress() {
+        if (this.#goalAmount === 0) return 0;
+        return Math.min(100, (this.#currentAmount / this.#goalAmount) * 100);
+    }
+
+    getRemainingAmount() {
+        return Math.max(0, this.#goalAmount - this.#currentAmount);
+    }
+
+    isCompleted() {
+        return this.#currentAmount >= this.#goalAmount || this.#status === 'completed';
+    }
 }
+
+module.exports = SavingGoal;
