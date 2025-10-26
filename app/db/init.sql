@@ -17,7 +17,6 @@ CREATE TABLE categories (
     id VARCHAR(36) PRIMARY KEY,
     name VARCHAR(50),
     description VARCHAR(255),
-    image VARCHAR(1000),
     type VARCHAR(50),
     user_id VARCHAR(36),
     FOREIGN KEY (user_id) REFERENCES users (id),

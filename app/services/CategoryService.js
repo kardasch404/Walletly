@@ -12,7 +12,6 @@ class CategoryService {
                 id: Math.random().toString(36).substring(2, 12),
                 name: data.name,
                 description: data.description,
-                image: data.image,
                 type: data.type,
                 user_id: userId
             };

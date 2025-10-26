@@ -6,13 +6,12 @@ class CategoryRepository {
     {
         try {
             return new Promise((resolve, reject) => {
-                const query = `INSERT INTO categories (id, name, description, image, type, user_id) 
-                            VALUES (?, ?, ?, ?, ?, ?)`;
+                const query = `INSERT INTO categories (id, name, description, type, user_id) 
+                            VALUES (?, ?, ?, ?, ?)`;
                 const values = [
                     data.id,
                     data.name,
                     data.description,
-                    data.image,
                     data.type,
                     data.user_id
                 ];
