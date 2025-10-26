@@ -133,6 +133,29 @@ class TransactionRepository {
             throw error;
         }
     }
+
+    async getMonthlyDataByUserId(userId, year) {
+        try {
+            return new Promise((resolve, reject) => {
+                const query = `
+                    SELECT 
+                        MONTH(transactionDate) as month,
+                        SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) as income,
+                        SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) as expense
+                    FROM transactions 
+                    WHERE user_id = ? AND YEAR(transactionDate) = ?
+                    GROUP BY MONTH(transactionDate)
+                    ORDER BY MONTH(transactionDate)
+                `;
+                db.query(query, [userId, year], (err, result) => {
+                    if (err) reject(err);
+                    else resolve(result);
+                });
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = TransactionRepository;

@@ -1,22 +1,53 @@
 <!-- Dashboard Page -->
 <div id="dashboard" class="page-view active p-8">
+  <%
+    // Calculate current month and last month data for comparison
+    const currentMonth = new Date().getMonth() + 1;
+    const lastMonth = currentMonth === 1 ? 12 : currentMonth - 1;
+    
+    const currentMonthData = monthlyData[currentMonth - 1] || { income: 0, expense: 0 };
+    const lastMonthData = monthlyData[lastMonth - 1] || { income: 0, expense: 0 };
+    
+    // Calculate percentage changes
+    const incomeChange = lastMonthData.income > 0 
+      ? (((currentMonthData.income - lastMonthData.income) / lastMonthData.income) * 100).toFixed(1)
+      : 0;
+    const expenseChange = lastMonthData.expense > 0
+      ? (((currentMonthData.expense - lastMonthData.expense) / lastMonthData.expense) * 100).toFixed(1)
+      : 0;
+    
+    const currentBalance = currentMonthData.income - currentMonthData.expense;
+    const lastBalance = lastMonthData.income - lastMonthData.expense;
+    const balanceChange = currentBalance - lastBalance;
+    const balanceChangePercent = lastBalance > 0
+      ? ((balanceChange / Math.abs(lastBalance)) * 100).toFixed(1)
+      : 0;
+    
+    // Total savings calculation (cumulative)
+    const totalSavings = totalIncome - totalExpense;
+  %>
+  
   <!-- Metrics Grid -->
   <div class="grid grid-cols-4 gap-6 mb-8">
     <div class="card metric-card rounded-2xl p-6 fade-in-up stagger-1">
       <div class="flex items-start justify-between mb-4">
         <div>
           <p class="text-sm text-[#2C2C2C]/60 mb-1">Total balance</p>
-          <h3 class="serif text-3xl font-semibold text-[#2C2C2C]">$<%= totalBalance.toLocaleString() %></h3>
+          <h3 class="serif text-3xl font-semibold text-[#2C2C2C]">$<%= totalBalance.toLocaleString() %>
+          </h3>
         </div>
-        <div
-          class="w-10 h-10 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center"
-        >
+        <div class="w-10 h-10 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center">
           <i class="fas fa-arrow-trend-up text-[#4A6B5C]"></i>
         </div>
       </div>
 
       <div class="flex items-center gap-2">
-        <span class="text-xs text-[#2C2C2C]/40"><%= new Date().toLocaleDateString('en-US', { month: 'long' }) %></span>
+        <% if (balanceChangePercent != 0) { %>
+        <span class="stat-badge px-2 py-1 rounded-lg text-xs font-medium <%= balanceChangePercent > 0 ? 'text-[#4A6B5C] bg-[#4A6B5C]/10' : 'text-[#C9A86A] bg-[#C9A86A]/10' %>">
+          <i class="fas fa-arrow-<%= balanceChangePercent > 0 ? 'up' : 'down' %> text-xs"></i> <%= Math.abs(balanceChangePercent) %>%
+        </span>
+        <% } %>
+        <span class="text-xs text-[#2C2C2C]/40">vs last month</span>
       </div>
     </div>
 
@@ -24,17 +55,21 @@
       <div class="flex items-start justify-between mb-4">
         <div>
           <p class="text-sm text-[#2C2C2C]/60 mb-1">Income</p>
-          <h3 class="serif text-3xl font-semibold text-[#2C2C2C]">$<%= totalIncome.toLocaleString() %></h3>
+          <h3 class="serif text-3xl font-semibold text-[#2C2C2C]">$<%= totalIncome.toLocaleString() %>
+          </h3>
         </div>
-        <div
-          class="w-10 h-10 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center"
-        >
+        <div class="w-10 h-10 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center">
           <i class="fas fa-arrow-down text-[#4A6B5C]"></i>
         </div>
       </div>
 
       <div class="flex items-center gap-2">
-        <span class="text-xs text-[#2C2C2C]/40"><%= new Date().toLocaleDateString('en-US', { month: 'long' }) %></span>
+        <% if (incomeChange != 0) { %>
+        <span class="stat-badge px-2 py-1 rounded-lg text-xs font-medium <%= incomeChange > 0 ? 'text-[#4A6B5C] bg-[#4A6B5C]/10' : 'text-[#C9A86A] bg-[#C9A86A]/10' %>">
+          <i class="fas fa-arrow-<%= incomeChange > 0 ? 'up' : 'down' %> text-xs"></i> <%= Math.abs(incomeChange) %>%
+        </span>
+        <% } %>
+        <span class="text-xs text-[#2C2C2C]/40">vs last month</span>
       </div>
     </div>
 
@@ -42,17 +77,21 @@
       <div class="flex items-start justify-between mb-4">
         <div>
           <p class="text-sm text-[#2C2C2C]/60 mb-1">Expense</p>
-          <h3 class="serif text-3xl font-semibold text-[#2C2C2C]">$<%= totalExpense.toLocaleString() %></h3>
+          <h3 class="serif text-3xl font-semibold text-[#2C2C2C]">$<%= totalExpense.toLocaleString() %>
+          </h3>
         </div>
-        <div
-          class="w-10 h-10 rounded-xl bg-[#C9A86A]/10 flex items-center justify-center"
-        >
+        <div class="w-10 h-10 rounded-xl bg-[#C9A86A]/10 flex items-center justify-center">
           <i class="fas fa-arrow-up text-[#C9A86A]"></i>
         </div>
       </div>
 
       <div class="flex items-center gap-2">
-        <span class="text-xs text-[#2C2C2C]/40"><%= new Date().toLocaleDateString('en-US', { month: 'long' }) %></span>
+        <% if (expenseChange != 0) { %>
+        <span class="stat-badge px-2 py-1 rounded-lg text-xs font-medium <%= expenseChange < 0 ? 'text-[#4A6B5C] bg-[#4A6B5C]/10' : 'text-[#C9A86A] bg-[#C9A86A]/10' %>">
+          <i class="fas fa-arrow-<%= expenseChange > 0 ? 'up' : 'down' %> text-xs"></i> <%= Math.abs(expenseChange) %>%
+        </span>
+        <% } %>
+        <span class="text-xs text-[#2C2C2C]/40">vs last month</span>
       </div>
     </div>
 
@@ -60,18 +99,114 @@
       <div class="flex items-start justify-between mb-4">
         <div>
           <p class="text-sm text-[#2C2C2C]/60 mb-1">Total savings</p>
-          <h3 class="serif text-3xl font-semibold text-[#2C2C2C]">$32,913</h3>
+          <h3 class="serif text-3xl font-semibold text-[#2C2C2C]">$<%= totalSavings.toLocaleString() %></h3>
         </div>
-        <div
-          class="w-10 h-10 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center"
-        >
+        <div class="w-10 h-10 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center">
           <i class="fas fa-piggy-bank text-[#4A6B5C]"></i>
         </div>
       </div>
 
       <div class="flex items-center gap-2">
-        <span class="text-xs text-[#2C2C2C]/40"><%= new Date().toLocaleDateString('en-US', { month: 'long' }) %></span>
+        <% if (balanceChangePercent != 0) { %>
+        <span class="stat-badge px-2 py-1 rounded-lg text-xs font-medium <%= balanceChangePercent > 0 ? 'text-[#4A6B5C] bg-[#4A6B5C]/10' : 'text-[#C9A86A] bg-[#C9A86A]/10' %>">
+          <i class="fas fa-arrow-<%= balanceChangePercent > 0 ? 'up' : 'down' %> text-xs"></i> <%= Math.abs(balanceChangePercent) %>%
+        </span>
+        <% } %>
+        <span class="text-xs text-[#2C2C2C]/40">vs last month</span>
       </div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="grid grid-cols-3 gap-6 mb-8">
+    <!-- Money Flow Chart -->
+    <div class="col-span-2 card rounded-2xl p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="serif text-xl font-semibold text-[#2C2C2C]">Money flow</h3>
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2">
+            <div class="w-3 h-3 rounded-full bg-[#4A6B5C]"></div>
+            <span class="text-xs text-[#2C2C2C]/60">Income</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-3 h-3 rounded-full bg-[#C9A86A]"></div>
+            <span class="text-xs text-[#2C2C2C]/60">Expense</span>
+          </div>
+          <select class="px-3 py-1.5 rounded-lg bg-white/60 border border-black/5 text-xs">
+            <option>This year</option>
+            <option>Last year</option>
+          </select>
+        </div>
+      </div>
+      <div class="chart-container">
+        <canvas id="moneyFlowChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Budget Overview -->
+    <div class="card rounded-2xl p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="serif text-xl font-semibold text-[#2C2C2C]">Budget</h3>
+        <a href="/budget"
+          class="w-8 h-8 rounded-lg bg-white/60 hover:bg-white/80 flex items-center justify-center transition-all">
+          <i class="fas fa-arrow-right text-xs text-[#2C2C2C]/60"></i>
+        </a>
+      </div>
+      <% 
+        const budgetMonth = new Date().getMonth() + 1;
+        const budgetYear = new Date().getFullYear();
+        const currentMonthBudgets = budgets.filter(b => b.mounth == budgetMonth && b.year == budgetYear);
+        const totalBudgetLimit = currentMonthBudgets.reduce((sum, b) => sum + parseFloat(b.monthlyLimit || 0), 0);
+        const totalSpent = currentMonthBudgets.reduce((sum, b) => sum + parseFloat(b.spent || 0), 0);
+        const budgetPercentage = totalBudgetLimit > 0 ? ((totalSpent / totalBudgetLimit) * 100) : 0;
+        const strokeDashoffset = 439.6 - (439.6 * budgetPercentage / 100);
+      %>
+      
+      <% if (currentMonthBudgets.length > 0) { %>
+      <div class="flex items-center justify-center mb-6">
+        <div class="relative w-40 h-40">
+          <svg class="transform -rotate-90" width="160" height="160">
+            <circle cx="80" cy="80" r="70" fill="none" stroke="rgba(0,0,0,0.05)" stroke-width="12" />
+            <circle cx="80" cy="80" r="70" fill="none" stroke="url(#gradient)" stroke-width="12"
+              stroke-dasharray="439.6" stroke-dashoffset="<%= strokeDashoffset %>" stroke-linecap="round" />
+            <defs>
+              <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#4A6B5C;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#C9A86A;stop-opacity:1" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="absolute inset-0 flex flex-col items-center justify-center">
+            <span class="serif text-2xl font-semibold text-[#2C2C2C]">$<%= totalSpent.toLocaleString() %></span>
+            <span class="text-xs text-[#2C2C2C]/40">of $<%= totalBudgetLimit.toLocaleString() %></span>
+          </div>
+        </div>
+      </div>
+      <div class="space-y-3">
+        <% currentMonthBudgets.slice(0, 3).forEach((budget, index) => { 
+          const colors = ['#4A6B5C', '#C9A86A', '#8B9D93'];
+          const color = colors[index % 3];
+        %>
+        <div class="flex items-center justify-between text-sm">
+          <div class="flex items-center gap-2">
+            <div class="w-2 h-2 rounded-full" style="background-color: <%= color %>"></div>
+            <span class="text-[#2C2C2C]/60"><%= budget.category_name %></span>
+          </div>
+          <span class="font-medium text-[#2C2C2C]">$<%= parseFloat(budget.spent || 0).toLocaleString() %></span>
+        </div>
+        <% }); %>
+      </div>
+      <% } else { %>
+      <div class="text-center py-8">
+        <div class="w-16 h-16 bg-[#4A6B5C]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-chart-pie text-[#4A6B5C] text-2xl"></i>
+        </div>
+        <p class="text-sm text-[#2C2C2C]/40 mb-4">No budgets for this month</p>
+        <a href="/budget" class="text-sm text-[#4A6B5C] hover:text-[#3A5A4C] font-medium">
+          Create Budget <i class="fas fa-arrow-right text-xs ml-1"></i>
+        </a>
+      </div>
+      <% } %>
     </div>
   </div>
 
@@ -83,37 +218,43 @@
         <h3 class="serif text-xl font-semibold text-[#2C2C2C]">
           Recent transactions
         </h3>
-        <button
-          onclick="openTransactionModal()"
-          class="text-sm text-[#4A6B5C] hover:text-[#3A5A4C] font-medium transition-colors"
-        >
+        <button onclick="openTransactionModal()"
+          class="text-sm text-[#4A6B5C] hover:text-[#3A5A4C] font-medium transition-colors">
           Add Transaction <i class="fas fa-plus text-xs ml-1"></i>
         </button>
       </div>
       <div class="space-y-1">
-        <% if (recentTransactions.length === 0) { %>
+        <% if (recentTransactions.length===0) { %>
           <div class="text-center py-8 text-[#2C2C2C]/40">
             No transactions found
           </div>
-        <% } else { %>
-          <% recentTransactions.forEach(transaction => { %>
-            <div class="transaction-row flex items-center justify-between py-4 px-2 rounded-lg">
-              <div class="flex items-center gap-4">
-                <div class="category-icon bg-blue-50">
-                  <i class="fas fa-circle text-blue-600"></i>
+          <% } else { %>
+            <% recentTransactions.forEach(transaction=> { %>
+              <div class="transaction-row flex items-center justify-between py-4 px-2 rounded-lg">
+                <div class="flex items-center gap-4">
+                  <div class="category-icon bg-blue-50">
+                    <i class="fas fa-circle text-blue-600"></i>
+                  </div>
+                  <div>
+                    <p class="font-medium text-[#2C2C2C] text-sm">
+                      <%= transaction.description %>
+                    </p>
+                    <p class="text-xs text-[#2C2C2C]/40">
+                      <%= new Date(transaction.transactionDate).toLocaleDateString() %>
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p class="font-medium text-[#2C2C2C] text-sm"><%= transaction.description %></p>
-                  <p class="text-xs text-[#2C2C2C]/40"><%= new Date(transaction.transactionDate).toLocaleDateString() %></p>
+                <div class="text-right">
+                  <p class="font-semibold text-[#2C2C2C]">
+                    <%= transaction.type==='expense' ? '-' : '+' %>$<%= transaction.amount %>
+                  </p>
+                  <p class="text-xs text-[#2C2C2C]/40">
+                    <%= transaction.category_name || 'Uncategorized' %>
+                  </p>
                 </div>
               </div>
-              <div class="text-right">
-                <p class="font-semibold text-[#2C2C2C]"><%= transaction.type === 'expense' ? '-' : '+' %>$<%= transaction.amount %></p>
-                <p class="text-xs text-[#2C2C2C]/40"><%= transaction.category_name || 'Uncategorized' %></p>
-              </div>
-            </div>
-          <% }); %>
-        <% } %>
+              <% }); %>
+                <% } %>
       </div>
     </div>
 
@@ -122,8 +263,7 @@
       <div class="flex items-center justify-between mb-6">
         <h3 class="serif text-xl font-semibold text-[#2C2C2C]">Saving goals</h3>
         <button
-          class="w-8 h-8 rounded-lg bg-white/60 hover:bg-white/80 flex items-center justify-center transition-all"
-        >
+          class="w-8 h-8 rounded-lg bg-white/60 hover:bg-white/80 flex items-center justify-center transition-all">
           <i class="fas fa-plus text-xs text-[#2C2C2C]/60"></i>
         </button>
       </div>
@@ -134,10 +274,7 @@
             <span class="text-sm font-semibold text-[#4A6B5C]">$1,650</span>
           </div>
           <div class="w-full h-2 bg-black/5 rounded-full overflow-hidden">
-            <div
-              class="progress-bar h-full rounded-full"
-              style="width: 100%"
-            ></div>
+            <div class="progress-bar h-full rounded-full" style="width: 100%"></div>
           </div>
         </div>
         <div class="goal-card p-4 rounded-xl bg-white/40">
@@ -146,10 +283,7 @@
             <span class="text-sm font-semibold text-[#4A6B5C]">$60,000</span>
           </div>
           <div class="w-full h-2 bg-black/5 rounded-full overflow-hidden">
-            <div
-              class="progress-bar h-full rounded-full"
-              style="width: 45%"
-            ></div>
+            <div class="progress-bar h-full rounded-full" style="width: 45%"></div>
           </div>
           <p class="text-xs text-[#2C2C2C]/40 mt-2">45% complete</p>
         </div>
@@ -159,10 +293,7 @@
             <span class="text-sm font-semibold text-[#4A6B5C]">$150,000</span>
           </div>
           <div class="w-full h-2 bg-black/5 rounded-full overflow-hidden">
-            <div
-              class="progress-bar h-full rounded-full"
-              style="width: 12%"
-            ></div>
+            <div class="progress-bar h-full rounded-full" style="width: 12%"></div>
           </div>
           <p class="text-xs text-[#2C2C2C]/40 mt-2">12% complete</p>
         </div>
@@ -170,4 +301,3 @@
     </div>
   </div>
 </div>
-

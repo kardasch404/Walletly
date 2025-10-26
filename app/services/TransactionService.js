@@ -62,6 +62,32 @@ class TransactionService {
             throw error;
         }
     }
+
+    async getMonthlyData(userId, year = new Date().getFullYear()) {
+        try {
+            const monthlyData = await this.#transactionRepository.getMonthlyDataByUserId(userId, year);
+            
+            // Initialize all 12 months with zero values
+            const months = Array.from({ length: 12 }, (_, i) => ({
+                month: i + 1,
+                income: 0,
+                expense: 0
+            }));
+            
+            // Fill in actual data
+            monthlyData.forEach(data => {
+                months[data.month - 1] = {
+                    month: data.month,
+                    income: parseFloat(data.income) || 0,
+                    expense: parseFloat(data.expense) || 0
+                };
+            });
+            
+            return months;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = TransactionService;

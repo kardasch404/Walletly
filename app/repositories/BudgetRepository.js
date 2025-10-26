@@ -56,6 +56,40 @@ class BudgetRepository {
             throw error;
         }
     }
+
+    async getCurrentMonthBudgetSummary(userId) {
+        try {
+            return new Promise((resolve, reject) => {
+                const query = `
+                    SELECT 
+                        b.*, 
+                        c.name as category_name,
+                        COALESCE(SUM(CASE WHEN t.type = 'expense' THEN t.amount ELSE 0 END), 0) as spent
+                    FROM budgets b 
+                    JOIN categories c ON b.category_id = c.id 
+                    LEFT JOIN transactions t ON b.category_id = t.category_id 
+                        AND t.user_id = b.user_id 
+                        AND MONTH(t.transactionDate) = MONTH(CURDATE())
+                        AND YEAR(t.transactionDate) = YEAR(CURDATE())
+                    WHERE b.user_id = ?
+                        AND b.mounth = MONTH(CURDATE())
+                        AND b.year = YEAR(CURDATE())
+                    GROUP BY b.id, c.name
+                    ORDER BY spent DESC
+                    LIMIT 3
+                `;
+                db.query(query, [userId], (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = BudgetRepository;

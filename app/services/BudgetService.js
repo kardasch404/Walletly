@@ -30,6 +30,14 @@ class BudgetService {
             throw error;
         }
     }
+
+    async getCurrentMonthBudgetSummary(userId) {
+        try {
+            return await this.#budgetRepository.getCurrentMonthBudgetSummary(userId);
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = BudgetService;
