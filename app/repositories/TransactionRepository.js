@@ -226,6 +226,101 @@ class TransactionRepository {
             throw error;
         }
     }
+
+    async getAnalyticsData(userId) {
+        try {
+            return new Promise((resolve, reject) => {
+                const query = `
+                    SELECT 
+                        COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END), 0) as totalIncome,
+                        COALESCE(SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END), 0) as totalExpense,
+                        COUNT(*) as totalTransactions,
+                        AVG(CASE WHEN type = 'expense' THEN amount ELSE NULL END) as avgExpense
+                    FROM transactions 
+                    WHERE user_id = ? AND YEAR(transactionDate) = YEAR(CURDATE())
+                `;
+                db.query(query, [userId], (err, result) => {
+                    if (err) reject(err);
+                    else resolve(result[0]);
+                });
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getCategorySpending(userId) {
+        try {
+            return new Promise((resolve, reject) => {
+                const query = `
+                    SELECT 
+                        categories.name as category,
+                        COALESCE(SUM(transactions.amount), 0) as total
+                    FROM transactions 
+                    LEFT JOIN categories ON transactions.category_id = categories.id 
+                    WHERE transactions.user_id = ? 
+                        AND transactions.type = 'expense'
+                        AND YEAR(transactions.transactionDate) = YEAR(CURDATE())
+                    GROUP BY categories.name
+                    ORDER BY total DESC
+                    LIMIT 10
+                `;
+                db.query(query, [userId], (err, result) => {
+                    if (err) reject(err);
+                    else resolve(result);
+                });
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getLastMonthData(userId) {
+        try {
+            return new Promise((resolve, reject) => {
+                const query = `
+                    SELECT 
+                        COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END), 0) as totalIncome,
+                        COALESCE(SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END), 0) as totalExpense,
+                        COUNT(*) as totalTransactions
+                    FROM transactions 
+                    WHERE user_id = ? 
+                        AND YEAR(transactionDate) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))
+                        AND MONTH(transactionDate) = MONTH(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))
+                `;
+                db.query(query, [userId], (err, result) => {
+                    if (err) reject(err);
+                    else resolve(result[0]);
+                });
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getCurrentMonthData(userId) {
+        try {
+            return new Promise((resolve, reject) => {
+                const query = `
+                    SELECT 
+                        COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END), 0) as totalIncome,
+                        COALESCE(SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END), 0) as totalExpense,
+                        COUNT(*) as totalTransactions,
+                        COUNT(DISTINCT DATE(transactionDate)) as daysWithTransactions
+                    FROM transactions 
+                    WHERE user_id = ? 
+                        AND YEAR(transactionDate) = YEAR(CURDATE())
+                        AND MONTH(transactionDate) = MONTH(CURDATE())
+                `;
+                db.query(query, [userId], (err, result) => {
+                    if (err) reject(err);
+                    else resolve(result[0]);
+                });
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = TransactionRepository;

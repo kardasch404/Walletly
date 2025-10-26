@@ -1,76 +1,78 @@
 <!-- Analytics Page -->
 <div id="analytics" class="page-view <%= currentPage === 'analytics' ? 'active' : '' %> p-8">
   <div class="mb-8">
-    <h2 class="serif text-4xl font-semibold text-[#2C2C2C] mb-2">
-      Financial Analytics
-    </h2>
+    <h2 class="serif text-4xl font-semibold text-[#2C2C2C] mb-2">Financial Analytics</h2>
     <p class="text-[#2C2C2C]/60">Deep insights into your financial health</p>
   </div>
+
+  <% 
+    // Calculate comparison values
+    const netWorthChange = analytics.netWorthChange || 0;
+    const savingsRateChange = analytics.savingsRateChange || 0;
+    const avgDailySpendChange = analytics.avgDailySpendChange || 0;
+  %>
 
   <!-- Key Metrics -->
   <div class="grid grid-cols-4 gap-6 mb-8">
     <div class="card rounded-2xl p-6">
-      <div
-        class="w-10 h-10 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center mb-4"
-      >
+      <div class="w-10 h-10 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center mb-4">
         <i class="fas fa-chart-line text-[#4A6B5C]"></i>
       </div>
       <p class="text-sm text-[#2C2C2C]/60 mb-1">Net Worth</p>
-      <p class="serif text-2xl font-semibold text-[#2C2C2C]">$48,613</p>
-      <p class="text-xs text-[#4A6B5C] mt-2">
-        <i class="fas fa-arrow-up text-xs"></i> 18.5% vs last year
+      <p class="serif text-2xl font-semibold text-[#2C2C2C]">
+        $<%= analytics.netWorth.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>
+      </p>
+      <p class="text-xs <%= netWorthChange >= 0 ? 'text-[#4A6B5C]' : 'text-[#C9A86A]' %> mt-2">
+        <i class="fas fa-arrow-<%= netWorthChange >= 0 ? 'up' : 'down' %> text-xs"></i> 
+        <%= Math.abs(netWorthChange).toFixed(1) %>% vs last year
       </p>
     </div>
     <div class="card rounded-2xl p-6">
-      <div
-        class="w-10 h-10 rounded-xl bg-[#C9A86A]/10 flex items-center justify-center mb-4"
-      >
+      <div class="w-10 h-10 rounded-xl bg-[#C9A86A]/10 flex items-center justify-center mb-4">
         <i class="fas fa-percentage text-[#C9A86A]"></i>
       </div>
       <p class="text-sm text-[#2C2C2C]/60 mb-1">Savings Rate</p>
-      <p class="serif text-2xl font-semibold text-[#2C2C2C]">26.8%</p>
-      <p class="text-xs text-[#4A6B5C] mt-2">
-        <i class="fas fa-arrow-up text-xs"></i> 3.2% vs last month
+      <p class="serif text-2xl font-semibold text-[#2C2C2C]">
+        <%= analytics.savingsRate.toFixed(1) %>%
+      </p>
+      <p class="text-xs <%= savingsRateChange >= 0 ? 'text-[#4A6B5C]' : 'text-[#C9A86A]' %> mt-2">
+        <i class="fas fa-arrow-<%= savingsRateChange >= 0 ? 'up' : 'down' %> text-xs"></i> 
+        <%= Math.abs(savingsRateChange).toFixed(1) %>% vs last month
       </p>
     </div>
     <div class="card rounded-2xl p-6">
-      <div
-        class="w-10 h-10 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center mb-4"
-      >
+      <div class="w-10 h-10 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center mb-4">
         <i class="fas fa-calendar text-[#4A6B5C]"></i>
       </div>
       <p class="text-sm text-[#2C2C2C]/60 mb-1">Avg. Daily Spend</p>
-      <p class="serif text-2xl font-semibold text-[#2C2C2C]">$207</p>
-      <p class="text-xs text-[#C9A86A] mt-2">
-        <i class="fas fa-arrow-down text-xs"></i> 5.1% vs last month
+      <p class="serif text-2xl font-semibold text-[#2C2C2C]">
+        $<%= analytics.avgDailySpend.toFixed(0) %>
+      </p>
+      <p class="text-xs <%= avgDailySpendChange <= 0 ? 'text-[#4A6B5C]' : 'text-[#C9A86A]' %> mt-2">
+        <i class="fas fa-arrow-<%= avgDailySpendChange <= 0 ? 'down' : 'up' %> text-xs"></i> 
+        <%= Math.abs(avgDailySpendChange).toFixed(1) %>% vs last month
       </p>
     </div>
     <div class="card rounded-2xl p-6">
-      <div
-        class="w-10 h-10 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center mb-4"
-      >
+      <div class="w-10 h-10 rounded-xl bg-[#4A6B5C]/10 flex items-center justify-center mb-4">
         <i class="fas fa-trophy text-[#4A6B5C]"></i>
       </div>
       <p class="text-sm text-[#2C2C2C]/60 mb-1">Financial Score</p>
-      <p class="serif text-2xl font-semibold text-[#2C2C2C]">8.4/10</p>
-      <p class="text-xs text-[#4A6B5C] mt-2">Excellent</p>
+      <p class="serif text-2xl font-semibold text-[#2C2C2C]"><%= analytics.financialScore %>/10</p>
+      <p class="text-xs text-[#4A6B5C] mt-2"><%= analytics.scoreRating %></p>
     </div>
   </div>
 
   <!-- Charts -->
   <div class="grid grid-cols-2 gap-6 mb-8">
     <div class="card rounded-2xl p-6">
-      <h3 class="serif text-xl font-semibold text-[#2C2C2C] mb-6">
-        Income vs Expenses
-      </h3>
+      <h3 class="serif text-xl font-semibold text-[#2C2C2C] mb-6">Income vs Expenses</h3>
       <div class="chart-container">
         <canvas id="incomeExpenseChart"></canvas>
       </div>
     </div>
     <div class="card rounded-2xl p-6">
-      <h3 class="serif text-xl font-semibold text-[#2C2C2C] mb-6">
-        Spending by Category
-      </h3>
+      <h3 class="serif text-xl font-semibold text-[#2C2C2C] mb-6">Spending by Category</h3>
       <div class="chart-container">
         <canvas id="categoryChart"></canvas>
       </div>
@@ -78,65 +80,171 @@
   </div>
 
   <!-- Financial Health Indicators -->
-  <!-- <div class="card rounded-2xl p-8">
-    <h3 class="serif text-2xl font-semibold text-[#2C2C2C] mb-6">
-      Financial Health Indicators
-    </h3>
+  <div class="card rounded-2xl p-8">
+    <h3 class="serif text-2xl font-semibold text-[#2C2C2C] mb-6">Financial Health Indicators</h3>
     <div class="grid grid-cols-2 gap-8">
       <div>
         <div class="flex items-center justify-between mb-3">
           <span class="font-medium text-[#2C2C2C]">Emergency Fund</span>
-          <span class="text-sm text-[#4A6B5C] font-medium">Excellent</span>
+          <span class="text-sm text-[#4A6B5C] font-medium"><%= analytics.emergencyFundStatus.rating %></span>
         </div>
         <div class="w-full h-2 bg-black/5 rounded-full overflow-hidden mb-2">
-          <div
-            class="progress-bar h-full rounded-full"
-            style="width: 90%"
-          ></div>
+          <div class="progress-bar h-full rounded-full" style="width: <%= Math.min(100, analytics.emergencyFundStatus.percentage) %>%"></div>
         </div>
-        <p class="text-xs text-[#2C2C2C]/60">6 months of expenses covered</p>
+        <p class="text-xs text-[#2C2C2C]/60">
+          <%= (analytics.emergencyFundStatus.percentage / 100 * 6).toFixed(1) %> months of expenses covered
+        </p>
       </div>
       <div>
         <div class="flex items-center justify-between mb-3">
           <span class="font-medium text-[#2C2C2C]">Debt-to-Income Ratio</span>
-          <span class="text-sm text-[#4A6B5C] font-medium">Good</span>
+          <span class="text-sm text-[#4A6B5C] font-medium">N/A</span>
         </div>
         <div class="w-full h-2 bg-black/5 rounded-full overflow-hidden mb-2">
-          <div
-            class="progress-bar h-full rounded-full"
-            style="width: 75%"
-          ></div>
+          <div class="progress-bar h-full rounded-full" style="width: 0%"></div>
         </div>
-        <p class="text-xs text-[#2C2C2C]/60">15% debt ratio</p>
+        <p class="text-xs text-[#2C2C2C]/60">No debt data available</p>
       </div>
       <div>
         <div class="flex items-center justify-between mb-3">
           <span class="font-medium text-[#2C2C2C]">Investment Portfolio</span>
-          <span class="text-sm text-[#4A6B5C] font-medium">Growing</span>
+          <span class="text-sm text-[#4A6B5C] font-medium">N/A</span>
         </div>
         <div class="w-full h-2 bg-black/5 rounded-full overflow-hidden mb-2">
-          <div
-            class="progress-bar h-full rounded-full"
-            style="width: 65%"
-          ></div>
+          <div class="progress-bar h-full rounded-full" style="width: 0%"></div>
         </div>
-        <p class="text-xs text-[#2C2C2C]/60">12% annual return</p>
+        <p class="text-xs text-[#2C2C2C]/60">No investment data available</p>
       </div>
       <div>
         <div class="flex items-center justify-between mb-3">
           <span class="font-medium text-[#2C2C2C]">Budget Adherence</span>
-          <span class="text-sm text-[#4A6B5C] font-medium">Excellent</span>
+          <span class="text-sm text-[#4A6B5C] font-medium"><%= analytics.budgetAdherence.rating %></span>
         </div>
         <div class="w-full h-2 bg-black/5 rounded-full overflow-hidden mb-2">
-          <div
-            class="progress-bar h-full rounded-full"
-            style="width: 85%"
-          ></div>
+          <div class="progress-bar h-full rounded-full" style="width: <%= Math.max(0, analytics.budgetAdherence.percentage) %>%"></div>
         </div>
         <p class="text-xs text-[#2C2C2C]/60">
-          Staying within budget 85% of the time
+          <%= analytics.budgetAdherence.percentage >= 0 ? 'Within budget' : 'Over budget' %>
         </p>
       </div>
     </div>
-  </div> -->
+  </div>
 </div>
+
+<script>
+  // Initialize Income vs Expense Chart
+  const incomeExpenseCtx = document.getElementById('incomeExpenseChart');
+  if (incomeExpenseCtx) {
+    const monthlyData = <%- JSON.stringify(monthlyData || []) %>;
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    
+    new Chart(incomeExpenseCtx, {
+      type: 'line',
+      data: {
+        labels: months,
+        datasets: [{
+          label: 'Income',
+          data: monthlyData.map(m => m.income),
+          borderColor: '#4A6B5C',
+          backgroundColor: 'rgba(74, 107, 92, 0.1)',
+          tension: 0.4,
+          fill: true
+        }, {
+          label: 'Expenses',
+          data: monthlyData.map(m => m.expense),
+          borderColor: '#C9A86A',
+          backgroundColor: 'rgba(201, 168, 106, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              font: { size: 12 },
+              padding: 15,
+              usePointStyle: true
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return '$' + value.toLocaleString();
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // Initialize Category Spending Chart
+  const categoryCtx = document.getElementById('categoryChart');
+  if (categoryCtx) {
+    const categoryData = <%- JSON.stringify(analytics.categorySpending || []) %>;
+    const colors = [
+      '#4A6B5C', '#C9A86A', '#8B7355', '#6B8E23', 
+      '#D2691E', '#BC8F8F', '#708090', '#CD853F',
+      '#8FBC8F', '#B8860B'
+    ];
+    
+    new Chart(categoryCtx, {
+      type: 'doughnut',
+      data: {
+        labels: categoryData.map(c => c.category || 'Other'),
+        datasets: [{
+          data: categoryData.map(c => parseFloat(c.total)),
+          backgroundColor: colors,
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: {
+              font: { size: 11 },
+              padding: 10,
+              usePointStyle: true,
+              generateLabels: function(chart) {
+                const data = chart.data;
+                if (data.labels.length && data.datasets.length) {
+                  return data.labels.map((label, i) => {
+                    const value = data.datasets[0].data[i];
+                    return {
+                      text: label + ': $' + value.toFixed(0),
+                      fillStyle: data.datasets[0].backgroundColor[i],
+                      hidden: false,
+                      index: i
+                    };
+                  });
+                }
+                return [];
+              }
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                const label = context.label || '';
+                const value = context.parsed || 0;
+                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                const percentage = ((value / total) * 100).toFixed(1);
+                return label + ': $' + value.toFixed(2) + ' (' + percentage + '%)';
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+</script>

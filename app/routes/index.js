@@ -124,6 +124,7 @@ router.get('/dashboard', async function(req, res, next) {
     const monthlyData = await transactionService.getMonthlyData(req.session.userId);
     const budgets = await budgetService.getAllBudgetsFromUser(req.session.userId);
     const categories = await categoryService.getAllCategoriesFromUser(req.session.userId);
+    const analytics = await transactionService.getAnalyticsData(req.session.userId);
     
     res.render('dashboard/layouts/main', { 
       title: 'Dashboard - Walletly',
@@ -136,9 +137,11 @@ router.get('/dashboard', async function(req, res, next) {
       totalBalance: totalBalance,
       monthlyData: monthlyData,
       budgets: budgets,
-      categories: categories
+      categories: categories,
+      analytics: analytics
     });
   } catch (error) {
+    console.error('Dashboard error:', error);
     res.render('dashboard/layouts/main', { 
       title: 'Dashboard - Walletly',
       user: req.session.user,
@@ -150,7 +153,8 @@ router.get('/dashboard', async function(req, res, next) {
       totalBalance: 0,
       monthlyData: [],
       budgets: [],
-      categories: []
+      categories: [],
+      analytics: null
     });
   }
 });
@@ -199,6 +203,7 @@ router.get('/transactions', async function(req, res, next) {
     const wallets = await walletService.getAllWalletsFromUser(req.session.userId);
     const transactions = await transactionService.getAllTransactionsFromUser(req.session.userId);
     const monthlyData = await transactionService.getMonthlyData(req.session.userId);
+    const analytics = await transactionService.getAnalyticsData(req.session.userId);
     res.render('dashboard/layouts/main', { 
       title: 'Transactions - Walletly',
       user: user,
@@ -207,9 +212,11 @@ router.get('/transactions', async function(req, res, next) {
       categories: categories,
       wallets: wallets,
       transactions: transactions,
-      monthlyData: monthlyData
+      monthlyData: monthlyData,
+      analytics: analytics
     });
   } catch (error) {
+    console.error('Transactions error:', error);
     res.render('dashboard/layouts/main', { 
       title: 'Transactions - Walletly',
       user: req.session.user,
@@ -218,7 +225,8 @@ router.get('/transactions', async function(req, res, next) {
       categories: [],
       wallets: [],
       transactions: [],
-      monthlyData: []
+      monthlyData: [],
+      analytics: null
     });
   }
 });
@@ -233,22 +241,26 @@ router.get('/wallet', async function(req, res, next) {
     const user = await userService.getUserById(req.session.userId);
     const wallets = await walletService.getAllWalletsFromUser(req.session.userId);
     const monthlyData = await transactionService.getMonthlyData(req.session.userId);
+    const analytics = await transactionService.getAnalyticsData(req.session.userId);
     res.render('dashboard/layouts/main', { 
       title: 'Wallet - Walletly',
       user: user,
       body: '../pages/wallet',
       currentPage: 'wallet',
       wallets: wallets,
-      monthlyData: monthlyData
+      monthlyData: monthlyData,
+      analytics: analytics
     });
   } catch (error) {
+    console.error('Wallet error:', error);
     res.render('dashboard/layouts/main', { 
       title: 'Wallet - Walletly',
       user: req.session.user,
       body: '../pages/wallet',
       currentPage: 'wallet',
       wallets: [],
-      monthlyData: []
+      monthlyData: [],
+      analytics: null
     });
   }
 });
@@ -262,20 +274,24 @@ router.get('/goals', async function(req, res, next) {
   try {
     const user = await userService.getUserById(req.session.userId);
     const monthlyData = await transactionService.getMonthlyData(req.session.userId);
+    const analytics = await transactionService.getAnalyticsData(req.session.userId);
     res.render('dashboard/layouts/main', { 
       title: 'Goals - Walletly',
       user: user,
       body: '../pages/goals',
       currentPage: 'goals',
-      monthlyData: monthlyData
+      monthlyData: monthlyData,
+      analytics: analytics
     });
   } catch (error) {
+    console.error('Goals error:', error);
     res.render('dashboard/layouts/main', { 
       title: 'Goals - Walletly',
       user: req.session.user,
       body: '../pages/goals',
       currentPage: 'goals',
-      monthlyData: []
+      monthlyData: [],
+      analytics: null
     });
   }
 });
@@ -292,6 +308,7 @@ router.get('/budget', async function(req, res, next) {
     const budgets = await budgetService.getAllBudgetsFromUser(req.session.userId);
     const wallets = await walletService.getAllWalletsFromUser(req.session.userId);
     const monthlyData = await transactionService.getMonthlyData(req.session.userId);
+    const analytics = await transactionService.getAnalyticsData(req.session.userId);
     res.render('dashboard/layouts/main', { 
       title: 'Budget - Walletly',
       user: user,
@@ -300,9 +317,11 @@ router.get('/budget', async function(req, res, next) {
       categories: categories,
       budgets: budgets,
       wallets: wallets,
-      monthlyData: monthlyData
+      monthlyData: monthlyData,
+      analytics: analytics
     });
   } catch (error) {
+    console.error('Budget error:', error);
     res.render('dashboard/layouts/main', { 
       title: 'Budget - Walletly',
       user: req.session.user,
@@ -311,7 +330,8 @@ router.get('/budget', async function(req, res, next) {
       categories: [],
       budgets: [],
       wallets: [],
-      monthlyData: []
+      monthlyData: [],
+      analytics: null
     });
   }
 });
@@ -325,20 +345,34 @@ router.get('/analytics', async function(req, res, next) {
   try {
     const user = await userService.getUserById(req.session.userId);
     const monthlyData = await transactionService.getMonthlyData(req.session.userId);
+    const analyticsData = await transactionService.getAnalyticsData(req.session.userId);
+    
     res.render('dashboard/layouts/main', { 
       title: 'Analytics - Walletly',
       user: user,
       body: '../pages/analytics',
       currentPage: 'analytics',
-      monthlyData: monthlyData
+      monthlyData: monthlyData,
+      analytics: analyticsData
     });
   } catch (error) {
+    console.error('Analytics error:', error);
     res.render('dashboard/layouts/main', { 
       title: 'Analytics - Walletly',
       user: req.session.user,
       body: '../pages/analytics',
       currentPage: 'analytics',
-      monthlyData: []
+      monthlyData: [],
+      analytics: {
+        netWorth: 0,
+        savingsRate: 0,
+        avgDailySpend: 0,
+        financialScore: 0,
+        scoreRating: 'N/A',
+        categorySpending: [],
+        emergencyFundStatus: { percentage: 0, rating: 'N/A' },
+        budgetAdherence: { percentage: 0, rating: 'N/A' }
+      }
     });
   }
 });
@@ -353,22 +387,26 @@ router.get('/categories', async function(req, res, next) {
     const user = await userService.getUserById(req.session.userId);
     const categories = await categoryService.getAllCategoriesFromUser(req.session.userId);
     const monthlyData = await transactionService.getMonthlyData(req.session.userId);
+    const analytics = await transactionService.getAnalyticsData(req.session.userId);
     res.render('dashboard/layouts/main', { 
       title: 'Categories - Walletly',
       user: user,
       body: '../pages/categories',
       currentPage: 'categories',
       categories: categories,
-      monthlyData: monthlyData
+      monthlyData: monthlyData,
+      analytics: analytics
     });
   } catch (error) {
+    console.error('Categories error:', error);
     res.render('dashboard/layouts/main', { 
       title: 'Categories - Walletly',
       user: req.session.user,
       body: '../pages/categories',
       currentPage: 'categories',
       categories: [],
-      monthlyData: []
+      monthlyData: [],
+      analytics: null
     });
   }
 });
@@ -382,25 +420,29 @@ router.get('/settings', async function(req, res, next) {
   try {
     const user = await userService.getUserById(req.session.userId);
     const monthlyData = await transactionService.getMonthlyData(req.session.userId);
+    const analytics = await transactionService.getAnalyticsData(req.session.userId);
     res.render('dashboard/layouts/main', { 
       title: 'Settings - Walletly',
       user: user,
       body: '../pages/settings',
       currentPage: 'settings',
-      monthlyData: monthlyData
+      monthlyData: monthlyData,
+      analytics: analytics
     });
   } catch (error) {
+    console.error('Settings error:', error);
     res.render('dashboard/layouts/main', { 
       title: 'Settings - Walletly',
       user: req.session.user,
       body: '../pages/settings',
       currentPage: 'settings',
-      monthlyData: []
+      monthlyData: [],
+      analytics: null
     });
   }
 });
 
-
+module.exports = router;
 
 // ============= POST ROUTES =============
 
