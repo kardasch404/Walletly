@@ -66,7 +66,7 @@
       </button>
     </div>
     
-    <form action="/categories" method="POST">
+    <form action="/categories/create" method="POST">
       <div class="space-y-4">
         <div>
           <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Category Name</label>
@@ -86,6 +86,16 @@
             class="search-input w-full px-4 py-3 rounded-xl text-sm resize-none"
             placeholder="Enter category description"
           ></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Type</label>
+          <select
+            name="type"
+            class="search-input w-full px-4 py-3 rounded-xl text-sm"
+          >
+            <option value="expense">Expense</option>
+            <option value="income">Income</option>
+          </select>
         </div>
       </div>
       

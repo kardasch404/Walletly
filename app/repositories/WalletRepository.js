@@ -1,29 +1,18 @@
-const db = require('../database/mysql.js');
+const Wallet = require('../models/Wallet');
 
 class WalletRepository {
 
     async create(data) {
         try {
-            return new Promise((resolve, reject) => {
-                const query = `INSERT INTO wallets (id, user_id, cardNumber, amount, mounth, year) 
-                            VALUES (?, ?, ?, ?, ?, ?)`;
-                const values = [
-                    data.id,
-                    data.user_id,
-                    data.cardNumber,
-                    data.amount,
-                    data.mounth,
-                    data.year
-                ];
-    
-                db.query(query, values, (err, result) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(data);
-                    }
-                });
+            const wallet = await Wallet.create({
+                id: data.id,
+                user_id: data.user_id,
+                cardNumber: data.cardNumber,
+                amount: data.amount,
+                mounth: data.mounth,
+                year: data.year
             });
+            return wallet.toJSON();
         } catch (error) {
             throw error;
         }
@@ -31,16 +20,10 @@ class WalletRepository {
 
     async getAllByUserId(userId) {
         try {
-            return new Promise((resolve, reject) => {
-                const query = 'SELECT * FROM wallets WHERE user_id = ?';
-                db.query(query, [userId], (err, result) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(result);
-                    }
-                });
+            const wallets = await Wallet.findAll({
+                where: { user_id: userId }
             });
+            return wallets.map(wallet => wallet.toJSON());
         } catch (error) {
             throw error;
         }

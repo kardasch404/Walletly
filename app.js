@@ -12,6 +12,16 @@ var budgetsRouter = require('./app/routes/budgets');
 var transactionsRouter = require('./app/routes/transactions');
 var db = require('./app/database/mysql');
 
+// Initialize Saving Goals dependencies
+const SavingGoalController = require('./app/controllers/SavingGoalController');
+const SavingGoalService = require('./app/services/SavingGoalService');
+const SavingGoalRepository = require('./app/repositories/SavingGoalRepository');
+
+const savingGoalRepository = new SavingGoalRepository();
+const savingGoalService = new SavingGoalService(savingGoalRepository);
+const savingGoalController = new SavingGoalController(savingGoalService);
+var savingGoalsRouter = require('./app/routes/savinggoals')(savingGoalController);
+
 var app = express();
 
 // view engine setup
@@ -34,7 +44,8 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/categories', categoriesRouter);
 app.use('/budgets', budgetsRouter);
-// app.use('/transactions', transactionsRouter); // Commented out to avoid conflicts
+app.use('/transactions', transactionsRouter);
+app.use('/api/goals', savingGoalsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -49,7 +60,11 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.render('error', {
+    message: err.message,
+    error: req.app.get('env') === 'development' ? err : {},
+    status: err.status || 500
+  });
 });
 
 module.exports = app;

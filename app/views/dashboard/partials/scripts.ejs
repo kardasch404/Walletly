@@ -40,19 +40,29 @@
     // Money Flow Chart
     const moneyFlowCtx = document.getElementById('moneyFlowChart');
     if (moneyFlowCtx) {
+        // Get monthly data passed from server
+        const monthlyData = <%- JSON.stringify(monthlyData || []) %>;
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        
+        // Get current month to show only up to current month
+        const currentMonth = new Date().getMonth() + 1;
+        const labels = monthNames.slice(0, currentMonth);
+        const incomeData = monthlyData.slice(0, currentMonth).map(d => d.income);
+        const expenseData = monthlyData.slice(0, currentMonth).map(d => d.expense);
+        
         new Chart(moneyFlowCtx, {
             type: 'bar',
             data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                labels: labels,
                 datasets: [{
                     label: 'Income',
-                    data: [8200, 8500, 8300, 8700, 8400, 8600, 8500],
+                    data: incomeData,
                     backgroundColor: '#4A6B5C',
                     borderRadius: 8,
                     barThickness: 24
                 }, {
                     label: 'Expense',
-                    data: [6100, 6300, 5900, 6500, 6200, 6400, 6222],
+                    data: expenseData,
                     backgroundColor: '#C9A86A',
                     borderRadius: 8,
                     barThickness: 24

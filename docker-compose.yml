@@ -10,7 +10,7 @@ services:
       - "./app/db:/docker-entrypoint-initdb.d"
       - mysql_data:/var/lib/mysql
     ports:
-      - "3306:3306"
+      - "3308:3306"
     networks:
       - app-network
 
@@ -22,11 +22,19 @@ services:
     depends_on:
       - db
     volumes:
-      - "./:/var/www/html"
+      - "./:/usr/src/Walletly"
+      - /usr/src/Walletly/node_modules
     ports:
       - "8080:3000"
     networks:
       - app-network
+    environment:
+      - DB_HOST=db
+      - DB_USER=user
+      - DB_PASSWORD=userpassword123
+      - DB_NAME=walletly
+      - DB_PORT=3306
+      - PORT=3000
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin

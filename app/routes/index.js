@@ -7,6 +7,7 @@ const CategoryController = require('../controllers/CategoryController');
 const BudgetController = require('../controllers/BudgetController');
 const WalletController = require('../controllers/WalletController');
 const TransactionController = require('../controllers/TransactionController');
+const SavingGoalController = require('../controllers/SavingGoalController');
 
 // Services
 const UserService = require('../services/UserService');
@@ -14,6 +15,7 @@ const CategoryService = require('../services/CategoryService');
 const BudgetService = require('../services/BudgetService');
 const WalletService = require('../services/WalletService');
 const TransactionService = require('../services/TransactionService');
+const SavingGoalService = require('../services/SavingGoalService');
 
 // Repositories
 const UserRepository = require('../repositories/UserRepository');
@@ -21,6 +23,7 @@ const CategoryRepository = require('../repositories/CategoryRepository');
 const BudgetRepository = require('../repositories/BudgetRepository');
 const WalletRepository = require('../repositories/WalletRepository');
 const TransactionRepository = require('../repositories/TransactionRepository');
+const SavingGoalRepository = require('../repositories/SavingGoalRepository');
 
 // Request Validations
 const { validateRegister } = require('../http/requests/RegisterRequest');
@@ -79,6 +82,10 @@ const transactionRepository = new TransactionRepository();
 const transactionService = new TransactionService(transactionRepository);
 const transactionController = new TransactionController(transactionService);
 
+const savingGoalRepository = new SavingGoalRepository();
+const savingGoalService = new SavingGoalService(savingGoalRepository);
+const savingGoalController = new SavingGoalController(savingGoalService);
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('pages/home', { title: 'Walletly - Smart Budget Management' });
@@ -121,6 +128,10 @@ router.get('/dashboard', async function(req, res, next) {
     const totalIncome = await transactionService.getTotalIncome(req.session.userId);
     const totalExpense = await transactionService.getTotalExpense(req.session.userId);
     const totalBalance = await transactionService.getTotalBalance(req.session.userId);
+    const monthlyData = await transactionService.getMonthlyData(req.session.userId);
+    const budgets = await budgetService.getAllBudgetsFromUser(req.session.userId);
+    const categories = await categoryService.getAllCategoriesFromUser(req.session.userId);
+    const analytics = await transactionService.getAnalyticsData(req.session.userId);
     
     res.render('dashboard/layouts/main', { 
       title: 'Dashboard - Walletly',
@@ -130,9 +141,14 @@ router.get('/dashboard', async function(req, res, next) {
       recentTransactions: recentTransactions,
       totalIncome: totalIncome,
       totalExpense: totalExpense,
-      totalBalance: totalBalance
+      totalBalance: totalBalance,
+      monthlyData: monthlyData,
+      budgets: budgets,
+      categories: categories,
+      analytics: analytics
     });
   } catch (error) {
+    console.error('Dashboard error:', error);
     res.render('dashboard/layouts/main', { 
       title: 'Dashboard - Walletly',
       user: req.session.user,
@@ -141,7 +157,11 @@ router.get('/dashboard', async function(req, res, next) {
       recentTransactions: [],
       totalIncome: 0,
       totalExpense: 0,
-      totalBalance: 0
+      totalBalance: 0,
+      monthlyData: [],
+      budgets: [],
+      categories: [],
+      analytics: null
     });
   }
 });
@@ -189,6 +209,8 @@ router.get('/transactions', async function(req, res, next) {
     const categories = await categoryService.getAllCategoriesFromUser(req.session.userId);
     const wallets = await walletService.getAllWalletsFromUser(req.session.userId);
     const transactions = await transactionService.getAllTransactionsFromUser(req.session.userId);
+    const monthlyData = await transactionService.getMonthlyData(req.session.userId);
+    const analytics = await transactionService.getAnalyticsData(req.session.userId);
     res.render('dashboard/layouts/main', { 
       title: 'Transactions - Walletly',
       user: user,
@@ -196,9 +218,12 @@ router.get('/transactions', async function(req, res, next) {
       currentPage: 'transactions',
       categories: categories,
       wallets: wallets,
-      transactions: transactions
+      transactions: transactions,
+      monthlyData: monthlyData,
+      analytics: analytics
     });
   } catch (error) {
+    console.error('Transactions error:', error);
     res.render('dashboard/layouts/main', { 
       title: 'Transactions - Walletly',
       user: req.session.user,
@@ -206,7 +231,9 @@ router.get('/transactions', async function(req, res, next) {
       currentPage: 'transactions',
       categories: [],
       wallets: [],
-      transactions: []
+      transactions: [],
+      monthlyData: [],
+      analytics: null
     });
   }
 });
@@ -220,20 +247,27 @@ router.get('/wallet', async function(req, res, next) {
   try {
     const user = await userService.getUserById(req.session.userId);
     const wallets = await walletService.getAllWalletsFromUser(req.session.userId);
+    const monthlyData = await transactionService.getMonthlyData(req.session.userId);
+    const analytics = await transactionService.getAnalyticsData(req.session.userId);
     res.render('dashboard/layouts/main', { 
       title: 'Wallet - Walletly',
       user: user,
       body: '../pages/wallet',
       currentPage: 'wallet',
-      wallets: wallets
+      wallets: wallets,
+      monthlyData: monthlyData,
+      analytics: analytics
     });
   } catch (error) {
+    console.error('Wallet error:', error);
     res.render('dashboard/layouts/main', { 
       title: 'Wallet - Walletly',
       user: req.session.user,
       body: '../pages/wallet',
       currentPage: 'wallet',
-      wallets: []
+      wallets: [],
+      monthlyData: [],
+      analytics: null
     });
   }
 });
@@ -246,18 +280,32 @@ router.get('/goals', async function(req, res, next) {
   
   try {
     const user = await userService.getUserById(req.session.userId);
+    const monthlyData = await transactionService.getMonthlyData(req.session.userId);
+    const analytics = await transactionService.getAnalyticsData(req.session.userId);
+    const goals = await savingGoalService.getAllGoalsFromUser(req.session.userId);
+    const goalsStats = await savingGoalService.getStats(req.session.userId);
+    
     res.render('dashboard/layouts/main', { 
       title: 'Goals - Walletly',
       user: user,
       body: '../pages/goals',
-      currentPage: 'goals'
+      currentPage: 'goals',
+      monthlyData: monthlyData,
+      analytics: analytics,
+      goals: goals,
+      goalsStats: goalsStats
     });
   } catch (error) {
+    console.error('Goals error:', error);
     res.render('dashboard/layouts/main', { 
       title: 'Goals - Walletly',
       user: req.session.user,
       body: '../pages/goals',
-      currentPage: 'goals'
+      currentPage: 'goals',
+      monthlyData: [],
+      analytics: null,
+      goals: [],
+      goalsStats: { activeGoals: 0, completedGoals: 0, totalSaved: 0 }
     });
   }
 });
@@ -273,6 +321,8 @@ router.get('/budget', async function(req, res, next) {
     const categories = await categoryService.getAllCategoriesFromUser(req.session.userId);
     const budgets = await budgetService.getAllBudgetsFromUser(req.session.userId);
     const wallets = await walletService.getAllWalletsFromUser(req.session.userId);
+    const monthlyData = await transactionService.getMonthlyData(req.session.userId);
+    const analytics = await transactionService.getAnalyticsData(req.session.userId);
     res.render('dashboard/layouts/main', { 
       title: 'Budget - Walletly',
       user: user,
@@ -280,9 +330,12 @@ router.get('/budget', async function(req, res, next) {
       currentPage: 'budget',
       categories: categories,
       budgets: budgets,
-      wallets: wallets
+      wallets: wallets,
+      monthlyData: monthlyData,
+      analytics: analytics
     });
   } catch (error) {
+    console.error('Budget error:', error);
     res.render('dashboard/layouts/main', { 
       title: 'Budget - Walletly',
       user: req.session.user,
@@ -290,7 +343,9 @@ router.get('/budget', async function(req, res, next) {
       currentPage: 'budget',
       categories: [],
       budgets: [],
-      wallets: []
+      wallets: [],
+      monthlyData: [],
+      analytics: null
     });
   }
 });
@@ -303,18 +358,35 @@ router.get('/analytics', async function(req, res, next) {
   
   try {
     const user = await userService.getUserById(req.session.userId);
+    const monthlyData = await transactionService.getMonthlyData(req.session.userId);
+    const analyticsData = await transactionService.getAnalyticsData(req.session.userId);
+    
     res.render('dashboard/layouts/main', { 
       title: 'Analytics - Walletly',
       user: user,
       body: '../pages/analytics',
-      currentPage: 'analytics'
+      currentPage: 'analytics',
+      monthlyData: monthlyData,
+      analytics: analyticsData
     });
   } catch (error) {
+    console.error('Analytics error:', error);
     res.render('dashboard/layouts/main', { 
       title: 'Analytics - Walletly',
       user: req.session.user,
       body: '../pages/analytics',
-      currentPage: 'analytics'
+      currentPage: 'analytics',
+      monthlyData: [],
+      analytics: {
+        netWorth: 0,
+        savingsRate: 0,
+        avgDailySpend: 0,
+        financialScore: 0,
+        scoreRating: 'N/A',
+        categorySpending: [],
+        emergencyFundStatus: { percentage: 0, rating: 'N/A' },
+        budgetAdherence: { percentage: 0, rating: 'N/A' }
+      }
     });
   }
 });
@@ -328,20 +400,27 @@ router.get('/categories', async function(req, res, next) {
   try {
     const user = await userService.getUserById(req.session.userId);
     const categories = await categoryService.getAllCategoriesFromUser(req.session.userId);
+    const monthlyData = await transactionService.getMonthlyData(req.session.userId);
+    const analytics = await transactionService.getAnalyticsData(req.session.userId);
     res.render('dashboard/layouts/main', { 
       title: 'Categories - Walletly',
       user: user,
       body: '../pages/categories',
       currentPage: 'categories',
-      categories: categories
+      categories: categories,
+      monthlyData: monthlyData,
+      analytics: analytics
     });
   } catch (error) {
+    console.error('Categories error:', error);
     res.render('dashboard/layouts/main', { 
       title: 'Categories - Walletly',
       user: req.session.user,
       body: '../pages/categories',
       currentPage: 'categories',
-      categories: []
+      categories: [],
+      monthlyData: [],
+      analytics: null
     });
   }
 });
@@ -354,23 +433,30 @@ router.get('/settings', async function(req, res, next) {
   
   try {
     const user = await userService.getUserById(req.session.userId);
+    const monthlyData = await transactionService.getMonthlyData(req.session.userId);
+    const analytics = await transactionService.getAnalyticsData(req.session.userId);
     res.render('dashboard/layouts/main', { 
       title: 'Settings - Walletly',
       user: user,
       body: '../pages/settings',
-      currentPage: 'settings'
+      currentPage: 'settings',
+      monthlyData: monthlyData,
+      analytics: analytics
     });
   } catch (error) {
+    console.error('Settings error:', error);
     res.render('dashboard/layouts/main', { 
       title: 'Settings - Walletly',
       user: req.session.user,
       body: '../pages/settings',
-      currentPage: 'settings'
+      currentPage: 'settings',
+      monthlyData: [],
+      analytics: null
     });
   }
 });
 
-
+module.exports = router;
 
 // ============= POST ROUTES =============
 

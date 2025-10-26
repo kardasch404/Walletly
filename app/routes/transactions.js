@@ -13,6 +13,10 @@ router.get('/', async (req, res) => {
     await transactionController.getAllTransactionsFromUser(req, res);
 });
 
+router.get('/api/search', async (req, res) => {
+    await transactionController.searchAndFilter(req, res);
+});
+
 router.post('/create', async (req, res) => {
     try {
         validateTransactionStore(req.body);

@@ -10,7 +10,7 @@
           Track your progress towards financial milestones
         </p>
       </div>
-      <button class="btn-primary px-6 py-3 rounded-xl font-medium">
+      <button id="createGoalBtn" class="btn-primary px-6 py-3 rounded-xl font-medium">
         <i class="fas fa-plus mr-2"></i>Create New Goal
       </button>
     </div>
@@ -27,7 +27,7 @@
         </div>
         <div>
           <p class="text-sm text-[#2C2C2C]/60 mb-1">Active Goals</p>
-          <p class="serif text-2xl font-semibold text-[#2C2C2C]">3</p>
+          <p class="serif text-2xl font-semibold text-[#2C2C2C]"><%= goalsStats.activeGoals %></p>
         </div>
       </div>
     </div>
@@ -40,7 +40,7 @@
         </div>
         <div>
           <p class="text-sm text-[#2C2C2C]/60 mb-1">Total Saved</p>
-          <p class="serif text-2xl font-semibold text-[#2C2C2C]">$32,913</p>
+          <p class="serif text-2xl font-semibold text-[#2C2C2C]">$<%= goalsStats.totalSaved.toLocaleString() %></p>
         </div>
       </div>
     </div>
@@ -53,7 +53,7 @@
         </div>
         <div>
           <p class="text-sm text-[#2C2C2C]/60 mb-1">Completed</p>
-          <p class="serif text-2xl font-semibold text-[#2C2C2C]">1</p>
+          <p class="serif text-2xl font-semibold text-[#2C2C2C]"><%= goalsStats.completedGoals %></p>
         </div>
       </div>
     </div>
@@ -65,137 +65,265 @@
       Active Goals
     </h3>
     <div class="space-y-6">
-      <div class="card rounded-2xl p-8">
-        <div class="flex items-start justify-between mb-6">
-          <div class="flex items-center gap-4">
-            <div
-              class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#4A6B5C] to-[#3A5A4C] flex items-center justify-center"
-            >
-              <i class="fas fa-laptop text-white text-2xl"></i>
+      <% if (goals && goals.length > 0) { %>
+        <% goals.forEach(function(goal) { %>
+          <div class="card rounded-2xl p-8">
+            <div class="flex items-start justify-between mb-6">
+              <div class="flex items-center gap-4">
+                <div
+                  class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#4A6B5C] to-[#3A5A4C] flex items-center justify-center"
+                >
+                  <i class="fas <%= goal.icon %> text-white text-2xl"></i>
+                </div>
+                <div>
+                  <h4 class="serif text-2xl font-semibold text-[#2C2C2C] mb-1">
+                    <%= goal.title %>
+                  </h4>
+                  <p class="text-sm text-[#2C2C2C]/60">
+                    Target: <%= new Date(goal.targetDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) %>
+                  </p>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="serif text-3xl font-semibold text-[#4A6B5C] mb-1">
+                  $<%= goal.currentAmount.toLocaleString() %>
+                </p>
+                <p class="text-sm text-[#2C2C2C]/60">of $<%= goal.goalAmount.toLocaleString() %></p>
+              </div>
             </div>
-            <div>
-              <h4 class="serif text-2xl font-semibold text-[#2C2C2C] mb-1">
-                MacBook Pro
-              </h4>
-              <p class="text-sm text-[#2C2C2C]/60">Target: December 2024</p>
+            <div class="mb-4">
+              <div class="w-full h-3 bg-black/5 rounded-full overflow-hidden">
+                <div
+                  class="progress-bar h-full rounded-full"
+                  style="width: <%= goal.progress %>%"
+                ></div>
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <% if (goal.isCompleted) { %>
+                <span
+                  class="stat-badge px-3 py-1.5 rounded-lg text-sm font-medium text-[#4A6B5C]"
+                >
+                  <i class="fas fa-check-circle mr-1"></i>Goal Completed!
+                </span>
+              <% } else { %>
+                <span
+                  class="stat-badge px-3 py-1.5 rounded-lg text-sm font-medium text-[#4A6B5C]"
+                >
+                  <%= goal.progress.toFixed(0) %>% Complete • $<%= goal.remainingAmount.toLocaleString() %> remaining
+                </span>
+              <% } %>
+              <button
+                class="<% if (goal.isCompleted) { %>view-goal-btn<% } else { %>add-funds-btn<% } %> text-sm text-[#4A6B5C] hover:text-[#3A5A4C] font-medium"
+                data-goal-id="<%= goal.id %>"
+                data-goal-title="<%= goal.title %>"
+              >
+                <% if (goal.isCompleted) { %>
+                  View Details <i class="fas fa-arrow-right text-xs ml-1"></i>
+                <% } else { %>
+                  Add Funds <i class="fas fa-plus text-xs ml-1"></i>
+                <% } %>
+              </button>
             </div>
           </div>
-          <div class="text-right">
-            <p class="serif text-3xl font-semibold text-[#4A6B5C] mb-1">
-              $1,650
-            </p>
-            <p class="text-sm text-[#2C2C2C]/60">of $1,650</p>
+        <% }); %>
+      <% } else { %>
+        <div class="card rounded-2xl p-12 text-center">
+          <div class="w-20 h-20 rounded-full bg-[#4A6B5C]/10 flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-bullseye text-[#4A6B5C] text-3xl"></i>
           </div>
-        </div>
-        <div class="mb-4">
-          <div class="w-full h-3 bg-black/5 rounded-full overflow-hidden">
-            <div
-              class="progress-bar h-full rounded-full"
-              style="width: 100%"
-            ></div>
-          </div>
-        </div>
-        <div class="flex items-center justify-between">
-          <span
-            class="stat-badge px-3 py-1.5 rounded-lg text-sm font-medium text-[#4A6B5C]"
-          >
-            <i class="fas fa-check-circle mr-1"></i>Goal Completed!
-          </span>
-          <button
-            class="text-sm text-[#4A6B5C] hover:text-[#3A5A4C] font-medium"
-          >
-            View Details <i class="fas fa-arrow-right text-xs ml-1"></i>
+          <h4 class="serif text-xl font-semibold text-[#2C2C2C] mb-2">No Goals Yet</h4>
+          <p class="text-[#2C2C2C]/60 mb-6">Start your savings journey by creating your first goal</p>
+          <button id="createGoalBtnEmpty" class="btn-primary px-6 py-3 rounded-xl font-medium">
+            <i class="fas fa-plus mr-2"></i>Create Your First Goal
           </button>
         </div>
-      </div>
-
-      <div class="card rounded-2xl p-8">
-        <div class="flex items-start justify-between mb-6">
-          <div class="flex items-center gap-4">
-            <div
-              class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#C9A86A] to-[#B89860] flex items-center justify-center"
-            >
-              <i class="fas fa-car text-white text-2xl"></i>
-            </div>
-            <div>
-              <h4 class="serif text-2xl font-semibold text-[#2C2C2C] mb-1">
-                New Car
-              </h4>
-              <p class="text-sm text-[#2C2C2C]/60">Target: June 2025</p>
-            </div>
-          </div>
-          <div class="text-right">
-            <p class="serif text-3xl font-semibold text-[#4A6B5C] mb-1">
-              $27,000
-            </p>
-            <p class="text-sm text-[#2C2C2C]/60">of $60,000</p>
-          </div>
-        </div>
-        <div class="mb-4">
-          <div class="w-full h-3 bg-black/5 rounded-full overflow-hidden">
-            <div
-              class="progress-bar h-full rounded-full"
-              style="width: 45%"
-            ></div>
-          </div>
-        </div>
-        <div class="flex items-center justify-between">
-          <span
-            class="stat-badge px-3 py-1.5 rounded-lg text-sm font-medium text-[#4A6B5C]"
-          >
-            45% Complete • $33,000 remaining
-          </span>
-          <button
-            class="text-sm text-[#4A6B5C] hover:text-[#3A5A4C] font-medium"
-          >
-            Add Funds <i class="fas fa-plus text-xs ml-1"></i>
-          </button>
-        </div>
-      </div>
-
-      <div class="card rounded-2xl p-8">
-        <div class="flex items-start justify-between mb-6">
-          <div class="flex items-center gap-4">
-            <div
-              class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#4A6B5C] to-[#3A5A4C] flex items-center justify-center"
-            >
-              <i class="fas fa-home text-white text-2xl"></i>
-            </div>
-            <div>
-              <h4 class="serif text-2xl font-semibold text-[#2C2C2C] mb-1">
-                New House
-              </h4>
-              <p class="text-sm text-[#2C2C2C]/60">Target: December 2026</p>
-            </div>
-          </div>
-          <div class="text-right">
-            <p class="serif text-3xl font-semibold text-[#4A6B5C] mb-1">
-              $18,000
-            </p>
-            <p class="text-sm text-[#2C2C2C]/60">of $150,000</p>
-          </div>
-        </div>
-        <div class="mb-4">
-          <div class="w-full h-3 bg-black/5 rounded-full overflow-hidden">
-            <div
-              class="progress-bar h-full rounded-full"
-              style="width: 12%"
-            ></div>
-          </div>
-        </div>
-        <div class="flex items-center justify-between">
-          <span
-            class="stat-badge px-3 py-1.5 rounded-lg text-sm font-medium text-[#4A6B5C]"
-          >
-            12% Complete • $132,000 remaining
-          </span>
-          <button
-            class="text-sm text-[#4A6B5C] hover:text-[#3A5A4C] font-medium"
-          >
-            Add Funds <i class="fas fa-plus text-xs ml-1"></i>
-          </button>
-        </div>
-      </div>
+      <% } %>
     </div>
   </div>
 </div>
+
+<!-- Create Goal Modal -->
+<div id="createGoalModal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center">
+  <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4">
+    <h3 class="serif text-2xl font-semibold text-[#2C2C2C] mb-6">Create New Goal</h3>
+    <form id="createGoalForm">
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Goal Title</label>
+          <input type="text" name="title" required class="w-full px-4 py-3 rounded-xl border border-black/10 focus:outline-none focus:border-[#4A6B5C]" placeholder="e.g., MacBook Pro">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Description</label>
+          <textarea name="description" required class="w-full px-4 py-3 rounded-xl border border-black/10 focus:outline-none focus:border-[#4A6B5C]" rows="3" placeholder="What are you saving for?"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Target Amount</label>
+          <input type="number" name="goalAmount" required min="1" step="0.01" class="w-full px-4 py-3 rounded-xl border border-black/10 focus:outline-none focus:border-[#4A6B5C]" placeholder="0.00">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Current Amount (Optional)</label>
+          <input type="number" name="currentAmount" min="0" step="0.01" class="w-full px-4 py-3 rounded-xl border border-black/10 focus:outline-none focus:border-[#4A6B5C]" placeholder="0.00">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Target Date</label>
+          <input type="date" name="targetDate" required class="w-full px-4 py-3 rounded-xl border border-black/10 focus:outline-none focus:border-[#4A6B5C]">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Icon</label>
+          <select name="icon" class="w-full px-4 py-3 rounded-xl border border-black/10 focus:outline-none focus:border-[#4A6B5C]">
+            <option value="fa-bullseye">🎯 Target</option>
+            <option value="fa-laptop">💻 Laptop</option>
+            <option value="fa-car">🚗 Car</option>
+            <option value="fa-home">🏠 House</option>
+            <option value="fa-plane">✈️ Travel</option>
+            <option value="fa-graduation-cap">🎓 Education</option>
+            <option value="fa-ring">💍 Wedding</option>
+            <option value="fa-piggy-bank">🐷 Savings</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex gap-3 mt-6">
+        <button type="button" id="cancelCreateBtn" class="flex-1 px-6 py-3 rounded-xl border border-black/10 text-[#2C2C2C] font-medium hover:bg-black/5">
+          Cancel
+        </button>
+        <button type="submit" class="flex-1 btn-primary px-6 py-3 rounded-xl font-medium">
+          Create Goal
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Add Funds Modal -->
+<div id="addFundsModal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center">
+  <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4">
+    <h3 class="serif text-2xl font-semibold text-[#2C2C2C] mb-2">Add Funds</h3>
+    <p id="goalTitle" class="text-[#2C2C2C]/60 mb-6"></p>
+    <form id="addFundsForm">
+      <input type="hidden" name="goalId" id="goalIdInput">
+      <div class="mb-6">
+        <label class="block text-sm font-medium text-[#2C2C2C] mb-2">Amount to Add</label>
+        <input type="number" name="amount" required min="0.01" step="0.01" class="w-full px-4 py-3 rounded-xl border border-black/10 focus:outline-none focus:border-[#4A6B5C]" placeholder="0.00" autofocus>
+      </div>
+      <div class="flex gap-3">
+        <button type="button" id="cancelAddFundsBtn" class="flex-1 px-6 py-3 rounded-xl border border-black/10 text-[#2C2C2C] font-medium hover:bg-black/5">
+          Cancel
+        </button>
+        <button type="submit" class="flex-1 btn-primary px-6 py-3 rounded-xl font-medium">
+          Add Funds
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Create Goal Modal
+  const createGoalModal = document.getElementById('createGoalModal');
+  const createGoalBtn = document.getElementById('createGoalBtn');
+  const createGoalBtnEmpty = document.getElementById('createGoalBtnEmpty');
+  const cancelCreateBtn = document.getElementById('cancelCreateBtn');
+  const createGoalForm = document.getElementById('createGoalForm');
+
+  function openCreateModal() {
+    createGoalModal.classList.remove('hidden');
+    createGoalModal.classList.add('flex');
+  }
+
+  function closeCreateModal() {
+    createGoalModal.classList.add('hidden');
+    createGoalModal.classList.remove('flex');
+    createGoalForm.reset();
+  }
+
+  createGoalBtn?.addEventListener('click', openCreateModal);
+  createGoalBtnEmpty?.addEventListener('click', openCreateModal);
+  cancelCreateBtn.addEventListener('click', closeCreateModal);
+  createGoalModal.addEventListener('click', (e) => {
+    if (e.target === createGoalModal) closeCreateModal();
+  });
+
+  createGoalForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(createGoalForm);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const response = await fetch('/api/goals', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      if (response.ok) {
+        window.location.reload();
+      } else {
+        const error = await response.json();
+        alert(error.message || 'Failed to create goal');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Failed to create goal');
+    }
+  });
+
+  // Add Funds Modal
+  const addFundsModal = document.getElementById('addFundsModal');
+  const cancelAddFundsBtn = document.getElementById('cancelAddFundsBtn');
+  const addFundsForm = document.getElementById('addFundsForm');
+  const goalIdInput = document.getElementById('goalIdInput');
+  const goalTitle = document.getElementById('goalTitle');
+  const addFundsBtns = document.querySelectorAll('.add-funds-btn');
+
+  function openAddFundsModal(goalId, title) {
+    goalIdInput.value = goalId;
+    goalTitle.textContent = title;
+    addFundsModal.classList.remove('hidden');
+    addFundsModal.classList.add('flex');
+  }
+
+  function closeAddFundsModal() {
+    addFundsModal.classList.add('hidden');
+    addFundsModal.classList.remove('flex');
+    addFundsForm.reset();
+  }
+
+  addFundsBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const goalId = btn.dataset.goalId;
+      const title = btn.dataset.goalTitle;
+      openAddFundsModal(goalId, title);
+    });
+  });
+
+  cancelAddFundsBtn.addEventListener('click', closeAddFundsModal);
+  addFundsModal.addEventListener('click', (e) => {
+    if (e.target === addFundsModal) closeAddFundsModal();
+  });
+
+  addFundsForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(addFundsForm);
+    const goalId = formData.get('goalId');
+    const amount = parseFloat(formData.get('amount'));
+
+    try {
+      const response = await fetch(`/api/goals/${goalId}/add-funds`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount })
+      });
+
+      if (response.ok) {
+        window.location.reload();
+      } else {
+        const error = await response.json();
+        alert(error.message || 'Failed to add funds');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Failed to add funds');
+    }
+  });
+</script>

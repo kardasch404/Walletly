@@ -49,13 +49,13 @@
       <i class="fas fa-chart-pie w-5"></i>
       <span>Budget</span>
     </a>
-    <!-- <a
+    <a
       href="/analytics"
       class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm <%= currentPage === 'analytics' ? 'active' : '' %>"
     >
       <i class="fas fa-chart-bar w-5"></i>
       <span>Analytics</span>
-    </a> -->
+    </a>
     <a
       href="/categories"
       class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm <%= currentPage === 'categories' ? 'active' : '' %>"
@@ -63,6 +63,10 @@
       <i class="fas fa-tags w-5"></i>
       <span>Categories</span>
     </a>
+  </nav>
+
+  <!-- Bottom Actions -->
+  <div class="p-4 border-t border-black/5 space-y-1">
     <a
       href="/settings"
       class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm <%= currentPage === 'settings' ? 'active' : '' %>"
@@ -70,10 +74,6 @@
       <i class="fas fa-cog w-5"></i>
       <span>Settings</span>
     </a>
-  </nav>
-
-  <!-- Bottom Actions -->
-  <div class="p-4 border-t border-black/5 space-y-1">
     <a
       href="#"
       class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm"

@@ -101,6 +101,30 @@ class TransactionController {
             return res.status(400).json({ error: error.message });
         }
     }
+
+    async searchAndFilter(req, res) {
+        try {
+            const userId = req.session.userId;
+            if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+            
+            const { search = '', type = 'all' } = req.query;
+            
+            const transactions = await this.#transactionService.searchAndFilter(userId, search, type);
+            const stats = await this.#transactionService.getStatsByFilter(userId, type);
+            
+            return res.json({
+                success: true,
+                transactions,
+                stats: {
+                    totalIncome: parseFloat(stats.totalIncome) || 0,
+                    totalExpense: parseFloat(stats.totalExpense) || 0,
+                    transactionCount: parseInt(stats.transactionCount) || 0
+                }
+            });
+        } catch (error) {
+            return res.status(400).json({ error: error.message });
+        }
+    }
     
 }
 
